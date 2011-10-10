@@ -1,0 +1,10 @@
+* Use issue tracking system
+* X		Apply code formatter
+* Use Umlaute (oe -> ö) etc.
+* X		Use DDBAccess everywhere (UI is statically linked to JDBC impl.)
+* X		Add email adress of software developers in comment
+* Use a logger like java.util.log. System.out.println() should only be used if there is real output. 
+* Write design document to 1) explain any patterns which are used and ...
+* Think about localization (German, English, ...)
+* Think about integration with web development (Groovy on Grails etc.)  
+* The search- and delete-function should only be available in the base classe (Personel). Only the edit-function is different depending on the type (Worker, Employee). This reduces the source code and decreases redundancy. 

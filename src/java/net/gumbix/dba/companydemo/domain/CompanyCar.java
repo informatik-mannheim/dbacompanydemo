@@ -1,24 +1,21 @@
 package net.gumbix.dba.companydemo.domain;
 
 /**
- * @project manager  Markus Gumbel (m.gumbel@hs-mannheim.de)
- * 
+ * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Marius Czardybon  (m.czardybon@gmx.net)
- * 
- * */
-
+ */
 public class CompanyCar {
 
 	private String licensePlate;
-	private Car model;
+	private Car car;
     private Employee driver;
 
 	public CompanyCar() {
 	}
 
-	public CompanyCar(String licensePlate, Car model) {
+	public CompanyCar(String licensePlate, Car car) {
 		this.licensePlate = licensePlate;
-		this.model = model;
+		this.car = car;
 	}
 
 	public String getLicensePlate() {
@@ -29,12 +26,12 @@ public class CompanyCar {
 		this.licensePlate = licensePlate;
 	}
 
-	public Car getModel() {
-		return model;
+	public Car getCar() {
+		return car;
 	}
 
-	public void setModel(Car model) {
-		this.model = model;
+	public void setCar(Car car) {
+		this.car = car;
 	}
 
     public Employee getDriver() {

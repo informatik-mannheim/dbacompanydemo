@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import com.sun.jmx.snmp.SnmpString;
 import net.gumbix.dba.companydemo.db.DBAccess;
 import net.gumbix.dba.companydemo.domain.*;
 
@@ -23,7 +22,7 @@ public class JdbcAccess implements DBAccess {
     private EmployeeDAO empDAO = new EmployeeDAO(this);
     private ProjectDAO projDAO;
     private StatusReportDAO statDAO;
-    private WorkersDAO workDAO;
+    private WorkerDAO workDAO;
     private WorksOnDAO woOnDAO;
 
     private WeakHashMap<Long, Employee> employeeCache
@@ -51,7 +50,7 @@ public class JdbcAccess implements DBAccess {
         empDAO = new EmployeeDAO(this);
         projDAO = new ProjectDAO(this);
         statDAO = new StatusReportDAO(this);
-        workDAO = new WorkersDAO(this);
+        workDAO = new WorkerDAO(this);
         woOnDAO = new WorksOnDAO(this);
     }
 
@@ -80,20 +79,20 @@ public class JdbcAccess implements DBAccess {
         empDAO.delete(emp);
     }
 
-    // Workers...
-    public Workers loadWorkers(long persNr) throws Exception {
+    // Worker...
+    public Worker loadWorkers(long persNr) throws Exception {
         return this.workDAO.load(persNr);
     }
 
-    public List<Workers> loadWorkers(String firstName, String lastName) throws Exception {
+    public List<Worker> loadWorkers(String firstName, String lastName) throws Exception {
         return this.workDAO.load(firstName, lastName);
     }
 
-    public void storeWorkers(Workers work) throws Exception {
+    public void storeWorkers(Worker work) throws Exception {
         this.workDAO.store(work);
     }
 
-    public void deleteWorkers(Workers worker) throws Exception {
+    public void deleteWorkers(Worker worker) throws Exception {
         this.workDAO.delete(worker);
     }
 

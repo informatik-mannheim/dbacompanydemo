@@ -7,15 +7,14 @@ import java.util.GregorianCalendar;
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
 
-public class Workers extends Personnel {
+public class Worker extends Personnel {
 
     private String workspace;
 
-    public Workers() {
-
+    public Worker() {
     }
 
-    public Workers(String name, String vorname, GregorianCalendar gebDatum, Address adr, String workspace) {
+    public Worker(String name, String vorname, GregorianCalendar gebDatum, Address adr, String workspace) {
         super(name, vorname, gebDatum, adr);
         setWorkspace(workspace);
     }
@@ -27,6 +26,4 @@ public class Workers extends Personnel {
     public void setWorkspace(String workspace) {
         this.workspace = workspace;
     }
-
-
 }

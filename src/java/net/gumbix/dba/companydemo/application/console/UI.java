@@ -144,7 +144,7 @@ public class UI {
                     "Was möchten Sie tun?\n\n" +
                     "1 Arbeiter verwalten \n" +
                     "2 Angestellte verwalten \n\n" +
-                    "0 Zurueck\n\n" +
+                    "0 Zurück\n\n" +
                     PROMPT);
 
             menuChoice = getMenuChoice();
@@ -161,7 +161,7 @@ public class UI {
                     gotoAngestellteMenu();
                     break;
 
-                //menu "0 Zurueck"
+                //menu "0 Zurück"
                 case 0:
                     break;
 
@@ -177,21 +177,21 @@ public class UI {
     private static void gotoArbeiterMenu() throws Exception {
 
         int menuChoice;
-        Workers work;
-        List<Workers> workList;
+        Worker work;
+        List<Worker> workList;
 
-        //		WorkersDAO workDAO = new WorkersDAO();
+        //		WorkerDAO workDAO = new WorkerDAO();
         //		PersonnelDAO persDAO = new PersonnelDAO();
 
         do {
             System.out.println("*** Arbeiter verwalten ***\n\n" +
-                    "Was moechten Sie tun?\n\n" +
+                    "Was möchten Sie tun?\n\n" +
                     "1 Arbeiter suchen (nach Personalnummer)\n" +
                     "2 Arbeiter suchen (nach Nachname, Vorname)\n" +
                     "3 Arbeiter neu anlegen\n" +
                     "4 Arbeiter editieren\n" +
                     "5 Arbeiter loeschen\n\n" +
-                    "0 Zurueck\n\n" +
+                    "0 Zurück\n\n" +
                     "Ihre Eingabe (Zahl): ");
 
             menuChoice = getMenuChoice();
@@ -236,7 +236,7 @@ public class UI {
                     //				workList = workDAO.load(firstName, lastName);
 
                     if (!workList.isEmpty()) {
-                        for (Workers w : workList) {
+                        for (Worker w : workList) {
                             printWorker(w);
 
                         }
@@ -284,14 +284,14 @@ public class UI {
                     Address adr = new Address(zip, city);
 
                     //create new Worker object
-                    Workers WorkersNew = new Workers(lastName, firstName, stringToGreg(bDate), adr, workspace);
+                    Worker workerNew = new Worker(lastName, firstName, stringToGreg(bDate), adr, workspace);
 
-                    WorkersNew.setStreet(street);
-                    WorkersNew.setHouseNo(houseNo);
+                    workerNew.setStreet(street);
+                    workerNew.setHouseNo(houseNo);
 
                     //store the new Worker object in the database
-                    db.storeWorkers(WorkersNew);
-                    //				workDAO.store(WorkersNew);
+                    db.storeWorkers(workerNew);
+                    //				workDAO.store(workerNew);
 
                     //let you see what was saved
                     printWorker(db.loadWorkers(firstName, lastName).get(0));
@@ -307,8 +307,8 @@ public class UI {
                     persNrStr = getUserInputString();
                     persNr = Long.valueOf(persNrStr);
 
-                    Workers workEdit = db.loadWorkers(persNr);
-                    //				Workers workEdit = workDAO.load(persNr);
+                    Worker workEdit = db.loadWorkers(persNr);
+                    //				Worker workEdit = workDAO.load(persNr);
 
                     printWorker(workEdit);
 
@@ -344,7 +344,7 @@ public class UI {
                     persNrStr = getUserInputString();
                     persNr = Long.valueOf(persNrStr);
 
-                    Workers personnelDelete = db.loadWorkers(persNr);
+                    Worker personnelDelete = db.loadWorkers(persNr);
                     //				Personnel personnelDelete = persDAO.load(persNr);
 
                     //check on "personnelDelete != null" did not work here
@@ -359,7 +359,7 @@ public class UI {
 
                     break;
 
-                //menu "0 Zurueck"
+                //menu "0 Zurück"
                 case 0:
                     break;
 
@@ -393,7 +393,7 @@ public class UI {
 
         do {
             System.out.println("*** Angestellte verwalten ***\n\n" +
-                    "Was moechten Sie tun?\n\n" +
+                    "Was möchten Sie tun?\n\n" +
                     "1 Angestellten suchen (nach Personalnummer)\n" +
                     "2 Angestellten suchen (nach Nachname, Vorname)\n" +
                     "3 Angestellten neu anlegen\n" +
@@ -403,8 +403,8 @@ public class UI {
                     "7 Firmenwagen einem Angestellten entziehen\n\n" +
                     "8 Angestellten einem Projekt zuordnen\n" +
                     "9 Angestellten von einem Projekt abziehen\n\n" +
-                    "0 Zurueck\n\n" +
-                    "Ihre Eingabe (Zahl): ");
+                    "0 Zurück\n\n" +
+                    PROMPT);
 
             menuChoice = getMenuChoice();
 
@@ -549,7 +549,7 @@ public class UI {
                     if (personnelDelete.getPersonnelNumber() != 0) {
                         db.deleteEmployee(personnelDelete);
                     } else {
-                        System.out.println("Personalnummer nicht vergeben! Loeschen nicht mueglich! \n");
+                        System.out.println("Personalnummer nicht vergeben! Löschen nicht möglich! \n");
                     }
                     break;
 
@@ -665,7 +665,7 @@ public class UI {
                     //				woDAO.delete(wo);
 
                     break;
-                //menu "0 Zurueck"
+                //menu "0 Zurück"
                 case 0:
                     break;
 
@@ -695,11 +695,11 @@ public class UI {
                     "Was muechten Sie tun?\n\n" +
                     "1 Projekt ausgeben\n" +
                     "2 Projekt alnegen \n" +
-                    "3 Projekt Loeschen\n\n" +
+                    "3 Projekt löschen\n\n" +
                     "4 Statusberichte ausgeben\n" +
                     "5 Statusbericht eingeben\n" +
                     "6 Statusbericht Aendern\n\n" +
-                    "0 Zurueck\n\n" +
+                    "0 Zurück\n\n" +
                     "Ihre Eingabe (Zahl): ");
 
             menuChoice = getMenuChoice();
@@ -737,9 +737,9 @@ public class UI {
 
                     break;
 
-                //menu "Projekt Loeschen"
+                //menu "Projekt löschen"
                 case 3:
-                    System.out.println("*** Projekt Loeschen ***\n");
+                    System.out.println("*** Projekt löschen ***\n");
 
                     System.out.println("ProjektNr : ");
                     persNrStr = getUserInputString();
@@ -828,100 +828,87 @@ public class UI {
 
     private static void gotoFirmenwagenMenu() throws Exception {
         int menuChoice;
-        //		CompanyCarDAO comCarDAO = new CompanyCarDAO();
-        //		CarDAO carDAO = new CarDAO();
-
-        Employee emp = new Employee();
+        Car car;
 
         do {
             System.out.println("*** Firmenwagen verwalten ***\n\n" +
-                    "Was moechten Sie tun?\n\n" +
-                    "1 Firmenwagen alnegen\n" +
-                    "2 Firmenwagen Loeschen\n" +
+                    "Was möchten Sie tun?\n\n" +
+                    "1 Firmenwagen anlegen\n" +
+                    "2 Firmenwagen löschen\n" +
                     "3 Modell anlegen \n" +
-                    "4 Modell Loeschen\n\n" +
-                    "0 Zurueck\n\n" +
-                    "Ihre Eingabe (Zahl): ");
+                    "4 Modell löschen\n\n" +
+                    "0 Zurück\n\n" +
+                    PROMPT);
 
             menuChoice = getMenuChoice();
 
             switch (menuChoice) {
 
-                //menu "Firmenwagen alnegen"
+                //menu "Firmenwagen anlegen"
                 case 1:
-                    System.out.println("*** Firmenwagen alnegen ***\n");
+                    System.out.println("*** Firmenwagen anlegen ***\n");
 
-                    System.out.println("Marke : ");
+                    System.out.print("Marke: ");
                     String type = getUserInputString();
 
-                    System.out.println("Model : ");
+                    System.out.print("Model: ");
                     String modell = getUserInputString();
 
-                    Car car = new Car(modell, type);
+                    car = new Car(modell, type);
 
-                    System.out.println("Nummernschild : ");
+                    System.out.print("Nummernschild: ");
                     String num = getUserInputString();
 
                     CompanyCar comCar = new CompanyCar(num, car);
 
-                    emp.setCar(comCar);
                     db.storeCompanyCar(comCar);
-                    //				comCarDAO.store(emp);
-
                     break;
 
-                //menu "Firmenwagen Loeschen"
+                //menu "Firmenwagen löschen"
                 case 2:
-                    System.out.println("*** Firmenwagen Loeschen ***\n");
+                    System.out.println("*** Firmenwagen löschen ***\n");
 
-                    System.out.println("Nummernschild : ");
+                    System.out.print("Nummernschild: ");
                     num = getUserInputString();
 
-                    // db.deleteCompanyCar(num);
-                    //				comCarDAO.delete(num);
+                    CompanyCar companyCar = db.loadCompanyCar(num);
+                    db.deleteCompanyCar(companyCar);
                     break;
 
-                //menu "Modell alnegen"
+                //menu "Modell anlegen"
                 case 3:
-                    System.out.println("*** Modell alnegen ***\n");
-
-                    System.out.println("Marke : ");
+                    System.out.println("*** Modell anlegen ***\n");
+                    System.out.print("Marke: ");
                     type = getUserInputString();
 
-                    System.out.println("Model : ");
+                    System.out.print("Model: ");
                     modell = getUserInputString();
 
                     car = new Car(modell, type);
                     db.storeCar(car);
-                    //				carDAO.store(car);
-
                     break;
 
-                //menu "Modell Loeschen"
+                //menu "Modell löschen"
                 case 4:
-                    System.out.println("*** Modell Loeschen ***\n");
-
+                    System.out.println("*** Modell löschen ***\n");
                     System.out.println("Marke : ");
                     type = getUserInputString();
 
-                    // db.deleteCar(type);
-                    //				carDAO.delete(type);
-
+                    car = db.loadCar(type);
+                    db.deleteCar(car);
                     break;
 
-
-                //menu "0 Zurueck"
+                //menu "0 Zurück"
                 case 0:
                     break;
 
                 //invalide input
                 default:
-                    System.out.println("fehlerhafte Eingabe");
+                    System.out.println(INVALID_INPUT);
                     break;
             }
         }
         while (menuChoice != 0);
-
     }
 
     private static void gotoAbteilungenMenu() throws Exception {
@@ -931,12 +918,12 @@ public class UI {
 
         do {
             System.out.println("*** Abteilungen verwalten ***\n\n" +
-                    "Was moechten Sie tun? \n\n" +
+                    "Was möchten Sie tun? \n\n" +
                     "1 Abteilung ausgeben \n" +
-                    "2 Abteilung alnegen \n" +
+                    "2 Abteilung anlegen \n" +
                     "3 Abteilung editieren \n" +
-                    "4 Abteilung Loeschen \n\n" +
-                    "0 Zurueck\n\n" +
+                    "4 Abteilung löschen \n\n" +
+                    "0 Zurück\n\n" +
                     "Ihre Eingabe (Zahl): ");
 
             menuChoice = getMenuChoice();
@@ -1000,9 +987,9 @@ public class UI {
 
                     break;
 
-                //menu "Abteilung Loeschen"
+                //menu "Abteilung löschen"
                 case 4:
-                    System.out.println("*** Abteilung Loeschen ***\n");
+                    System.out.println("*** Abteilung löschen ***\n");
 
                     System.out.println("Abteilunsnummer : ");
                     depNrStr = getUserInputString();
@@ -1074,7 +1061,7 @@ public class UI {
         }
     }
 
-    private static void printWorker(Workers work) {
+    private static void printWorker(Worker work) {
 
         printPersonnel(work);
 
@@ -1089,7 +1076,7 @@ public class UI {
         System.out.println("tel.          : " + emp.getPhoneNumber() + "\n");
 
         if (emp.getCar().getLicensePlate() != null) {
-            System.out.println("Firmenwagen   : " + emp.getCar().getModel().getType() + " " + emp.getCar().getModel().getModel() + "\n" +
+            System.out.println("Firmenwagen   : " + emp.getCar().getCar().getType() + " " + emp.getCar().getCar().getModel() + "\n" +
                     "Nummernschild : " + emp.getCar().getLicensePlate() + "\n");
 
         }
@@ -1145,7 +1132,7 @@ public class UI {
 
         for (CompanyCar comCar : comCarList) {
 
-            System.out.println("Firmenwagen   : " + comCar.getModel().getType() + " " + comCar.getModel().getModel() + "\n" +
+            System.out.println("Firmenwagen   : " + comCar.getCar().getType() + " " + comCar.getCar().getModel() + "\n" +
                     "Nummernschild : " + comCar.getLicensePlate() + "\n");
         }
     }

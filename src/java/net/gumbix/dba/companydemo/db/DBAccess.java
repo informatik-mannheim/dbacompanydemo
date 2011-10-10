@@ -19,13 +19,13 @@ public interface DBAccess {
 
     public void deleteEmployee(Employee emp) throws Exception;
 
-    public Workers loadWorkers(long persNr) throws Exception;
+    public Worker loadWorkers(long persNr) throws Exception;
 
-    public List<Workers> loadWorkers(String firstName, String lastName) throws Exception;
+    public List<Worker> loadWorkers(String firstName, String lastName) throws Exception;
 
-    public void storeWorkers(Workers worker) throws Exception;
+    public void storeWorkers(Worker worker) throws Exception;
 
-    public void deleteWorkers(Workers worker) throws Exception;
+    public void deleteWorkers(Worker worker) throws Exception;
 
     public Department loadDepartment(long depNumber) throws Exception;
 

@@ -5,12 +5,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @project manager  Markus Gumbel (m.gumbel@hs-mannheim.de)
- * 
+ * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Marius Czardybon  (m.czardybon@gmx.net)
- * 
- * */
-
+ */
 public class Employee extends Personnel {
 
 	private String phoneNumber;
@@ -18,7 +15,6 @@ public class Employee extends Personnel {
 	private Set<WorksOn> projects;
 
 	public Employee() {
-
 	}
 
 	public Employee(String name, String vorname, GregorianCalendar gebDatum, Address adr, String tel) {
@@ -58,4 +54,9 @@ public class Employee extends Personnel {
 	public void setProjects(WorksOn projects) {
 		this.projects.add(projects);
 	}
+
+    public String toFullString() {
+        return super.toFullString() + "\n" +
+               "Telefon:    " + phoneNumber;
+    }
 }

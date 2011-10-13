@@ -47,8 +47,7 @@ public class UI {
                     "3 eigene SQL-Datenbank (über JDBC) \n" +
                     "4 eigene SQL-Datenbank (über Hibernate) \n" +
                     "5 lokale DB4O-Datenbank \n\n" +
-                    "0 Programm beenden\n\n" +
-                    PROMPT);
+                    "0 Programm beenden");
 
             menuChoice = getMenuChoice();
 
@@ -100,8 +99,7 @@ public class UI {
                     "2 Projekte verwalten\n" +
                     "3 Firmenwagen verwalten\n" +
                     "4 Abteilungen verwalten\n\n" +
-                    "0 Zurück \n\n" +
-                    PROMPT);
+                    "0 Zurück");
 
             menuChoice = getMenuChoice();
 
@@ -153,8 +151,7 @@ public class UI {
                     "7 Angestellte neu anlegen \n" +
                     "8 Angestellte editieren \n" +
                     "9 Mitarbeiter löschen\n" +
-                    "0 Zurück\n\n" +
-                    PROMPT);
+                    "0 Zurück");
 
             menuChoice = getMenuChoice();
 
@@ -170,6 +167,7 @@ public class UI {
                     try {
                         Personnel personnel = db.loadPersonnel(persNr);
                         System.out.println(personnel.toFullString());
+                        pressAnyKey();
                     } catch (ObjectNotFoundException e) {
                         System.out.println("Personalnummer nicht vergeben!\n");
                     }
@@ -925,106 +923,105 @@ public class UI {
 
     private static void gotoAbteilungenMenu() throws Exception {
         int menuChoice;
-        //		DepartmentDAO depDAO = new DepartmentDAO();
         Department dep = new Department();
 
         do {
             System.out.println("*** Abteilungen verwalten ***\n\n" +
                     "Was möchten Sie tun? \n\n" +
-                    "1 Abteilung ausgeben \n" +
-                    "2 Abteilung anlegen \n" +
-                    "3 Abteilung editieren \n" +
-                    "4 Abteilung löschen \n\n" +
-                    "0 Zurück\n\n" +
-                    "Ihre Eingabe (Zahl): ");
+                    "1 Abteilung suchen (nach ID)\n" +
+                    "2 Abteilung suchen (nach Bezeichnung)\n" +
+                    "3 Abteilung anlegen \n" +
+                    "4 Abteilung editieren \n" +
+                    "5 Abteilung löschen \n\n" +
+                    "0 Zurück");
 
             menuChoice = getMenuChoice();
 
             switch (menuChoice) {
 
-                //menu "Abteilung ausgeben"
                 case 1:
-                    System.out.println("*** Abteilung ausgeben ***\n");
+                    System.out.println("*** Abteilung suchen (nach ID) ***\n");
 
-                    System.out.println("Abteilungnummer eingeben");
-                    String depNrStr = getUserInputString();
-                    long depNr = Long.valueOf(depNrStr);
+                    System.out.print("Abteilungnummer eingeben: ");
+                    long depNr = getUserInputLong();
 
-                    dep = db.loadDepartment(depNr);
-                    //				dep = depDAO.load(depNr);
-
-                    if (dep.getDepNumber() != 0) {
-                        printDepartment(dep);
-                    } else {
-                        System.out.println("Abteilungsnummer exsistiert nicht !! ");
+                    try {
+                        dep = db.loadDepartment(depNr);
+                        System.out.println(dep);
+                    } catch (ObjectNotFoundException e) {
+                        System.out.println("Abteilungsnummer existiert nicht!");
                     }
-
-
                     break;
 
-                //menu "Abteilung alnegen"
                 case 2:
-                    System.out.println("*** Abteilung alnegen ***\n");
+                    System.out.println("*** Abteilung suchen (nach Bezeichnung) ***\n");
 
-                    System.out.println("Bezeichnung der Abteilung : ");
-                    String name = getUserInputString();
+                    System.out.print("Abteilungsbezeichnung eingeben (% Wildcard): ");
+                    String queryString = getUserInputString();
+                    List<Department> result = db.queryDepartmentByName(queryString);
+                    for (Department d : result) {
+                        System.out.println(d);
+                    }
+                    pressAnyKey();
+                    break;
+                //menu "Abteilung anlegen"
+                case 3:
+                    System.out.println("*** Abteilung anlegen ***\n");
 
-                    dep.setName(name);
+                    System.out.print("Abteilungnr: ");
+                    long id = getUserInputLong();
 
-                    db.storeDepartment(dep);
-                    //				depDAO.store(dep);
+                    try {
+                        db.loadDepartment(id);
+                        System.out.println("Abteilungnr. bereits vergeben.");
+                    } catch (ObjectNotFoundException e) {
+                        System.out.print("Bezeichnung der Abteilung: ");
+                        String name = getUserInputString();
 
-                    printDepartment(db.loadDepartment(name));
-                    //				printDepartment(depDAO.load(name));
-
-
+                        dep = new Department(id, name);
+                        db.storeDepartment(dep);
+                        System.out.println(dep);
+                    }
+                    pressAnyKey();
                     break;
 
                 //menu "Abteilung editieren"
-                case 3:
+                case 4:
                     System.out.println("*** Abteilung editieren ***\n");
 
-                    System.out.println("Abteilungnummer eingeben");
-                    depNrStr = getUserInputString();
-                    depNr = Long.valueOf(depNrStr);
+                    System.out.println("Abteilungnummer eingeben: ");
+                    depNr = getUserInputLong();
 
-                    System.out.println("Abteilungnummer eingeben");
-                    name = getUserInputString();
+                    System.out.println("Neuen Abteilungname eingeben: ");
+                    String name = getUserInputString();
 
                     dep.setDepNumber(depNr);
                     dep.setName(name);
 
                     db.storeDepartment(dep);
-                    //				depDAO.store(dep);
-
                     break;
 
                 //menu "Abteilung löschen"
-                case 4:
+                case 5:
                     System.out.println("*** Abteilung löschen ***\n");
 
                     System.out.println("Abteilunsnummer : ");
-                    depNrStr = getUserInputString();
-                    depNr = Long.valueOf(depNrStr);
+                    depNr = getUserInputLong();
 
-                    // db.deleteDepartment(depNr);
-                    //				depDAO.delete(depNr);
-
+                    dep = db.loadDepartment(depNr);
+                    db.deleteDepartment(dep);
                     break;
 
-                //menu "0 Programm beenden" - system exits
                 case 0:
                     break;
 
                 //invalide input
                 default:
-                    System.out.println("fehlerhafte Eingabe");
+                    System.out.println(INVALID_INPUT);
                     break;
             }
         }
         while (menuChoice != 0);
-
-
     }
 
     /**
@@ -1156,15 +1153,8 @@ public class UI {
     }
 
     private static int getMenuChoice() throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String line = null;
-
-        // reading user input
-        line = br.readLine();
-        if (line != null)
-            return Integer.parseInt(line);
-        else
-            throw new IOException("Fehlerhafte Eingabe. Bitte Zahl eingeben.");
+        System.out.print("Ihre Auswahl (Zahl): ");
+        return (int) getUserInputLong();
     }
 
     private static String getUserInputString() throws Exception {
@@ -1181,5 +1171,11 @@ public class UI {
 
     private static long getUserInputLong() throws Exception {
         return Long.valueOf(getUserInputString());
+    }
+
+    private static void pressAnyKey() throws Exception {
+        System.out.print("\nTaste für weiter...");
+        getUserInputString();
+        System.out.println();
     }
 }

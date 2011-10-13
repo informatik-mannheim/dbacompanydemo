@@ -6,7 +6,6 @@ import java.util.GregorianCalendar;
  * @author Marius Czardybon (m.czardybon@gmx.net)
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-
 public class Worker extends Personnel {
 
     private String workspace;
@@ -25,5 +24,10 @@ public class Worker extends Personnel {
 
     public void setWorkspace(String workspace) {
         this.workspace = workspace;
+    }
+
+    public String toFullString() {
+        return super.toFullString() + "\n" +
+               "Arbeitsplatz: " + workspace;
     }
 }

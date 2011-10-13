@@ -1,19 +1,15 @@
 package net.gumbix.dba.companydemo.domain;
 
 /**
- * @project manager  Markus Gumbel (m.gumbel@hs-mannheim.de)
- * 
- * @author Marius Czardybon  (m.czardybon@gmx.net)
- * 
- * */
-
+ * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
+ * @author Marius Czardybon (m.czardybon@gmx.net)
+ */
 public class Department {
 
 	private long depNumber;
 	private String name;
 
 	public Department() {
-
 	}
 
 	public Department(long depNumber, String name) {
@@ -38,6 +34,6 @@ public class Department {
 	}
 
 	public String toString() {
-		return depNumber + " : " + name;
+		return depNumber + ": " + name;
 	}
 }

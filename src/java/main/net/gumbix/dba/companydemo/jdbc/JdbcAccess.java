@@ -177,11 +177,11 @@ public class JdbcAccess implements DBAccess {
 
     // Departments...
     public Department loadDepartment(long depNumber) throws Exception {
-        return this.depDAO.load(depNumber);
+        return depDAO.load(depNumber);
     }
 
-    public Department loadDepartment(String name) throws Exception {
-        return this.depDAO.load(name);
+    public List<Department> queryDepartmentByName(String queryString) throws Exception {
+        return depDAO.queryByName(queryString);
     }
 
     public void storeDepartment(Department department) throws Exception {

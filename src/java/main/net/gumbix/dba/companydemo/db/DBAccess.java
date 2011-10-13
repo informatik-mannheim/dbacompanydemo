@@ -45,7 +45,7 @@ public interface DBAccess {
     // Department
     public Department loadDepartment(long depNumber) throws Exception;
 
-    public Department loadDepartment(String name) throws Exception;
+    public List<Department> queryDepartmentByName(String queryString) throws Exception;
 
     public void storeDepartment(Department department) throws Exception;
 

@@ -874,7 +874,6 @@ public class UI {
                     db.storeCompanyCar(comCar);
                     break;
 
-                //menu "Firmenwagen löschen"
                 case 2:
                     System.out.println("*** Firmenwagen löschen ***\n");
 
@@ -885,7 +884,6 @@ public class UI {
                     db.deleteCompanyCar(companyCar);
                     break;
 
-                //menu "Modell anlegen"
                 case 3:
                     System.out.println("*** Modell anlegen ***\n");
                     System.out.print("Marke: ");
@@ -898,7 +896,6 @@ public class UI {
                     db.storeCar(car);
                     break;
 
-                //menu "Modell löschen"
                 case 4:
                     System.out.println("*** Modell löschen ***\n");
                     System.out.println("Modell: ");
@@ -908,11 +905,9 @@ public class UI {
                     db.deleteCar(car);
                     break;
 
-                //menu "0 Zurück"
                 case 0:
                     break;
 
-                //invalide input
                 default:
                     System.out.println(INVALID_INPUT);
                     break;

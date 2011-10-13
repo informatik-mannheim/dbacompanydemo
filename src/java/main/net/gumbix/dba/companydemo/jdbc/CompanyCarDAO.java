@@ -2,6 +2,7 @@ package net.gumbix.dba.companydemo.jdbc;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.List;
 
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
@@ -50,15 +51,22 @@ public class CompanyCarDAO extends AbstractDAO {
             pstmt = prepareStatement("update Firmenwagen set modell = ? " +
                     ", personalNr = ? where nummernschild = ?");
             pstmt.setString(1, car.getCar().getModel());
-            pstmt.setLong(2, car.getDriver().getPersonnelNumber());
-            pstmt.setString(3, car.getLicensePlate());
+            if (car.getDriver() != null) {
+                pstmt.setLong(3, car.getDriver().getPersonnelNumber());
+            } else {
+                pstmt.setNull(3, Types.INTEGER);
+            }
             pstmt.execute();
         } catch (Exception e) {
             // new record
             pstmt = prepareStatement("insert into Firmenwagen values (?, ?, ? )");
-            pstmt.setString(1, car.getCar().getModel());
-            pstmt.setLong(2, car.getDriver().getPersonnelNumber());
-            pstmt.setString(3, car.getLicensePlate());
+            pstmt.setString(1, car.getLicensePlate());
+            pstmt.setString(2, car.getCar().getModel());
+            if (car.getDriver() != null) {
+                pstmt.setLong(3, car.getDriver().getPersonnelNumber());
+            } else {
+                pstmt.setNull(3, Types.INTEGER);
+            }
             pstmt.execute();
         }
     }

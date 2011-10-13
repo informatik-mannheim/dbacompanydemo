@@ -19,6 +19,7 @@ public class JdbcAccess implements DBAccess {
     private CarDAO carDAO;
     private CompanyCarDAO comCarDAO;
     private DepartmentDAO depDAO;
+    private PersonnelDAO persDAO = new PersonnelDAO(this);
     private EmployeeDAO empDAO = new EmployeeDAO(this);
     private ProjectDAO projDAO;
     private StatusReportDAO statDAO;
@@ -47,11 +48,46 @@ public class JdbcAccess implements DBAccess {
         carDAO = new CarDAO(this);
         comCarDAO = new CompanyCarDAO(this);
         depDAO = new DepartmentDAO(this);
-        empDAO = new EmployeeDAO(this);
         projDAO = new ProjectDAO(this);
         statDAO = new StatusReportDAO(this);
         workDAO = new WorkerDAO(this);
         woOnDAO = new WorksOnDAO(this);
+    }
+
+    public Object load(Class clazz, long id) throws Exception {
+        return null;
+    }
+
+    public void delete(Object object) throws Exception {
+    }
+
+    // Personnel
+    public Personnel loadPersonnel(long persNr) throws Exception {
+        return persDAO.load(persNr);
+    }
+
+    public List<Personnel> loadPersonnel(String firstName, String lastName) throws Exception {
+        return null;
+    }
+
+    public void storePersonnel(Personnel pers) throws Exception {
+        if (pers instanceof Worker) {
+            storeWorkers((Worker) pers);
+        } else if (pers instanceof Employee) {
+            storeEmployee((Employee) pers);
+        } else {
+            // TODO
+        }
+    }
+
+    public void deletePersonnel(Personnel pers) throws Exception {
+        if (pers instanceof Worker) {
+            deleteWorkers((Worker) pers);
+        } else if (pers instanceof Employee) {
+            deleteEmployee((Employee) pers);
+        } else {
+            // TODO
+        }
     }
 
     // Employees...

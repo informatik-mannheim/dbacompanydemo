@@ -1,14 +1,12 @@
 package net.gumbix.dba.companydemo.domain;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 /**
- * @project manager  Markus Gumbel (m.gumbel@hs-mannheim.de)
- * 
+ * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Marius Czardybon  (m.czardybon@gmx.net)
- * 
- * */
-
+ */
 public class Personnel {
 
 	private long personnelNumber;
@@ -17,21 +15,20 @@ public class Personnel {
 	private GregorianCalendar birthDate;
 	private String street;
 	private String houseNo;
-	private Address adress;
+	private Address address;
 	private Department department;
 	private String position;
 	private Personnel boss;
 
 
 	public Personnel() {
-
 	}
 
 	public Personnel(String lastName, String firstName, GregorianCalendar birthDate, Address adr) {
 		this.lastName = lastName;
 		this.firstName = firstName;
 		this.birthDate = birthDate;
-		this.adress = adr;
+		this.address = adr;
 	}
 
 	public long getPersonnelNumber() {
@@ -82,12 +79,12 @@ public class Personnel {
 		this.houseNo = houseNo;
 	}
 
-	public Address getAdress() {
-		return adress;
+	public Address getAddress() {
+		return address;
 	}
 
-	public void setAdress(Address adress) {
-		this.adress = adress;
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
 	public Department getDepartment() {
@@ -117,4 +114,10 @@ public class Personnel {
 	public String toString() {
 		return firstName + " " + lastName;
 	}
+
+    public String toFullString() {
+        return "Name:       " + firstName + " " + lastName + "\n" +
+               "Geb.-Datum: " + birthDate.get(Calendar.YEAR) + "\n" +
+               "Adresse:    " + street + ", " + address.getZip() + " " + address.getCity();
+    }
 }

@@ -11,6 +11,20 @@ import net.gumbix.dba.companydemo.domain.*;
  */
 public interface DBAccess {
 
+    public Object load(Class clazz, long id) throws Exception;
+
+    public void delete(Object object) throws Exception;
+
+    // Personnel
+    public Personnel loadPersonnel(long persNr) throws Exception;
+
+    public List<Personnel> loadPersonnel(String firstName, String lastName) throws Exception;
+
+    public void storePersonnel(Personnel pers) throws Exception;
+
+    public void deletePersonnel(Personnel pers) throws Exception;
+
+    // Employee
     public Employee loadEmployee(long persNr) throws Exception;
 
     public List<Employee> loadEmployee(String firstName, String lastName) throws Exception;
@@ -19,6 +33,7 @@ public interface DBAccess {
 
     public void deleteEmployee(Employee emp) throws Exception;
 
+    // Worker
     public Worker loadWorkers(long persNr) throws Exception;
 
     public List<Worker> loadWorkers(String firstName, String lastName) throws Exception;
@@ -27,6 +42,7 @@ public interface DBAccess {
 
     public void deleteWorkers(Worker worker) throws Exception;
 
+    // Department
     public Department loadDepartment(long depNumber) throws Exception;
 
     public Department loadDepartment(String name) throws Exception;
@@ -35,18 +51,14 @@ public interface DBAccess {
 
     public void deleteDepartment(Department department) throws Exception;
 
+    // Car
     public Car loadCar(final String modell) throws Exception;
 
     public void storeCar(Car car) throws Exception;
 
     public void deleteCar(Car car) throws Exception;
 
-    public Address loadAddress(String zip) throws Exception;
-
-    public void storeAddress(Address adr) throws Exception;
-
-    public void deleteAddress(Address adr) throws Exception;
-
+    // CompanyCar
     public CompanyCar loadCompanyCar(String licensePlate) throws Exception;
 
     public void storeCompanyCar(CompanyCar car) throws Exception;
@@ -55,18 +67,28 @@ public interface DBAccess {
 
     public void deleteCompanyCar(CompanyCar car) throws Exception;
 
+    // Adress
+    public Address loadAddress(String zip) throws Exception;
+
+    public void storeAddress(Address adr) throws Exception;
+
+    public void deleteAddress(Address adr) throws Exception;
+
+    // Project
     public Project loadProject(final long projNr) throws Exception;
 
     public void storeProject(Project proj) throws Exception;
 
     public void deleteProject(Project proj) throws Exception;
 
+    // StatusReport
     public List<StatusReport> loadStatusReport(long projNr) throws Exception;
 
     public void storeStatusReport(StatusReport rep) throws Exception;
 
     public void deleteStatusReport(StatusReport rep) throws Exception;
 
+    // ...
     public Set<WorksOn> loadWorksOn(Project proj) throws Exception;
 
     public WorksOn loadWorksOn(long persNr, long projNr) throws Exception;

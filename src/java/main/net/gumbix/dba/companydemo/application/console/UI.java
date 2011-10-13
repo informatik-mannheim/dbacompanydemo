@@ -1,6 +1,7 @@
 package net.gumbix.dba.companydemo.application.console;
 
 import net.gumbix.dba.companydemo.db.DBAccess;
+import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
 import net.gumbix.dba.companydemo.domain.*;
 import net.gumbix.dba.companydemo.jdbc.JdbcAccess;
 
@@ -28,8 +29,9 @@ public class UI {
         try {
             selectDB();
         } catch (Exception e) {
-            System.out.println("Fehler verursacht: " + e.getMessage());
-            System.out.println("Das Programm wird neu gestartet.\n\n");
+            System.out.println("### Fehler verursacht: " + e.getMessage());
+            e.printStackTrace();
+            System.out.println("### Das Programm wird neu gestartet.\n\n");
             main(null);
         }
     }
@@ -142,8 +144,15 @@ public class UI {
         do {
             System.out.println("*** Personal verwalten ***\n\n" +
                     "Was möchten Sie tun?\n\n" +
-                    "1 Arbeiter verwalten \n" +
-                    "2 Angestellte verwalten \n\n" +
+                    "1 Mitarbeiter suchen (Personalnr.)\n" +
+                    "2 Mitarbeiter suchen (Name, Vorname)\n" +
+                    "3 Mitarbeiter neu anlegen \n" +
+                    "4 Mitarbeiter editieren \n" +
+                    "5 Arbeiter neu anlegen \n" +
+                    "6 Arbeiter editieren \n" +
+                    "7 Angestellte neu anlegen \n" +
+                    "8 Angestellte editieren \n" +
+                    "9 Mitarbeiter löschen\n" +
                     "0 Zurück\n\n" +
                     PROMPT);
 
@@ -151,14 +160,19 @@ public class UI {
 
             switch (menuChoice) {
 
-                //Arbeiter verwalten
+                // Mitarbeiter suchen
                 case 1:
-                    gotoArbeiterMenu();
-                    break;
+                    System.out.println("*** Mitarbeiter suchen (nach Personalnummer) ***\n");
 
-                // Angestellte verwalten
-                case 2:
-                    gotoAngestellteMenu();
+                    System.out.print("Personalnummer: ");
+                    long persNr = getUserInputLong();
+
+                    try {
+                        Personnel personnel = db.loadPersonnel(persNr);
+                        System.out.println(personnel.toFullString());
+                    } catch (ObjectNotFoundException e) {
+                        System.out.println("Personalnummer nicht vergeben!\n");
+                    }
                     break;
 
                 //menu "0 Zurück"
@@ -166,6 +180,7 @@ public class UI {
                     break;
 
                 default:
+                    System.out.println("Noch nicht implementiert.");
                     System.out.println(INVALID_INPUT);
                     break;
             }
@@ -848,13 +863,10 @@ public class UI {
                 case 1:
                     System.out.println("*** Firmenwagen anlegen ***\n");
 
-                    System.out.print("Marke: ");
-                    String type = getUserInputString();
-
-                    System.out.print("Model: ");
+                    System.out.print("Modell: ");
                     String modell = getUserInputString();
 
-                    car = new Car(modell, type);
+                    car = db.loadCar(modell);
 
                     System.out.print("Nummernschild: ");
                     String num = getUserInputString();
@@ -879,9 +891,9 @@ public class UI {
                 case 3:
                     System.out.println("*** Modell anlegen ***\n");
                     System.out.print("Marke: ");
-                    type = getUserInputString();
+                    String type = getUserInputString();
 
-                    System.out.print("Model: ");
+                    System.out.print("Modell: ");
                     modell = getUserInputString();
 
                     car = new Car(modell, type);
@@ -891,7 +903,7 @@ public class UI {
                 //menu "Modell löschen"
                 case 4:
                     System.out.println("*** Modell löschen ***\n");
-                    System.out.println("Marke : ");
+                    System.out.println("Modell: ");
                     type = getUserInputString();
 
                     car = db.loadCar(type);
@@ -1039,7 +1051,7 @@ public class UI {
                 "----------------------------- >> " + "Personalnummer : " + pers.getPersonnelNumber() + " << -----------------------------" + "\n" +
                         "Name          : " + pers.getFirstName() + " " + pers.getLastName() + "\n" +
                         "Anschrift     : " + pers.getStreet() + " " + pers.getHouseNo() + "\n" +
-                        "                " + pers.getAdress().getZip() + " " + pers.getAdress().getCity() + " " + "\n" +
+                        "                " + pers.getAddress().getZip() + " " + pers.getAddress().getCity() + " " + "\n" +
                         "Geburtsdatum  : " + df.format(pers.getBirthDate().getTime()) + "\n");
 
         if (pers.getPosition() != null) {
@@ -1164,6 +1176,10 @@ public class UI {
         if (line != null)
             return line;
         else
-            throw new IOException("Fehlerhafte Eingabe");
+            throw new IOException("Fehlerhafte Eingabe!");
+    }
+
+    private static long getUserInputLong() throws Exception {
+        return Long.valueOf(getUserInputString());
     }
 }

@@ -66,8 +66,8 @@ public class JdbcAccess implements DBAccess {
         return persDAO.load(persNr);
     }
 
-    public List<Personnel> loadPersonnel(String firstName, String lastName) throws Exception {
-        return null;
+    public List<Personnel> queryByName(String firstName, String lastName) throws Exception {
+        return persDAO.queryByName(firstName, lastName);
     }
 
     public void storePersonnel(Personnel pers) throws Exception {
@@ -97,7 +97,7 @@ public class JdbcAccess implements DBAccess {
         if (e != null) {
             return e;
         } else {
-            e = empDAO.load(persNr);
+            e = (Employee) persDAO.load(persNr); // TODO
             employeeCache.put(persNr, e);
             return e;
         }
@@ -163,8 +163,8 @@ public class JdbcAccess implements DBAccess {
         return this.comCarDAO.load(licensePlate);
     }
 
-    public List<CompanyCar> queryCompanyCar(String licensePlate) throws Exception {
-        return comCarDAO.query(licensePlate);
+    public List<CompanyCar> queryCompanyCarByModel(String model) throws Exception {
+        return comCarDAO.queryByModel(model);
     }
 
     public void storeCompanyCar(CompanyCar car) throws Exception {

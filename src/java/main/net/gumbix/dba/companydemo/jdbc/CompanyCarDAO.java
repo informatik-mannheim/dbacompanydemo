@@ -3,6 +3,7 @@ package net.gumbix.dba.companydemo.jdbc;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
@@ -38,8 +39,17 @@ public class CompanyCarDAO extends AbstractDAO {
     }
 
     // Loads an CompanyCar Object from Table "Firmenwagen" using the primary key
-    public List<CompanyCar> query(String licensePlate) throws Exception {
-        return null;
+    public List<CompanyCar> queryByModel(String model) throws Exception {
+        PreparedStatement prep = prepareStatement("select * from Firmenwagen" +
+                " where modell like ?");
+        prep.setString(1, model);
+        ResultSet rs = prep.executeQuery();
+        List<CompanyCar> list = new ArrayList<CompanyCar>();
+        while (rs.next()) {
+            // TODO Ouch!!! Very bad performance. Please revise.
+            list.add(load(rs.getString("nummernschild")));
+        }
+        return list;
     }
 
     // Store or Update an CompanyCar Object in Table "Firmenwagen"

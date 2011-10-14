@@ -1,19 +1,15 @@
 package net.gumbix.dba.companydemo.domain;
 
 /**
- * @project manager  Markus Gumbel (m.gumbel@hs-mannheim.de)
- * 
+ * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Marius Czardybon  (m.czardybon@gmx.net)
- * 
- * */
-
+ */
 public class Car {
 
 	private String model;
 	private String type;
 
 	public Car(){
-
 	}
 
 	public Car(String model) {
@@ -44,4 +40,7 @@ public class Car {
 		this.type = type;
 	}
 
+    public String toString() {
+        return type + " " + model;
+    }
 }

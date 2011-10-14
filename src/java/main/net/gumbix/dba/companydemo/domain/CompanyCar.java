@@ -44,4 +44,12 @@ public class CompanyCar {
             driver.setCar(this);
         }
     }
+
+    public String toString() {
+        String s = licensePlate + " (Modell: " + car + ")";
+        if (driver != null) {
+            s += " gefahren von " + driver;
+        }
+        return s;
+    }
 }

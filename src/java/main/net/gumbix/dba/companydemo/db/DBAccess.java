@@ -18,7 +18,7 @@ public interface DBAccess {
     // Personnel
     public Personnel loadPersonnel(long persNr) throws Exception;
 
-    public List<Personnel> loadPersonnel(String firstName, String lastName) throws Exception;
+    public List<Personnel> queryByName(String firstName, String lastName) throws Exception;
 
     public void storePersonnel(Personnel pers) throws Exception;
 
@@ -63,7 +63,7 @@ public interface DBAccess {
 
     public void storeCompanyCar(CompanyCar car) throws Exception;
 
-    public List<CompanyCar> queryCompanyCar(String licensePlate) throws Exception;
+    public List<CompanyCar> queryCompanyCarByModel(String model) throws Exception;
 
     public void deleteCompanyCar(CompanyCar car) throws Exception;
 

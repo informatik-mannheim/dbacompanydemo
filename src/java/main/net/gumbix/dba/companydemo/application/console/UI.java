@@ -173,6 +173,27 @@ public class UI {
                     }
                     break;
 
+                case 2:
+                    System.out.println("*** Arbeiter suchen (nach Nachname, Vorname) ***\n");
+
+                    System.out.println("Nachname (* möglich): ");
+                    String lastName = getUserInputString();
+
+                    System.out.println("Vorname (* möglich): ");
+                    String firstName = getUserInputString();
+
+                    System.out.println("Input: " + firstName + " " + lastName + "\n");
+
+                    List<Personnel> list = db.queryByName(firstName, lastName);
+
+                    if (!list.isEmpty()) {
+                        for (Personnel p : list) {
+                            System.out.println(p.toString());
+                        }
+                    } else {
+                        System.out.println("Keine(n) Mitarbeiter gefunden!\n");
+                    }
+                    break;
                 //menu "0 Zurück"
                 case 0:
                     break;
@@ -569,27 +590,7 @@ public class UI {
                 //menu "Firmenwagen einem Angestelltem zuordnen"
                 case 6:
 
-                    System.out.println("*** Firmenwagen einem Angestelltem zuordnen ***\n");
-
-                    // load and print the available cars
-                    comCarList = db.queryCompanyCar("*");
-                    //				comCarList = comCarDAO.load();
-                    printCompanyCar(comCarList);
-
-                    System.out.println("Personalnummer des Angestellten eingeben : ");
-                    persNrStr = getUserInputString();
-                    persNr = Long.valueOf(persNrStr);
-
-                    System.out.println("Nummernschild des Firmenwagen eingeben : ");
-                    String licensePlate = getUserInputString();
-
-                    comCar = db.loadCompanyCar(licensePlate);
-                    //				comCar = comCarDAO.load(licensePlate);
-
-                    emp.setPersonnelNumber(persNr);
-                    emp.setCar(comCar);
-
-                    // db.storeCompanyCar(emp);
+                    System.out.println("*** Firmenwagen einem Angestellten zuordnen ***\n");
 
                     break;
 
@@ -846,19 +847,30 @@ public class UI {
         do {
             System.out.println("*** Firmenwagen verwalten ***\n\n" +
                     "Was möchten Sie tun?\n\n" +
-                    "1 Firmenwagen anlegen\n" +
-                    "2 Firmenwagen löschen\n" +
-                    "3 Modell anlegen \n" +
-                    "4 Modell löschen\n\n" +
-                    "0 Zurück\n\n" +
-                    PROMPT);
+                    "1 Firmenwagen suchen (nach Modell)\n" +
+                    "2 Firmenwagen anlegen\n" +
+                    "3 Firmenwagen löschen\n" +
+                    "4 Modell anlegen \n" +
+                    "5 Modell löschen\n\n" +
+                    "0 Zurück");
 
             menuChoice = getMenuChoice();
 
             switch (menuChoice) {
 
-                //menu "Firmenwagen anlegen"
                 case 1:
+                    System.out.println("*** Firmenwagen suchen (nach Modell) ***\n");
+
+                    System.out.print("Modell eingeben (% Wildcard): ");
+                    String queryString = getUserInputString();
+                    List<CompanyCar> result = db.queryCompanyCarByModel(queryString);
+                    for (CompanyCar c : result) {
+                        System.out.println(c);
+                    }
+                    pressAnyKey();
+                    break;
+                //menu "Firmenwagen anlegen"
+                case 2:
                     System.out.println("*** Firmenwagen anlegen ***\n");
 
                     System.out.print("Modell: ");
@@ -874,7 +886,7 @@ public class UI {
                     db.storeCompanyCar(comCar);
                     break;
 
-                case 2:
+                case 3:
                     System.out.println("*** Firmenwagen löschen ***\n");
 
                     System.out.print("Nummernschild: ");
@@ -884,7 +896,7 @@ public class UI {
                     db.deleteCompanyCar(companyCar);
                     break;
 
-                case 3:
+                case 4:
                     System.out.println("*** Modell anlegen ***\n");
                     System.out.print("Marke: ");
                     String type = getUserInputString();
@@ -896,7 +908,7 @@ public class UI {
                     db.storeCar(car);
                     break;
 
-                case 4:
+                case 5:
                     System.out.println("*** Modell löschen ***\n");
                     System.out.println("Modell: ");
                     type = getUserInputString();

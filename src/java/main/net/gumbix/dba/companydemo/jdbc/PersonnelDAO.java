@@ -8,6 +8,7 @@ import net.gumbix.dba.companydemo.domain.Worker;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -72,52 +73,23 @@ public class PersonnelDAO extends AbstractDAO {
         return personnel;
     }
 
-    // Loads an list of Personnel Objects from Table "Mitarbeiter, Ort" using the first name and last name
-    public List<Personnel> load(String firstName, String lastName) throws Exception {
+    public List<Personnel> queryByName(String firstName, String lastName) throws Exception {
 
-        /*
         firstName = firstName.replace('*', '%');
         lastName = lastName.replace('*', '%');
 
-        ResultSet rs = executeSQLQuery("SELECT * FROM Mitarbeiter,Ort WHERE Mitarbeiter.plz = Ort.plz and vorname like " + "'" +
-                firstName + "'" + " AND nachname like " + "'" + lastName + "'");
-
+        ResultSet rs = executeSQLQuery("select * from Mitarbeiter" +"" +
+                " where vorname like " + "'" + firstName + "'" +
+                " and nachname like " + "'" + lastName + "'");
 
         List<Personnel> persons = new ArrayList<Personnel>();
 
         while (rs.next()) {
-
-            Personnel p = new Personnel();
-            Address adr = new Address();
-            GregorianCalendar birthDate = new GregorianCalendar();
-
-            p.setLastName(rs.getString("nachname"));
-            p.setFirstName(rs.getString("vorname"));
-            p.setPersonnelNumber(rs.getLong("personalNr"));
-            p.setPosition(rs.getString("funktion"));
-            p.setStreet(rs.getString("strasse"));
-            p.setHouseNo(rs.getString("hausNr"));
-            adr.setZip(rs.getString("plz"));
-            adr.setCity(rs.getString("ortsname"));
-            birthDate.setTime(rs.getDate("gebDatum"));
-            p.setBirthDate(birthDate);
-
-            if (rs.getLong("abteilungsNr") != 0) {
-                p.setDepartment(new DepartmentDAO().load(rs.getLong("abteilungsNr")));
-            }
-
-            if (rs.getLong("vorgesetzterNr") != 0) {
-                p.setBoss(new PersonnelDAO().load(rs.getLong("vorgesetzterNr")));
-            }
-
-            p.setAddress(adr);
-            persons.add(p);
-
+            // TODO Never do that, please revise!
+            persons.add(load(rs.getLong("personalNr")));
         }
 
         return persons;
-        */
-        return null;
     }
 
     // Store or Update an Personnel Object in Table "Mitarbeiter"

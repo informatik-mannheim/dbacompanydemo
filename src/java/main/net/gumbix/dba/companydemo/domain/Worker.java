@@ -26,6 +26,11 @@ public class Worker extends Personnel {
         this.workspace = workspace;
     }
 
+    public String toString() {
+        return getFirstName() + " " + getLastName() +
+                " (" + getPersonnelNumber() + " " + "Arbeiter)";
+    }
+
     public String toFullString() {
         return super.toFullString() + "\n" +
                "Arbeitsplatz: " + workspace;

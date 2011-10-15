@@ -75,7 +75,9 @@ public interface DBAccess {
     public void deleteAddress(Address adr) throws Exception;
 
     // Project
-    public Project loadProject(final long projNr) throws Exception;
+    public Project loadProject(long projNr) throws Exception;
+
+    public List<Project> queryProjectByDescription(String queryString) throws Exception;
 
     public void storeProject(Project proj) throws Exception;
 
@@ -89,9 +91,9 @@ public interface DBAccess {
     public void deleteStatusReport(StatusReport rep) throws Exception;
 
     // ...
-    public Set<WorksOn> loadWorksOn(Project proj) throws Exception;
+    public Set<WorksOn> loadWorksOn(Employee employee) throws Exception;
 
-    public WorksOn loadWorksOn(long persNr, long projNr) throws Exception;
+    public Set<WorksOn> loadWorksOn(Project proj) throws Exception;
 
     public void storeWorksOn(WorksOn wo) throws Exception;
 

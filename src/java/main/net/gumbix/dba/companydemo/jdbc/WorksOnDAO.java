@@ -1,35 +1,57 @@
 package net.gumbix.dba.companydemo.jdbc;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import net.gumbix.dba.companydemo.domain.Employee;
+import net.gumbix.dba.companydemo.domain.Project;
+import net.gumbix.dba.companydemo.domain.WorksOn;
+
 import java.sql.ResultSet;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.gumbix.dba.companydemo.domain.Employee;
-import net.gumbix.dba.companydemo.domain.Personnel;
-import net.gumbix.dba.companydemo.domain.Project;
-import net.gumbix.dba.companydemo.domain.WorksOn;
-
 /**
- * @author Marius Czardybon  (m.czardybon@gmx.net)
- * @project manager  Markus Gumbel (m.gumbel@hs-mannheim.de)
+ * @author Marius Czardybon (m.czardybon@gmx.net)
+ * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-
 public class WorksOnDAO extends AbstractDAO {
 
     public WorksOnDAO(JdbcAccess access) {
         super(access);
     }
 
-    // Loads an set of WorksOn Objects from Table "MitarbeiterArbeitetAnProjekt, Angestellter, Projekt" using the personnel number
-    public Set<WorksOn> load(Personnel pers) throws Exception {
-        return null;
+    public Set<WorksOn> load(Employee employee) throws Exception {
+        WorksOn wo;
+        Set<WorksOn> set = new HashSet<WorksOn>();
+
+        ResultSet rs = executeSQLQuery("select * from MitarbeiterArbeitetAnProjekt" +
+                " where personalNr = " + employee.getPersonnelNumber());
+
+        while (rs.next()) {
+            wo = new WorksOn();
+            wo.setEmployee(employee);
+            wo.setProject(access.loadProject(rs.getLong("projektNr")));
+            wo.setJob(rs.getString("taetigkeit"));
+            wo.setPercentage(rs.getDouble("prozAnteil"));
+            set.add(wo);
+        }
+        return set;
     }
 
-    // Loads an set of WorksOn Objects from Table "MitarbeiterArbeitetAnProjekt, Angestellter, Projekt" using the project number
     public Set<WorksOn> load(Project proj) throws Exception {
-        return null;
+        WorksOn wo;
+        Set<WorksOn> set = new HashSet<WorksOn>();
+
+        ResultSet rs = executeSQLQuery("select * from MitarbeiterArbeitetAnProjekt" +
+                " where projektNr = " + proj.getProjectNr());
+
+        while (rs.next()) {
+            wo = new WorksOn();
+            wo.setEmployee((Employee) access.loadPersonnel(rs.getLong("personalNr")));
+            wo.setProject(proj);
+            wo.setJob(rs.getString("taetigkeit"));
+            wo.setPercentage(rs.getDouble("prozAnteil"));
+            set.add(wo);
+        }
+        return set;
     }
 
     // Store or Update an WorksOn Object in Table "Projekt"

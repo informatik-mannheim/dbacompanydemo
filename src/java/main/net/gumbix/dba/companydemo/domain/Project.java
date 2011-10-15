@@ -6,12 +6,10 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @project manager  Markus Gumbel (m.gumbel@hs-mannheim.de)
+ * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
+ * @author Marius Czardybon (m.czardybon@gmx.net)
  * 
- * @author Marius Czardybon  (m.czardybon@gmx.net)
- * 
- * */
-
+ */
 public class Project {
 
 	private long projectNr;
@@ -70,4 +68,11 @@ public class Project {
 		this.employees.add(employees);
 	}
 
+    public String toString() {
+        return description + " (" + projectNr + ")";
+    }
+
+    public String toFullString() {
+        return toString();
+    }
 }

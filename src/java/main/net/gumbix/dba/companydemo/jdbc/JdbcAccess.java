@@ -26,9 +26,6 @@ public class JdbcAccess implements DBAccess {
     private WorkerDAO workDAO;
     private WorksOnDAO woOnDAO;
 
-    private WeakHashMap<Long, Employee> employeeCache
-            = new WeakHashMap<Long, Employee>();
-
     public Connection connection;
 
     public JdbcAccess() throws Exception {
@@ -91,16 +88,9 @@ public class JdbcAccess implements DBAccess {
     }
 
     // Employees...
-
     public Employee loadEmployee(long persNr) throws Exception {
-        Employee e = employeeCache.get(persNr);
-        if (e != null) {
-            return e;
-        } else {
-            e = (Employee) persDAO.load(persNr); // TODO
-            employeeCache.put(persNr, e);
-            return e;
-        }
+        // empDAO.load(persNr);
+        return (Employee) persDAO.load(persNr);
     }
 
     public List<Employee> loadEmployee(String firstName, String lastName) throws Exception {
@@ -160,7 +150,7 @@ public class JdbcAccess implements DBAccess {
 
     // CompanyCars...
     public CompanyCar loadCompanyCar(String licensePlate) throws Exception {
-        return this.comCarDAO.load(licensePlate);
+        return comCarDAO.load(licensePlate);
     }
 
     public List<CompanyCar> queryCompanyCarByModel(String model) throws Exception {
@@ -194,7 +184,11 @@ public class JdbcAccess implements DBAccess {
 
     // Projects...
     public Project loadProject(long projNr) throws Exception {
-        return this.projDAO.load(projNr);
+        return projDAO.load(projNr);
+    }
+
+    public List<Project> queryProjectByDescription(String queryString) throws Exception {
+        return projDAO.queryByDescription(queryString);
     }
 
     public void storeProject(Project proj) throws Exception {
@@ -219,22 +213,20 @@ public class JdbcAccess implements DBAccess {
     }
 
     // ---
-
-    public void deleteWorksOn(WorksOn wo) throws Exception {
-        this.woOnDAO.delete(wo);
+    public Set<WorksOn> loadWorksOn(Employee employee) throws Exception {
+        return woOnDAO.load(employee);
     }
 
     public Set<WorksOn> loadWorksOn(Project proj) throws Exception {
-        return this.woOnDAO.load(proj);
-    }
-
-    public WorksOn loadWorksOn(long persNr, long projNr) throws Exception {
-        // return this.woOnDAO.load(persNr, projNr);
-        return null;
+        return woOnDAO.load(proj);
     }
 
     public void storeWorksOn(WorksOn wo) throws Exception {
-        this.woOnDAO.store(wo);
+        woOnDAO.store(wo);
+    }
+
+    public void deleteWorksOn(WorksOn wo) throws Exception {
+        woOnDAO.delete(wo);
     }
 }
 

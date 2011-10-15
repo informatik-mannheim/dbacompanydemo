@@ -208,489 +208,47 @@ public class UI {
     }
 
 
-    private static void gotoArbeiterMenu() throws Exception {
-
-        int menuChoice;
-        Worker work;
-        List<Worker> workList;
-
-        //		WorkerDAO workDAO = new WorkerDAO();
-        //		PersonnelDAO persDAO = new PersonnelDAO();
-
-        do {
-            System.out.println("*** Arbeiter verwalten ***\n\n" +
-                    "Was möchten Sie tun?\n\n" +
-                    "1 Arbeiter suchen (nach Personalnummer)\n" +
-                    "2 Arbeiter suchen (nach Nachname, Vorname)\n" +
-                    "3 Arbeiter neu anlegen\n" +
-                    "4 Arbeiter editieren\n" +
-                    "5 Arbeiter loeschen\n\n" +
-                    "0 Zurück\n\n" +
-                    "Ihre Eingabe (Zahl): ");
-
-            menuChoice = getMenuChoice();
-
-            switch (menuChoice) {
-                //menu "Arbeiter suchen (nach Personalnummer)"
-                case 1:
-                    System.out.println("*** Arbeiter suchen (nach Personalnummer) ***\n");
-
-                    System.out.println("Personalnummer: ");
-                    String persNrStr = getUserInputString();
-                    long persNr = Long.valueOf(persNrStr);
-
-                    work = db.loadWorkers(persNr);
-                    //				work = workDAO.load(persNr);
-
-                    if (work.getPersonnelNumber() != 0) {
-
-                        printWorker(work);
-
-
-                    } else {
-                        System.out.println("Personalnummer nicht vergeben!\n");
-                    }
-
-
-                    break;
-
-                //menu "Arbeiter suchen (nach Nachname, Vorname)"
-                case 2:
-                    System.out.println("*** Arbeiter suchen (nach Nachname, Vorname) ***\n");
-
-                    System.out.println("Nachname (* m\u00f6glich): ");
-                    String lastName = getUserInputString();
-
-                    System.out.println("Vorname (* m\u00f6glich): ");
-                    String firstName = getUserInputString();
-
-                    System.out.println("Input: " + firstName + " " + lastName + "\n");
-
-                    workList = db.loadWorkers(firstName, lastName);
-                    //				workList = workDAO.load(firstName, lastName);
-
-                    if (!workList.isEmpty()) {
-                        for (Worker w : workList) {
-                            printWorker(w);
-
-                        }
-                    } else {
-                        System.out.println("Keine(n) Mitarbeiter gefunden!\n");
-                    }
-
-                    break;
-
-                //menu "Arbeiter neu anlegen"
-                case 3:
-                    System.out.println("*** Arbeiter anlegen ***\n");
-
-                    /*System.out.println("Personalnummer eingeben: "); not used because of auto incremented value in database
-                  persNrStr = getUserInputString();
-                  persNr = Long.valueOf(persNrStr);*/
-                    System.out.println("-------- Personalien -------- \n");
-                    System.out.println("Nachname eingeben: ");
-                    lastName = getUserInputString();
-
-                    System.out.println("Vorname eingeben: ");
-                    firstName = getUserInputString();
-
-                    System.out.println("Geburtsdatum eingeben z.B. 30.11.1957 :");
-                    String bDate = getUserInputString();
-
-                    System.out.println("-------- Adresse -------- \n");
-                    System.out.println("Strasse eingeben: ");
-                    String street = getUserInputString();
-
-                    System.out.println("Haus Nr. eingeben: ");
-                    String houseNo = getUserInputString();
-
-                    System.out.println("Postleitzahl eingeben: ");
-                    String zip = getUserInputString();
-
-                    System.out.println("Stadt eingeben: ");
-                    String city = getUserInputString();
-
-                    System.out.println("-------- Arbeitsplatz -------- \n");
-                    System.out.println("Arbeitsplatz eingeben: ");
-                    String workspace = getUserInputString();
-
-                    //create new Address object
-                    Address adr = new Address(zip, city);
-
-                    //create new Worker object
-                    Worker workerNew = new Worker(lastName, firstName, stringToGreg(bDate), adr, workspace);
-
-                    workerNew.setStreet(street);
-                    workerNew.setHouseNo(houseNo);
-
-                    //store the new Worker object in the database
-                    db.storeWorkers(workerNew);
-                    //				workDAO.store(workerNew);
-
-                    //let you see what was saved
-                    printWorker(db.loadWorkers(firstName, lastName).get(0));
-                    //				printWorker(workDAO.load(firstName, lastName).get(0));
-
-                    break;
-
-                //menu "Arbeiter editieren"
-                case 4:
-                    System.out.println("*** Arbeiter editieren ***\n");
-
-                    System.out.println("Personalnummer des zu bearbeitenden Mitarbeiters eingeben: ");
-                    persNrStr = getUserInputString();
-                    persNr = Long.valueOf(persNrStr);
-
-                    Worker workEdit = db.loadWorkers(persNr);
-                    //				Worker workEdit = workDAO.load(persNr);
-
-                    printWorker(workEdit);
-
-                    //check on "personnelEdit != null" did not work here
-                    if (workEdit.getPersonnelNumber() != 0) {
-
-                        System.out.println("Arbeitsplatz eingeben: ");
-                        workspace = getUserInputString();
-
-                        workEdit.setWorkspace(workspace);
-
-                        //store the new Worker object in the database
-                        db.storeWorkers(workEdit);
-                        //					workDAO.store(workEdit);
-
-                        //let you see what was saved
-                        printWorker(db.loadWorkers(workEdit.getPersonnelNumber()));
-                        //					printWorker(workDAO.load(workEdit.getPersonnelNumber()));
-
-                    } else {
-
-                        System.out.println("Personalnummer nicht vergeben!\n");
-
-                    }
-
-                    break;
-
-                //menu "Arbeiter loeschen"
-                case 5:
-
-                    System.out.println("*** Arbeiter löschen ***\n");
-                    System.out.println("Personalnummer des zu löschenden Arbeiters eingeben: ");
-                    persNrStr = getUserInputString();
-                    persNr = Long.valueOf(persNrStr);
-
-                    Worker personnelDelete = db.loadWorkers(persNr);
-                    //				Personnel personnelDelete = persDAO.load(persNr);
-
-                    //check on "personnelDelete != null" did not work here
-                    if (personnelDelete.getPersonnelNumber() != 0) {
-                        db.deleteWorkers(personnelDelete);
-                    } else {
-
-                        System.out.println("Personalnummer nicht vergeben! L\u00f6schen nicht m\u00f6glich! \n");
-
-                    }
-
-
-                    break;
-
-                //menu "0 Zurück"
-                case 0:
-                    break;
-
-                default:
-                    System.out.println("Fehlerhafte Eingabe");
-                    break;
-            }
-        }
-        while (menuChoice != 0);
-    }
-
-    private static void gotoAngestellteMenu() throws Exception {
-
-        int menuChoice;
-
-        //		EmployeeDAO empDAO = new EmployeeDAO();
-        Employee emp = new Employee();
-
-        List<Employee> empList;
-        List<CompanyCar> comCarList;
-
-        //		PersonnelDAO persDAO = new PersonnelDAO();
-
-        //		CompanyCarDAO comCarDAO = new CompanyCarDAO();
-        CompanyCar comCar = new CompanyCar();
-        //		WorksOnDAO woDAO = new WorksOnDAO();
-        WorksOn wo = new WorksOn();
-        //		ProjectDAO projDAO = new ProjectDAO();
-        Project proj = new Project();
-
-
-        do {
-            System.out.println("*** Angestellte verwalten ***\n\n" +
-                    "Was möchten Sie tun?\n\n" +
-                    "1 Angestellten suchen (nach Personalnummer)\n" +
-                    "2 Angestellten suchen (nach Nachname, Vorname)\n" +
-                    "3 Angestellten neu anlegen\n" +
-                    "4 Angestellten editieren\n" +
-                    "5 Angestellten löschen\n\n" +
-                    "6 Firmenwagen einem Angestellten zuordnen\n" +
-                    "7 Firmenwagen einem Angestellten entziehen\n\n" +
-                    "8 Angestellten einem Projekt zuordnen\n" +
-                    "9 Angestellten von einem Projekt abziehen\n\n" +
-                    "0 Zurück\n\n" +
-                    PROMPT);
-
-            menuChoice = getMenuChoice();
-
-            switch (menuChoice) {
-                //menu "Angestellten suchen (nach Personalnummer)"
-                case 1:
-                    System.out.println("*** Angestellten suchen (nach Personalnummer) ***\n");
-
-                    System.out.println("Personalnummer : ");
-                    String persNrStr = getUserInputString();
-                    long persNr = Long.valueOf(persNrStr);
-
-                    emp = db.loadEmployee(persNr);
-                    //				emp = empDAO.load(persNr);
-
-                    if (emp.getPersonnelNumber() != 0) {
-
-                        printEmployee(emp);
-
-                    } else {
-                        System.out.println("Personalnummer nicht vergeben!\n");
-                    }
-
-
-                    break;
-
-                //menu "Angestellten suchen (nach Nachname, Vorname)"
-                case 2:
-                    System.out.println("*** Angestellten suchen (nach Nachname, Vorname) ***\n");
-
-                    System.out.println("Nachname (* m\u00f6glich): ");
-                    String lastName = getUserInputString();
-
-                    System.out.println("Vorname (* m\u00f6glich): ");
-                    String firstName = getUserInputString();
-
-                    System.out.println("Input: " + firstName + " " + lastName + "\n");
-
-                    empList = db.loadEmployee(firstName, lastName);
-                    //				empList = empDAO.load(firstName, lastName);
-
-                    if (!empList.isEmpty()) {
-                        for (Employee e : empList) {
-                            printEmployee(e);
-
-                        }
-                    } else {
-                        System.out.println("Keine(n) Angestellten gefunden!\n");
-                    }
-
-                    break;
-                //menu "Angestellten neu anlegen"
-                case 3:
-                    System.out.println("*** Angestellten anlegen ***\n");
-
-                    /*System.out.println("Personalnummer eingeben: "); not used because of auto incremented value in database
-                  persNrStr = getUserInputString();
-                  persNr = Long.valueOf(persNrStr);*/
-                    System.out.println("-------- Personalien -------- \n");
-                    System.out.println("Nachname eingeben: ");
-                    lastName = getUserInputString();
-
-                    System.out.println("Vorname eingeben: ");
-                    firstName = getUserInputString();
-
-                    System.out.println("Geburtsdatum eingeben z.B. 30.11.1957 :");
-                    String bDate = getUserInputString();
-
-                    System.out.println("-------- Adresse -------- \n");
-                    System.out.println("Strasse eingeben: ");
-                    String street = getUserInputString();
-
-                    System.out.println("Haus Nr. eingeben: ");
-                    String houseNo = getUserInputString();
-
-                    System.out.println("Postleitzahl eingeben: ");
-                    String zip = getUserInputString();
-
-                    System.out.println("Stadt eingeben: ");
-                    String city = getUserInputString();
-
-                    System.out.println("-------- TelefonNr -------- \n");
-                    System.out.println("TelefonNr eingeben: ");
-                    String telNr = getUserInputString();
-
-                    //create new Address object
-                    Address adr = new Address(zip, city);
-
-                    //create new Employee object
-                    Employee empNew = new Employee(lastName, firstName, stringToGreg(bDate), adr, telNr);
-
-                    empNew.setStreet(street);
-                    empNew.setHouseNo(houseNo);
-
-                    //store the new Employee object in the database
-                    db.storeEmployee(empNew);
-                    //				empDAO.store(empNew);
-
-                    //let you see what was saved
-                    printEmployee(db.loadEmployee(firstName, lastName).get(0));
-                    //				printEmployee(empDAO.load(firstName, lastName).get(0));
-
-                    break;
-
-                //menu "Angestellten editieren"
-                case 4:
-
-                    System.out.println("*** Angestellten editieren ***\n");
-
-                    System.out.println("Personalnummer des zu bearbeitenden Angestellten eingeben: ");
-                    persNrStr = getUserInputString();
-                    persNr = Long.valueOf(persNrStr);
-
-                    emp = db.loadEmployee(persNr);
-                    //				emp = empDAO.load(persNr);
-
-                    printEmployee(emp);
-
-                    System.out.println("Neue Tel.Nr. eingeben: ");
-                    telNr = getUserInputString();
-
-                    emp.setPhoneNumber(telNr);
-
-                    db.storeEmployee(emp);
-                    //				empDAO.store(emp);
-
-                    break;
-
-                //menu "Angestellten löschen"
-                case 5:
-
-                    System.out.println("*** Angestellten löschen ***\n");
-
-                    System.out.println("Personalnummer des zu loeschenden Angestellten eingeben: ");
-                    persNrStr = getUserInputString();
-                    persNr = Long.valueOf(persNrStr);
-
-                    Employee personnelDelete = db.loadEmployee(persNr);
-                    //				Personnel personnelDelete = persDAO.load(persNr);
-
-                    //check on "personnelDelete != null" did not work here
-                    if (personnelDelete.getPersonnelNumber() != 0) {
-                        db.deleteEmployee(personnelDelete);
-                    } else {
-                        System.out.println("Personalnummer nicht vergeben! Löschen nicht möglich! \n");
-                    }
-                    break;
-
-                //menu "Firmenwagen einem Angestelltem zuordnen"
-                case 6:
-
-                    System.out.println("*** Firmenwagen einem Angestellten zuordnen ***\n");
-
-                    break;
-
-                //menu "Firmenwagen einem Angestelltem entziehen"
-                case 7:
-
-                    System.out.println("*** Firmenwagen einem Angestelltem entziehen ***\n");
-
-                    System.out.println("Personalnummer des Angestellten eingeben : ");
-                    persNrStr = getUserInputString();
-                    persNr = Long.valueOf(persNrStr);
-
-                    emp = db.loadEmployee(persNr);
-                    //				emp = empDAO.load(persNr);
-
-                    empNew = new Employee();
-
-                    empNew.setCar(emp.getCar());
-
-                    db.storeCompanyCar(emp.getCar());
-                    //				comCarDAO.store(empNew);
-
-
-                    break;
-
-                //menu "Angestellten einem Projekt zuordnen"
-                case 8:
-
-                    System.out.println("*** Angestellten einem Projekt zuordnen ***\n");
-
-                    System.out.println("Personalnummer des Angestellten eingeben : ");
-                    persNrStr = getUserInputString();
-                    persNr = Long.valueOf(persNrStr);
-
-                    System.out.println("Projektnummer eingeben : ");
-                    persNrStr = getUserInputString();
-                    long projNr = Long.valueOf(persNrStr);
-
-                    System.out.println("Taetigkeit eingeben : ");
-                    String job = getUserInputString();
-
-                    System.out.println("Arbeitszeit Anteil eingeben : ");
-                    persNrStr = getUserInputString();
-                    double percentage = Double.valueOf(persNrStr);
-
-                    emp = db.loadEmployee(persNr);
-                    //				emp = empDAO.load(persNr);
-                    proj = db.loadProject(projNr);
-                    //				proj = projDAO.load(projNr);
-
-                    wo.setEmployee(emp);
-                    wo.setProject(proj);
-                    wo.setPercentage(percentage);
-                    wo.setJob(job);
-
-                    db.storeWorksOn(wo);
-                    //				woDAO.store(wo);
-
-
-                    break;
-
-                //menu "Angestellten von einem Projekt abziehen"
-                case 9:
-
-                    System.out.println("*** Angestellten von einem Projekt abziehen ***\n");
-
-                    System.out.println("Personalnummer des Angestellten eingeben : ");
-                    persNrStr = getUserInputString();
-                    persNr = Long.valueOf(persNrStr);
-
-                    emp = db.loadEmployee(persNr);
-                    //				emp = empDAO.load(persNr);
-                    printEmployee(emp);
-
-                    System.out.println("Projektnummer eingeben : ");
-                    persNrStr = getUserInputString();
-                    projNr = Long.valueOf(persNrStr);
-
-                    proj = db.loadProject(projNr);
-                    //				proj = projDAO.load(projNr);
-
-                    wo.setEmployee(emp);
-                    wo.setProject(proj);
-
-                    db.deleteWorksOn(wo);
-                    //				woDAO.delete(wo);
-
-                    break;
-                //menu "0 Zurück"
-                case 0:
-                    break;
-
-                default:
-                    System.out.println("Fehlerhafte Eingabe");
-                    break;
-            }
-        }
-        while (menuChoice != 0);
-
-
+    private void createPersonnel(Personnel personnel) throws Exception {
+        System.out.println("*** Arbeiter anlegen ***\n");
+
+        /*System.out.println("Personalnummer eingeben: "); not used because of auto incremented value in database
+      persNrStr = getUserInputString();
+      persNr = Long.valueOf(persNrStr);*/
+        System.out.println("-------- Personalien -------- \n");
+        System.out.print("Nachname eingeben: ");
+        String lastName = getUserInputString();
+
+        System.out.print("Vorname eingeben: ");
+        String firstName = getUserInputString();
+
+        System.out.print("Geburtsdatum eingeben (z.B. 30.11.1957):");
+        String bDate = getUserInputString();
+
+        System.out.println("-------- Adresse -------- \n");
+        System.out.println("Strasse eingeben: ");
+        String street = getUserInputString();
+
+        System.out.println("Haus Nr. eingeben: ");
+        String houseNo = getUserInputString();
+
+        System.out.println("Postleitzahl eingeben: ");
+        String zip = getUserInputString();
+
+        System.out.println("Stadt eingeben: ");
+        String city = getUserInputString();
+
+        System.out.println("-------- Arbeitsplatz -------- \n");
+        System.out.println("Arbeitsplatz eingeben: ");
+        String workspace = getUserInputString();
+
+        Address adr = new Address(zip, city);
+
+        personnel.setLastName(lastName);
+        personnel.setFirstName(firstName);
+        personnel.setBirthDate(stringToGreg(bDate));
+        personnel.setAddress(adr);
+        personnel.setStreet(street);
+        personnel.setHouseNo(houseNo);
     }
 
     private static void gotoProjekteMenu() throws Exception {
@@ -706,62 +264,56 @@ public class UI {
 
         do {
             System.out.println("*** Projekte verwalten ***\n\n" +
-                    "Was muechten Sie tun?\n\n" +
-                    "1 Projekt ausgeben\n" +
-                    "2 Projekt alnegen \n" +
+                    "Was möchten Sie tun?\n\n" +
+                    "1 Projekt suchen (nach Bezeichnung)\n" +
+                    "2 Projekt anlegen \n" +
                     "3 Projekt löschen\n\n" +
                     "4 Statusberichte ausgeben\n" +
                     "5 Statusbericht eingeben\n" +
-                    "6 Statusbericht Aendern\n\n" +
-                    "0 Zurück\n\n" +
-                    "Ihre Eingabe (Zahl): ");
+                    "6 Statusbericht ändern\n\n" +
+                    "0 Zurück");
 
             menuChoice = getMenuChoice();
 
             switch (menuChoice) {
-
-                //menu "Projekt ausgeben"
                 case 1:
-                    System.out.println("*** Projekt ausgeben ***\n");
+                    System.out.println("*** Projekt suchen (nach Bezeichnung) ***\n");
 
-                    System.out.println("ProjektNr : ");
-                    String persNrStr = getUserInputString();
-                    long projNr = Long.valueOf(persNrStr);
-
-                    proj = db.loadProject(projNr);
-                    //				proj = projDAO.load(projNr);
-
-                    printProject(proj);
-
+                    System.out.print("Bezeichnung (* erlaubt): ");
+                    String description = getUserInputString();
+                    List<Project> list = db.queryProjectByDescription(description);
+                    for (Project p : list) {
+                        System.out.println(p);
+                        for (WorksOn w : p.getEmployees()) {
+                            System.out.println(" " + w.getEmployee());
+                        }
+                        System.out.println("---");
+                    }
+                    pressAnyKey();
                     break;
 
-                //menu "Projekt anlegen"
                 case 2:
                     System.out.println("*** Projekt anlegen ***\n");
 
-                    System.out.println("Projekt bezeichnung : ");
-                    String description = getUserInputString();
+                    System.out.print("Projektbezeichnung: ");
+                    description = getUserInputString();
 
                     proj.setDescription(description);
-
                     db.storeProject(proj);
-                    //				projDAO.store(proj);
-
-                    printProject(proj);
-
                     break;
 
                 //menu "Projekt löschen"
                 case 3:
                     System.out.println("*** Projekt löschen ***\n");
 
-                    System.out.println("ProjektNr : ");
-                    persNrStr = getUserInputString();
-                    projNr = Long.valueOf(persNrStr);
-
-                    // db.deleteProject(projNr);
-                    //				projDAO.delete(projNr);
-
+                    System.out.print("Projektnr : ");
+                    long projNumber = getUserInputLong();
+                    try {
+                        Project project = db.loadProject(projNumber);
+                        db.deleteProject(project);
+                    } catch (ObjectNotFoundException e) {
+                        System.out.println("Projekt kann nicht gelöscht werden, da nicht vorhanden.");
+                    }
                     break;
 
                 //menu "Statusberichte ausgeben"
@@ -769,8 +321,8 @@ public class UI {
                     System.out.println("*** Statusberichte ausgeben ***\n");
 
                     System.out.println("ProjektNr : ");
-                    persNrStr = getUserInputString();
-                    projNr = Long.valueOf(persNrStr);
+                    String persNrStr = getUserInputString();
+                    long projNr = Long.valueOf(persNrStr);
 
                     statList = db.loadStatusReport(projNr);
                     //				statList = statDAO.load(projNr);

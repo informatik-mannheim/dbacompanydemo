@@ -6,7 +6,7 @@ import java.util.Set;
 
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
- * @author Marius Czardybon  (m.czardybon@gmx.net)
+ * @author Marius Czardybon (m.czardybon@gmx.net)
  */
 public class Employee extends Personnel {
 
@@ -51,12 +51,27 @@ public class Employee extends Personnel {
 		this.projects = projects;
 	}
 
-	public void setProjects(WorksOn projects) {
-		this.projects.add(projects);
+	public void addProject(WorksOn project) {
+		projects.add(project);
 	}
 
+    public String toString() {
+        return getFirstName() + " " + getLastName() +
+                " (" + getPersonnelNumber() + " " + "Angestellter)";
+    }
+
     public String toFullString() {
-        return super.toFullString() + "\n" +
+        String s =  super.toFullString() + "\n" +
                "Telefon:    " + phoneNumber;
+        if (car != null) {
+            s += "\nAuto:    " + car;
+        }
+        if (!projects.isEmpty()) {
+            s += "\nProjekte:    ";
+            for (WorksOn w : projects) {
+                s += w.getProject() + "; ";
+            }
+        }
+        return s;
     }
 }

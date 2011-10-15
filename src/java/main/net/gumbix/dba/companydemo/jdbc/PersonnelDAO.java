@@ -1,30 +1,32 @@
 package net.gumbix.dba.companydemo.jdbc;
 
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
-import net.gumbix.dba.companydemo.domain.Address;
-import net.gumbix.dba.companydemo.domain.Employee;
-import net.gumbix.dba.companydemo.domain.Personnel;
-import net.gumbix.dba.companydemo.domain.Worker;
+import net.gumbix.dba.companydemo.domain.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Patrick Sturm
  * @author Marius Czardybon (m.czardybon@gmx.net)
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-
 public class PersonnelDAO extends AbstractDAO {
+
+    public WeakHashMap<Long, Personnel> cache
+            = new WeakHashMap<Long, Personnel>();
 
     public PersonnelDAO(JdbcAccess access) {
         super(access);
     }
 
     public Personnel load(long personalNr) throws Exception {
+        // Try to find it in the cache first:
+        Personnel e = cache.get(personalNr);
+        if (e != null) {
+            return e;
+        }
 
         ResultSet rs = executeSQLQuery("select * from Personnel p" +
                 " where p.personalNr = " + personalNr);
@@ -34,15 +36,26 @@ public class PersonnelDAO extends AbstractDAO {
         GregorianCalendar birthDate = new GregorianCalendar();
 
         if (rs.next()) {
-
             if (rs.getLong("wPersNr") != 0) {
-                personnel = new Worker();
+                personnel = createAndCache(personalNr, new Worker());
                 ((Worker) personnel).setWorkspace(rs.getString("arbeitsplatz"));
             } else if (rs.getLong("aPersNr") != 0) {
-                personnel = new Employee();
-                ((Employee) personnel).setPhoneNumber(rs.getString("telefonNr"));
+                personnel = createAndCache(personalNr, new Employee());
+                Employee employee = (Employee) personnel;
+                employee.setPhoneNumber(rs.getString("telefonNr"));
+                // Try to assign a company car:
+                ResultSet rsC = executeSQLQuery("select * from Firmenwagen f" +
+                        " where f.personalNr = " + personalNr);
+                if (rsC.next()) {
+                    CompanyCar car = access.loadCompanyCar(rsC.getString("nummernschild"));
+                    employee.setCar(car);
+                }
+                rsC.close();
+                // Try to load projects:
+                Set<WorksOn> wOns = access.loadWorksOn(employee);
+                employee.setProjects(wOns);
             } else {
-                personnel = new Personnel();
+                personnel = createAndCache(personalNr, new Personnel());
             }
             personnel.setLastName(rs.getString("nachname"));
             personnel.setFirstName(rs.getString("vorname"));
@@ -70,6 +83,8 @@ public class PersonnelDAO extends AbstractDAO {
         } else {
             throw new ObjectNotFoundException(Personnel.class, personalNr + "");
         }
+
+        rs.close();
         return personnel;
     }
 
@@ -78,7 +93,7 @@ public class PersonnelDAO extends AbstractDAO {
         firstName = firstName.replace('*', '%');
         lastName = lastName.replace('*', '%');
 
-        ResultSet rs = executeSQLQuery("select * from Mitarbeiter" +"" +
+        ResultSet rs = executeSQLQuery("select * from Mitarbeiter" +
                 " where vorname like " + "'" + firstName + "'" +
                 " and nachname like " + "'" + lastName + "'");
 
@@ -94,6 +109,8 @@ public class PersonnelDAO extends AbstractDAO {
 
     // Store or Update an Personnel Object in Table "Mitarbeiter"
     public void store(Personnel pers) throws Exception {
+
+        // TODO consider cache!
 
         /*
         PreparedStatement pstmt;
@@ -132,10 +149,16 @@ public class PersonnelDAO extends AbstractDAO {
     }
 
     // Delete an Personnel Object from Table "Mitarbeiter"
-    public void delete(long personalNr) throws Exception {
+    public void delete(Personnel personnel) throws Exception {
         PreparedStatement pstmt =
                 access.connection.prepareStatement("delete from Mitarbeiter where personalNr = ?");
-        pstmt.setLong(1, personalNr);
+        pstmt.setLong(1, personnel.getPersonnelNumber());
         pstmt.execute();
+    }
+
+    private Personnel createAndCache(long personalNr, Personnel personnel) {
+        cache.put(personalNr, personnel);
+        personnel.setPersonnelNumber(personalNr);
+        return personnel;
     }
 }

@@ -46,9 +46,14 @@ public class CompanyCar {
     }
 
     public String toString() {
-        String s = licensePlate + " (Modell: " + car + ")";
+        return licensePlate;
+    }
+
+    public String toFullString() {
+        String s = "Nummernschild: " + licensePlate +
+                 "\nModell:        " + car;
         if (driver != null) {
-            s += " gefahren von " + driver;
+            s += "\nFahrer:        " + driver;
         }
         return s;
     }

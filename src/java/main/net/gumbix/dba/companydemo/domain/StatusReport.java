@@ -1,5 +1,6 @@
 package net.gumbix.dba.companydemo.domain;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -55,10 +56,10 @@ public class StatusReport {
     }
 
     public String toFullString() {
+        DateFormat df = DateFormat.getDateInstance(DateFormat.DATE_FIELD);
+
         return "Nummer: " + continuousNumber +
-                "\nDatum:  " + date.get(Calendar.DAY_OF_MONTH) + "." +
-                date.get(Calendar.MONTH) + "." +
-                date.get(Calendar.YEAR) +
+                "\nDatum:  " + df.format(date.getTime()) +
                 "\nInhalt: " + content;
     }
 }

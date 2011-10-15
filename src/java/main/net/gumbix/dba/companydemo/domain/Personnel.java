@@ -1,5 +1,6 @@
 package net.gumbix.dba.companydemo.domain;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -116,9 +117,11 @@ public class Personnel {
     }
 
     public String toFullString() {
+        DateFormat df = DateFormat.getDateInstance(DateFormat.DATE_FIELD);
+
         String base =
                 "Name:       " + firstName + " " + lastName + "\n" +
-                "Geb.-Datum: " + birthDate.get(Calendar.YEAR) + "\n" +
+                "Geb.-Datum: " + df.format(birthDate.getTime()) + "\n" +
                 "Adresse:    " + street + " " + houseNo +
                         ", " + address.getZip() + " " + address.getCity();
         String depString = "";

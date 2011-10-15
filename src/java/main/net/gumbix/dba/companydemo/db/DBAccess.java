@@ -1,16 +1,18 @@
 package net.gumbix.dba.companydemo.db;
 
+import net.gumbix.dba.companydemo.domain.*;
+
 import java.util.List;
 import java.util.Set;
 
-import net.gumbix.dba.companydemo.domain.*;
-
-
 /**
+ * This interface contains all methods to interact with the database.
+ * Each database implementation/technology implements this interface.
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
 public interface DBAccess {
 
+    // Experimental...
     public Object load(Class clazz, long id) throws Exception;
 
     public void delete(Object object) throws Exception;
@@ -90,7 +92,7 @@ public interface DBAccess {
 
     public void deleteStatusReport(StatusReport rep) throws Exception;
 
-    // ...
+    // Relationship (n:m) between employees and projects.
     public Set<WorksOn> loadWorksOn(Employee employee) throws Exception;
 
     public Set<WorksOn> loadWorksOn(Project proj) throws Exception;

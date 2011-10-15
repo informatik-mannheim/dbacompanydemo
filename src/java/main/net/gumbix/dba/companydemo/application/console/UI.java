@@ -2,6 +2,7 @@ package net.gumbix.dba.companydemo.application.console;
 
 import net.gumbix.dba.companydemo.db.DBAccess;
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
+import net.gumbix.dba.companydemo.db4o.Db4oAccess;
 import net.gumbix.dba.companydemo.domain.*;
 import net.gumbix.dba.companydemo.jdbc.JdbcAccess;
 
@@ -17,7 +18,6 @@ import java.util.Locale;
  * @author Patrick Sturm
  * @author Marius Czardybon (m.czardybon@gmx.net)
  */
-
 public class UI {
 
     private static String PROMPT = "Ihre Eingabe (Zahl): ";
@@ -25,14 +25,13 @@ public class UI {
     private static DBAccess db;
 
     public static void main(String[] args) {
-
         try {
             selectDB();
         } catch (Exception e) {
             System.out.println("### Fehler verursacht: " + e.getMessage());
             e.printStackTrace();
             System.out.println("### Das Programm wird neu gestartet.\n\n");
-            main(null);
+            main(null);  // Will result in a stack overflow some times...
         }
     }
 
@@ -72,7 +71,7 @@ public class UI {
                     break;
 
                 case 5:
-                    // db = new Db4oAccess();
+                    db = new Db4oAccess();
                     menu();
                     break;
 
@@ -399,7 +398,7 @@ public class UI {
                 case 1:
                     System.out.println("*** Firmenwagen suchen (nach Modell) ***\n");
 
-                    System.out.print("Modell eingeben (% Wildcard): ");
+                    System.out.print("Modell eingeben (* Wildcard): ");
                     String queryString = getUserInputString();
                     List<CompanyCar> result = db.queryCompanyCarByModel(queryString);
                     for (CompanyCar c : result) {
@@ -570,9 +569,8 @@ public class UI {
     }
 
     /**
-     * Hilfsmethoden
+     * Helper methods.
      */
-
     private static GregorianCalendar stringToGreg(String bDate) throws Exception {
 
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
@@ -582,119 +580,6 @@ public class UI {
         calendar.setTime(date);
 
         return calendar;
-
-    }
-
-    private static void printPersonnel(Personnel pers) {
-
-        DateFormat df = DateFormat.getDateInstance(DateFormat.DATE_FIELD);
-
-        System.out.println(
-                "----------------------------- >> " + "Personalnummer : " + pers.getPersonnelNumber() + " << -----------------------------" + "\n" +
-                        "Name          : " + pers.getFirstName() + " " + pers.getLastName() + "\n" +
-                        "Anschrift     : " + pers.getStreet() + " " + pers.getHouseNo() + "\n" +
-                        "                " + pers.getAddress().getZip() + " " + pers.getAddress().getCity() + " " + "\n" +
-                        "Geburtsdatum  : " + df.format(pers.getBirthDate().getTime()) + "\n");
-
-        if (pers.getPosition() != null) {
-            System.out.println(
-                    "Funktion      : " + pers.getPosition() + "\n");
-        }
-
-        if (pers.getDepartment() != null) {
-            System.out.println(
-                    "Abteilung     : " + pers.getDepartment().getName() + "\n" +
-                            "AbteilungsNr. : " + pers.getDepartment().getDepNumber() + "\n");
-        }
-
-        if (pers.getBoss() != null) {
-
-            System.out.println(
-                    "Vorgesetzter  : " + pers.getBoss().getFirstName() + " " + pers.getBoss().getLastName() + "\n" +
-                            "PersonalNr.   : " + pers.getBoss().getPersonnelNumber() + "\n");
-        }
-    }
-
-    private static void printWorker(Worker work) {
-
-        printPersonnel(work);
-
-        System.out.println("Arbeitsplatz  : " + work.getWorkspace() + "\n");
-
-    }
-
-    private static void printEmployee(Employee emp) {
-
-        printPersonnel(emp);
-
-        System.out.println("tel.          : " + emp.getPhoneNumber() + "\n");
-
-        if (emp.getCar().getLicensePlate() != null) {
-            System.out.println("Firmenwagen   : " + emp.getCar().getCar().getType() + " " + emp.getCar().getCar().getModel() + "\n" +
-                    "Nummernschild : " + emp.getCar().getLicensePlate() + "\n");
-
-        }
-
-        System.out.println("------------- Projekte ------------- \n");
-
-        if (emp.getProjects() != null) {
-
-            for (WorksOn e : emp.getProjects()) {
-
-                System.out.println(
-                        "ProjektNr     : " + e.getProject().getProjectNr() + "\n" +
-                                "Bezeichnung   : " + e.getProject().getDescription() + "\n" +
-                                "Taetigkeit    : " + e.getJob() + "\n" +
-                                "ZeitAnteil    : " + e.getPercentage() + "\n\n");
-
-            }
-        }
-
-    }
-
-    private static void printProject(Project proj) {
-
-        System.out.println("------ Projekt Nummer " + proj.getProjectNr() + " ------");
-        System.out.println("Projektname : " + proj.getDescription() + "\n");
-
-        if (!proj.getEmployees().isEmpty()) {
-
-            System.out.println("------ Beteiligte ------\n");
-
-            for (WorksOn wo : proj.getEmployees()) {
-
-                System.out.println("Name        : " + wo.getEmployee() + "\nTaetigkeit   : " + wo.getJob() + "\n");
-            }
-        }
-    }
-
-    private static void printStatusReport(List<StatusReport> statList) {
-
-        DateFormat df = DateFormat.getDateInstance(DateFormat.DATE_FIELD);
-
-        for (StatusReport stat : statList) {
-
-            System.out.println("Bericht Nummer : " + stat.getContinuousNumber() + "\n" +
-                    "Erstellt am    : " + df.format(stat.getDate().getTime()) + "\n" +
-                    "Inhalt         : " + stat.getContent() + "\n");
-        }
-    }
-
-    private static void printCompanyCar(List<CompanyCar> comCarList) {
-
-        System.out.println("Zur Verfügung stehende Autos : \n");
-
-        for (CompanyCar comCar : comCarList) {
-
-            System.out.println("Firmenwagen   : " + comCar.getCar().getType() + " " + comCar.getCar().getModel() + "\n" +
-                    "Nummernschild : " + comCar.getLicensePlate() + "\n");
-        }
-    }
-
-    private static void printDepartment(Department dep) {
-
-        System.out.println("Abteilungsnummer : " + dep.getDepNumber() + "\n" +
-                "Abteilungsname   : " + dep.getName() + "\n\n");
     }
 
     private static int getMenuChoice() throws Exception {

@@ -38,9 +38,10 @@ public class StatusReportDAO extends AbstractDAO {
     }
 
     public void store(StatusReport statusReport) throws Exception {
-
+        // TODO
     }
 
     public void delete(StatusReport statusReport) throws Exception {
+        // TODO
     }
 }

@@ -12,19 +12,18 @@ import net.gumbix.dba.companydemo.domain.*;
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Marius Czardybon (m.czardybon@gmx.net)
  */
-
 public class JdbcAccess implements DBAccess {
 
-    private AddressDAO adrDAO;
-    private CarDAO carDAO;
-    private CompanyCarDAO comCarDAO;
-    private DepartmentDAO depDAO;
+    private AddressDAO adrDAO = new AddressDAO(this);
+    private CarDAO carDAO = new CarDAO(this);
+    private CompanyCarDAO comCarDAO = new CompanyCarDAO(this);
+    private DepartmentDAO depDAO = new DepartmentDAO(this);
     private PersonnelDAO persDAO = new PersonnelDAO(this);
     private EmployeeDAO empDAO = new EmployeeDAO(this);
-    private ProjectDAO projDAO;
-    private StatusReportDAO statDAO;
-    private WorkerDAO workDAO;
-    private WorksOnDAO woOnDAO;
+    private ProjectDAO projDAO = new ProjectDAO(this);
+    private StatusReportDAO statDAO = new StatusReportDAO(this);
+    private WorkerDAO workDAO = new WorkerDAO(this);
+    private WorksOnDAO woOnDAO = new WorksOnDAO(this);
 
     public Connection connection;
 
@@ -41,14 +40,6 @@ public class JdbcAccess implements DBAccess {
     public JdbcAccess(String url, String user, String pwd) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         connection = DriverManager.getConnection(url, user, pwd);
-        adrDAO = new AddressDAO(this);
-        carDAO = new CarDAO(this);
-        comCarDAO = new CompanyCarDAO(this);
-        depDAO = new DepartmentDAO(this);
-        projDAO = new ProjectDAO(this);
-        statDAO = new StatusReportDAO(this);
-        workDAO = new WorkerDAO(this);
-        woOnDAO = new WorksOnDAO(this);
     }
 
     public Object load(Class clazz, long id) throws Exception {
@@ -56,6 +47,7 @@ public class JdbcAccess implements DBAccess {
     }
 
     public void delete(Object object) throws Exception {
+        // TODO
     }
 
     // Personnel
@@ -94,11 +86,11 @@ public class JdbcAccess implements DBAccess {
     }
 
     public List<Employee> loadEmployee(String firstName, String lastName) throws Exception {
-        return this.empDAO.load(firstName, lastName);
+        return empDAO.load(firstName, lastName);
     }
 
     public void storeEmployee(Employee emp) throws Exception {
-        this.empDAO.store(emp);
+        empDAO.store(emp);
     }
 
     public void deleteEmployee(Employee emp) throws Exception {
@@ -107,28 +99,28 @@ public class JdbcAccess implements DBAccess {
 
     // Worker...
     public Worker loadWorkers(long persNr) throws Exception {
-        return this.workDAO.load(persNr);
+        return workDAO.load(persNr);
     }
 
     public List<Worker> loadWorkers(String firstName, String lastName) throws Exception {
-        return this.workDAO.load(firstName, lastName);
+        return workDAO.load(firstName, lastName);
     }
 
     public void storeWorkers(Worker work) throws Exception {
-        this.workDAO.store(work);
+        workDAO.store(work);
     }
 
     public void deleteWorkers(Worker worker) throws Exception {
-        this.workDAO.delete(worker);
+        workDAO.delete(worker);
     }
 
     // Address...
     public Address loadAddress(String zip) throws Exception {
-        return this.adrDAO.load(zip);
+        return adrDAO.load(zip);
     }
 
     public void storeAddress(Address adr) throws Exception {
-        this.adrDAO.store(adr);
+        adrDAO.store(adr);
     }
 
     public void deleteAddress(Address adr) throws Exception {
@@ -137,15 +129,15 @@ public class JdbcAccess implements DBAccess {
 
     // Cars...
     public Car loadCar(String modell) throws Exception {
-        return this.carDAO.load(modell);
+        return carDAO.load(modell);
     }
 
     public void storeCar(Car car) throws Exception {
-        this.carDAO.store(car);
+        carDAO.store(car);
     }
 
     public void deleteCar(Car car) throws Exception {
-        this.carDAO.delete(car);
+        carDAO.delete(car);
     }
 
     // CompanyCars...
@@ -158,11 +150,11 @@ public class JdbcAccess implements DBAccess {
     }
 
     public void storeCompanyCar(CompanyCar car) throws Exception {
-        this.comCarDAO.store(car);
+        comCarDAO.store(car);
     }
 
     public void deleteCompanyCar(CompanyCar car) throws Exception {
-        this.comCarDAO.delete(car);
+        comCarDAO.delete(car);
     }
 
     // Departments...
@@ -175,11 +167,11 @@ public class JdbcAccess implements DBAccess {
     }
 
     public void storeDepartment(Department department) throws Exception {
-        this.depDAO.store(department);
+        depDAO.store(department);
     }
 
     public void deleteDepartment(Department department) throws Exception {
-        this.depDAO.delete(department);
+        depDAO.delete(department);
     }
 
     // Projects...
@@ -192,11 +184,11 @@ public class JdbcAccess implements DBAccess {
     }
 
     public void storeProject(Project proj) throws Exception {
-        this.projDAO.store(proj);
+        projDAO.store(proj);
     }
 
     public void deleteProject(Project proj) throws Exception {
-        this.projDAO.delete(proj);
+        projDAO.delete(proj);
     }
 
     // StatusReports...
@@ -205,11 +197,11 @@ public class JdbcAccess implements DBAccess {
     }
 
     public void storeStatusReport(StatusReport rep) throws Exception {
-        this.statDAO.store(rep);
+        statDAO.store(rep);
     }
 
     public void deleteStatusReport(StatusReport rep) throws Exception {
-        this.statDAO.delete(rep);
+        statDAO.delete(rep);
     }
 
     // ---

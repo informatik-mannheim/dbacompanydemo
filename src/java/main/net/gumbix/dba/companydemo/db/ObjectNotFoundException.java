@@ -1,6 +1,8 @@
 package net.gumbix.dba.companydemo.db;
 
 /**
+ * This exception is used within this project to indicate that
+ * an object could not be found in the database.
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
 public class ObjectNotFoundException extends RuntimeException {

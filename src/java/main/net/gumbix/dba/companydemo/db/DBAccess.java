@@ -84,7 +84,7 @@ public interface DBAccess {
     public void deleteProject(Project proj) throws Exception;
 
     // StatusReport
-    public List<StatusReport> loadStatusReport(long projNr) throws Exception;
+    public List<StatusReport> loadStatusReport(Project project) throws Exception;
 
     public void storeStatusReport(StatusReport rep) throws Exception;
 

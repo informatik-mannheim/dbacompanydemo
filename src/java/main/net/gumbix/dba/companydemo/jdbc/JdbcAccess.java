@@ -200,8 +200,8 @@ public class JdbcAccess implements DBAccess {
     }
 
     // StatusReports...
-    public List<StatusReport> loadStatusReport(long projNr) throws Exception {
-        return this.statDAO.load(projNr);
+    public List<StatusReport> loadStatusReport(Project project) throws Exception {
+        return statDAO.load(project);
     }
 
     public void storeStatusReport(StatusReport rep) throws Exception {

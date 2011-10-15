@@ -32,7 +32,7 @@ public class ProjectDAO extends AbstractDAO {
 
         if (rs.next()) {
             Project proj = createAndCache(projNr, new Project(rs.getLong("projektNr"), rs.getString("bezeichnung")));
-            // proj.setStatusReport(statDAO.load(projNr));
+            proj.setStatusReport(access.loadStatusReport(proj));
             proj.setEmployees(access.loadWorksOn(proj));
             return proj;
         } else {

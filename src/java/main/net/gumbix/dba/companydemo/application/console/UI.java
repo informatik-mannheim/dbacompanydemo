@@ -254,13 +254,6 @@ public class UI {
     private static void gotoProjekteMenu() throws Exception {
 
         int menuChoice;
-        //		ProjectDAO projDAO = new ProjectDAO();
-        Project proj = new Project();
-
-        //		StatusReportDAO statDAO = new StatusReportDAO();
-        StatusReport stat = new StatusReport();
-        List<StatusReport> statList;
-
 
         do {
             System.out.println("*** Projekte verwalten ***\n\n" +
@@ -268,7 +261,7 @@ public class UI {
                     "1 Projekt suchen (nach Bezeichnung)\n" +
                     "2 Projekt anlegen \n" +
                     "3 Projekt löschen\n\n" +
-                    "4 Statusberichte ausgeben\n" +
+                    "4 Statusberichte für Projekt ausgeben\n" +
                     "5 Statusbericht eingeben\n" +
                     "6 Statusbericht ändern\n\n" +
                     "0 Zurück");
@@ -298,84 +291,79 @@ public class UI {
                     System.out.print("Projektbezeichnung: ");
                     description = getUserInputString();
 
-                    proj.setDescription(description);
-                    db.storeProject(proj);
+                    Project project = new Project();
+                    project.setDescription(description);
+                    db.storeProject(project);
                     break;
 
-                //menu "Projekt löschen"
                 case 3:
                     System.out.println("*** Projekt löschen ***\n");
 
                     System.out.print("Projektnr : ");
                     long projNumber = getUserInputLong();
                     try {
-                        Project project = db.loadProject(projNumber);
+                        project = db.loadProject(projNumber);
                         db.deleteProject(project);
                     } catch (ObjectNotFoundException e) {
                         System.out.println("Projekt kann nicht gelöscht werden, da nicht vorhanden.");
                     }
                     break;
 
-                //menu "Statusberichte ausgeben"
                 case 4:
-                    System.out.println("*** Statusberichte ausgeben ***\n");
+                    System.out.println("*** Statusberichte für Projekt ausgeben ***\n");
 
-                    System.out.println("ProjektNr : ");
-                    String persNrStr = getUserInputString();
-                    long projNr = Long.valueOf(persNrStr);
+                    System.out.print("Projektnr: ");
+                    long projNr = getUserInputLong();
 
-                    statList = db.loadStatusReport(projNr);
-                    //				statList = statDAO.load(projNr);
-
-                    printStatusReport(statList);
-
+                    project = db.loadProject(projNr);
+                    System.out.println(project);
+                    for (StatusReport statusReport : project.getStatusReport()) {
+                        System.out.println(statusReport.toFullString());
+                    }
+                    System.out.println("---");
+                    pressAnyKey();
                     break;
 
-                //menu "Statusbericht eingeben"
                 case 5:
                     System.out.println("*** Statusbericht eingeben ***\n");
-                    stat = new StatusReport();
-                    System.out.println("ProjektNr : ");
-                    persNrStr = getUserInputString();
-                    projNr = Long.valueOf(persNrStr);
+                    StatusReport statusReport = new StatusReport();
+                    System.out.println("Projektnr : ");
+                    projNr = getUserInputLong();
 
-                    System.out.println("Inhalt : ");
+                    System.out.println("Inhalt: ");
                     String content = getUserInputString();
 
-                    proj.setProjectNr(projNr);
+                    /*
+                    project.setProjectNr(projNr);
                     stat.setContent(content);
 
-                    proj.setStatusReport(stat);
+                    proj.setStatusReport(statusReport);
 
                     db.storeStatusReport(stat);
-                    //				statDAO.store(proj);
-
+                    */
                     break;
 
-                //menu "Statusbericht Aendern"
                 case 6:
-                    System.out.println("*** Statusbericht Aendern ***\n");
-                    stat = new StatusReport();
-                    System.out.println("ProjektNr : ");
-                    persNrStr = getUserInputString();
-                    projNr = Long.valueOf(persNrStr);
+                    System.out.println("*** Statusbericht ändern ***\n");
+                    statusReport = new StatusReport();
+                    System.out.print("Projektnr : ");
+                    projNr = getUserInputLong();
 
-                    System.out.println("BerichtNr : ");
-                    persNrStr = getUserInputString();
-                    Long repNr = Long.valueOf(persNrStr);
+                    System.out.print("Berichtnr: ");
+                    Long repNr = getUserInputLong();
 
-                    System.out.println("Inhalt : ");
+                    System.out.print("Neuer Inhalt: ");
                     content = getUserInputString();
 
+                    /*
                     proj.setProjectNr(projNr);
-                    stat.setContinuouslyNr(repNr);
+                    stat.setContinuousNumber(repNr);
                     stat.setContent(content);
 
                     proj.setStatusReport(stat);
 
                     db.storeStatusReport(stat);
-                    //				statDAO.store(proj);
-
+                    */
                     break;
 
                 case 0:
@@ -388,8 +376,6 @@ public class UI {
             }
         }
         while (menuChoice != 0);
-
-
     }
 
     private static void gotoFirmenwagenMenu() throws Exception {
@@ -688,7 +674,7 @@ public class UI {
 
         for (StatusReport stat : statList) {
 
-            System.out.println("Bericht Nummer : " + stat.getContinuouslyNr() + "\n" +
+            System.out.println("Bericht Nummer : " + stat.getContinuousNumber() + "\n" +
                     "Erstellt am    : " + df.format(stat.getDate().getTime()) + "\n" +
                     "Inhalt         : " + stat.getContent() + "\n");
         }

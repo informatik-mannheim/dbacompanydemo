@@ -6,7 +6,7 @@ import java.util.GregorianCalendar;
 
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
- * @author Marius Czardybon  (m.czardybon@gmx.net)
+ * @author Marius Czardybon (m.czardybon@gmx.net)
  */
 public class Personnel {
 
@@ -25,7 +25,9 @@ public class Personnel {
     public Personnel() {
     }
 
-    public Personnel(String lastName, String firstName, GregorianCalendar birthDate, Address adr) {
+    public Personnel(long personnelNumber, String lastName, String firstName,
+                     GregorianCalendar birthDate, Address adr) {
+        this.personnelNumber = personnelNumber;
         this.lastName = lastName;
         this.firstName = firstName;
         this.birthDate = birthDate;
@@ -121,12 +123,13 @@ public class Personnel {
 
         String base =
                 "Name:       " + firstName + " " + lastName + "\n" +
-                "Geb.-Datum: " + df.format(birthDate.getTime()) + "\n" +
-                "Adresse:    " + street + " " + houseNo +
+                        // TODO db4o bug
+                        // "Geb.-Datum: " + df.format(birthDate.getTime()) + "\n" +
+                        "Adresse:    " + street + " " + houseNo +
                         ", " + address.getZip() + " " + address.getCity();
         String depString = "";
         if (department != null) {
-            depString =  "\nAbt.:     " + department;
+            depString = "\nAbt.:     " + department;
             depString += "\nFunktion: " + position;
         }
         String bossString = "";

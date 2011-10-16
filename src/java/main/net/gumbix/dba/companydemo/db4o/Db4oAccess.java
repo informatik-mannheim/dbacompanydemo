@@ -22,7 +22,7 @@ import net.gumbix.dba.companydemo.domain.*;
  */
 public class Db4oAccess implements DBAccess {
 
-    private EmbeddedObjectContainer db = Db4oEmbedded.openFile("firmenwelt.db4o");
+    public EmbeddedObjectContainer db = Db4oEmbedded.openFile("firmenwelt.db4o");
 
     public Db4oAccess() {
     }
@@ -36,19 +36,58 @@ public class Db4oAccess implements DBAccess {
     }
 
     public Personnel loadPersonnel(long persNr) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        ObjectSet<Personnel> set =
+                db.queryByExample(new Personnel(persNr, null, null, null, null));
+
+        if (set.hasNext()) {
+            return set.next();
+        } else {
+            throw new ObjectNotFoundException(Personnel.class, persNr + "");
+        }
     }
 
-    public List<Personnel> queryByName(String firstName, String lastName) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public List<Personnel> queryPersonnelByName(final String firstName,
+                                                final String lastName) throws Exception {
+        // If query string contains a *, we remove the * and use startsWith:
+        final String firstNameStartsWith;
+        if (firstName.endsWith("*")) {
+            firstNameStartsWith = firstName.substring(0, firstName.length() - 1);
+        } else {
+            firstNameStartsWith = null;
+        }
+        final String lastNameStartsWith;
+        if (lastName.endsWith("*")) {
+            lastNameStartsWith = lastName.substring(0, lastName.length() - 1);
+        } else {
+            lastNameStartsWith = null;
+        }
+
+        ObjectSet<Personnel> carList = db.query(new Predicate<Personnel>() {
+            public boolean match(Personnel personnel) {
+                boolean first = false;
+                if (firstNameStartsWith != null) {
+                    first = personnel.getFirstName().startsWith(firstNameStartsWith);
+                } else {
+                    first = personnel.getFirstName().equals(firstName);
+                }
+                boolean last = false;
+                if (lastNameStartsWith != null) {
+                    last = personnel.getLastName().startsWith(lastNameStartsWith);
+                } else {
+                    last = personnel.getLastName().equals(lastName);
+                }
+                return first && last;
+            }
+        });
+        return Arrays.asList(carList.toArray(new Personnel[0]));
     }
 
-    public void storePersonnel(Personnel pers) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void storePersonnel(Personnel personnel) throws Exception {
+        db.store(personnel);
     }
 
-    public void deletePersonnel(Personnel pers) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void deletePersonnel(Personnel personnel) throws Exception {
+        db.delete(personnel);
     }
 
     public Employee loadEmployee(long persNr) throws Exception {
@@ -59,44 +98,52 @@ public class Db4oAccess implements DBAccess {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void storeEmployee(Employee emp) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public void deleteEmployee(Employee emp) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public Worker loadWorkers(long persNr) throws Exception {
+    public Worker loadWorker(long persNr) throws Exception {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public List<Worker> loadWorkers(String firstName, String lastName) throws Exception {
+    public List<Worker> queryWorkerByName(String firstName, String lastName) throws Exception {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public void storeWorkers(Worker worker) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public void deleteWorkers(Worker worker) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public Department loadDepartment(long depNumber) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        ObjectSet<Department> set = db.queryByExample(new Department(depNumber, null));
+
+        if (set.hasNext()) {
+            return set.next();
+        } else {
+            throw new ObjectNotFoundException(Department.class, depNumber + "");
+        }
     }
 
-    public List<Department> queryDepartmentByName(String queryString) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public List<Department> queryDepartmentByName(final String queryString) throws Exception {
+        // If query string contains a *, we remove the * and use startsWith:
+        final String startsWith;
+        if (queryString.endsWith("*")) {
+            startsWith = queryString.substring(0, queryString.length() - 1);
+        } else {
+            startsWith = null;
+        }
+
+        ObjectSet<Department> depList = db.query(new Predicate<Department>() {
+            public boolean match(Department department) {
+                if (startsWith != null) {
+                    return department.getName().startsWith(startsWith);
+                } else {
+                    return department.getName().equals(queryString);
+                }
+            }
+        });
+        return Arrays.asList(depList.toArray(new Department[0]));
+
     }
 
     public void storeDepartment(Department department) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        db.store(department);
     }
 
     public void deleteDepartment(Department department) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        db.delete(department);
     }
 
     public Car loadCar(String model) throws Exception {

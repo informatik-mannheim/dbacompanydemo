@@ -6,23 +6,24 @@ wir die Referenzen einfacher nachverfolgen können.
 */
 
 -- Abteilung (abteilungsNr, bezeichnung)
-insert into Abteilung values (1, 'Personal');
-insert into Abteilung values (2, 'Einkauf');
-insert into Abteilung values (3, 'Verkauf');
-insert into Abteilung values (4, 'Abt_Verwaltung');
-insert into Abteilung values (5, 'Entwicklung');
-insert into Abteilung values (6, 'Produktion');
-insert into Abteilung values (7, 'Vorstand');
+insert into Abteilung values 
+(1, 'Personal'),
+(2, 'Einkauf'),
+(3, 'Verkauf'),
+(4, 'Abt_Verwaltung'),
+(5, 'Entwicklung'),
+(6, 'Produktion'),
+(7, 'Vorstand'),
 -- author Patrick Sturm:
-insert into Abteilung values (8, 'IT-Abteilung');
-insert into Abteilung values (9, 'Buchhaltung');
-insert into Abteilung values (10, 'Marketing');
-insert into Abteilung values (11, 'Kundendienst');
-insert into Abteilung values (12, 'Forschung');
-insert into Abteilung values (13, 'Logistik');
-insert into Abteilung values (14, 'Materialwirtschaft');
-insert into Abteilung values (15, 'PR-Abteilung');
-insert into Abteilung values (16, 'Qualitätssicherung');
+(8, 'IT-Abteilung'),
+(9, 'Buchhaltung'),
+(10, 'Marketing'),
+(11, 'Kundendienst'),
+(12, 'Forschung'),
+(13, 'Logistik'),
+(14, 'Materialwirtschaft'),
+(15, 'PR-Abteilung'),
+(16, 'Qualitätssicherung');
 
 -- Ort (plz, ortsname)
 insert into Ort values

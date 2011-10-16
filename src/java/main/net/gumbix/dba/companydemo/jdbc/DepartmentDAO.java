@@ -32,6 +32,7 @@ public class DepartmentDAO extends AbstractDAO {
     }
 
     public List<Department> queryByName(String queryString) throws Exception {
+        queryString = queryString.replace('*', '%');
         PreparedStatement prep = prepareStatement("select * from Abteilung" +
                 " where bezeichnung like ?");
         prep.setString(1, queryString);

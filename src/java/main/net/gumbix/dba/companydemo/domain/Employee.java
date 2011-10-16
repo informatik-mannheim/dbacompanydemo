@@ -17,11 +17,11 @@ public class Employee extends Personnel {
 	public Employee() {
 	}
 
-	public Employee(String name, String vorname, GregorianCalendar gebDatum, Address adr, String tel) {
-		super(name, vorname, gebDatum, adr);
+	public Employee(long personnelNumber, String lastName, String firstName,
+                    GregorianCalendar birthDate, Address adr, String tel) {
+		super(personnelNumber, lastName, firstName, birthDate, adr);
 		this.phoneNumber = tel;
 		this.projects = new HashSet<WorksOn>();
-
 	}
 
 	public String getPhoneNumber() {

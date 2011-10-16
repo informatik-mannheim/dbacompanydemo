@@ -7,7 +7,6 @@ import net.gumbix.dba.companydemo.domain.*;
 import net.gumbix.dba.companydemo.jdbc.JdbcAccess;
 
 import java.io.*;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -175,15 +174,13 @@ public class UI {
                 case 2:
                     System.out.println("*** Arbeiter suchen (nach Nachname, Vorname) ***\n");
 
-                    System.out.println("Nachname (* möglich): ");
+                    System.out.print("Nachname (* am Ende möglich): ");
                     String lastName = getUserInputString();
 
-                    System.out.println("Vorname (* möglich): ");
+                    System.out.print("Vorname (* am Ende möglich): ");
                     String firstName = getUserInputString();
 
-                    System.out.println("Input: " + firstName + " " + lastName + "\n");
-
-                    List<Personnel> list = db.queryByName(firstName, lastName);
+                    List<Personnel> list = db.queryPersonnelByName(firstName, lastName);
 
                     if (!list.isEmpty()) {
                         for (Personnel p : list) {
@@ -192,6 +189,7 @@ public class UI {
                     } else {
                         System.out.println("Keine(n) Mitarbeiter gefunden!\n");
                     }
+                    pressAnyKey();
                     break;
                 //menu "0 Zurück"
                 case 0:
@@ -500,7 +498,7 @@ public class UI {
                 case 2:
                     System.out.println("*** Abteilung suchen (nach Bezeichnung) ***\n");
 
-                    System.out.print("Abteilungsbezeichnung eingeben (% Wildcard): ");
+                    System.out.print("Abteilungsbezeichnung eingeben (* am Ende möglich): ");
                     String queryString = getUserInputString();
                     List<Department> result = db.queryDepartmentByName(queryString);
                     for (Department d : result) {

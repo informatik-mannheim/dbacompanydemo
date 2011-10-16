@@ -20,7 +20,7 @@ public interface DBAccess {
     // Personnel
     public Personnel loadPersonnel(long persNr) throws Exception;
 
-    public List<Personnel> queryByName(String firstName, String lastName) throws Exception;
+    public List<Personnel> queryPersonnelByName(String firstName, String lastName) throws Exception;
 
     public void storePersonnel(Personnel pers) throws Exception;
 
@@ -31,18 +31,10 @@ public interface DBAccess {
 
     public List<Employee> loadEmployee(String firstName, String lastName) throws Exception;
 
-    public void storeEmployee(Employee emp) throws Exception;
-
-    public void deleteEmployee(Employee emp) throws Exception;
-
     // Worker
-    public Worker loadWorkers(long persNr) throws Exception;
+    public Worker loadWorker(long persNr) throws Exception;
 
-    public List<Worker> loadWorkers(String firstName, String lastName) throws Exception;
-
-    public void storeWorkers(Worker worker) throws Exception;
-
-    public void deleteWorkers(Worker worker) throws Exception;
+    public List<Worker> queryWorkerByName(String firstName, String lastName) throws Exception;
 
     // Department
     public Department loadDepartment(long depNumber) throws Exception;

@@ -3,7 +3,6 @@ package net.gumbix.dba.companydemo.jdbc;
 import java.sql.*;
 import java.util.List;
 import java.util.Set;
-import java.util.WeakHashMap;
 
 import net.gumbix.dba.companydemo.db.DBAccess;
 import net.gumbix.dba.companydemo.domain.*;
@@ -55,13 +54,13 @@ public class JdbcAccess implements DBAccess {
         return persDAO.load(persNr);
     }
 
-    public List<Personnel> queryByName(String firstName, String lastName) throws Exception {
+    public List<Personnel> queryPersonnelByName(String firstName, String lastName) throws Exception {
         return persDAO.queryByName(firstName, lastName);
     }
 
     public void storePersonnel(Personnel pers) throws Exception {
         if (pers instanceof Worker) {
-            storeWorkers((Worker) pers);
+            storeWorker((Worker) pers);
         } else if (pers instanceof Employee) {
             storeEmployee((Employee) pers);
         } else {
@@ -71,7 +70,7 @@ public class JdbcAccess implements DBAccess {
 
     public void deletePersonnel(Personnel pers) throws Exception {
         if (pers instanceof Worker) {
-            deleteWorkers((Worker) pers);
+            deleteWorker((Worker) pers);
         } else if (pers instanceof Employee) {
             deleteEmployee((Employee) pers);
         } else {
@@ -98,19 +97,19 @@ public class JdbcAccess implements DBAccess {
     }
 
     // Worker...
-    public Worker loadWorkers(long persNr) throws Exception {
+    public Worker loadWorker(long persNr) throws Exception {
         return workDAO.load(persNr);
     }
 
-    public List<Worker> loadWorkers(String firstName, String lastName) throws Exception {
+    public List<Worker> queryWorkerByName(String firstName, String lastName) throws Exception {
         return workDAO.load(firstName, lastName);
     }
 
-    public void storeWorkers(Worker work) throws Exception {
+    public void storeWorker(Worker work) throws Exception {
         workDAO.store(work);
     }
 
-    public void deleteWorkers(Worker worker) throws Exception {
+    public void deleteWorker(Worker worker) throws Exception {
         workDAO.delete(worker);
     }
 

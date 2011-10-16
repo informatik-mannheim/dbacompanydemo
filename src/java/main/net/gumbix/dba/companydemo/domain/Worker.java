@@ -13,8 +13,9 @@ public class Worker extends Personnel {
     public Worker() {
     }
 
-    public Worker(String name, String vorname, GregorianCalendar gebDatum, Address adr, String workspace) {
-        super(name, vorname, gebDatum, adr);
+    public Worker(long personnelNumber, String lastName, String firstName,
+                  GregorianCalendar birthDate, Address adr, String workspace) {
+        super(personnelNumber, lastName, firstName, birthDate, adr);
         setWorkspace(workspace);
     }
 
@@ -33,6 +34,6 @@ public class Worker extends Personnel {
 
     public String toFullString() {
         return super.toFullString() + "\n" +
-               "Arbeitsplatz: " + workspace;
+                "Arbeitsplatz: " + workspace;
     }
 }

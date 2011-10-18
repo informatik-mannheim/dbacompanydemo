@@ -15,18 +15,19 @@ public class WorksOn {
     }
 
     public WorksOn(Employee employee, Project project, double percentage, String job) {
-        this.employee = employee;
-        this.project = project;
+        setEmployee(employee);
+        setProject(project);
         this.percentage = percentage;
         this.job = job;
     }
 
-    public Personnel getEmployee() {
+    public Employee getEmployee() {
         return employee;
     }
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
+        employee.addProject(this);
     }
 
     public Project getProject() {
@@ -35,6 +36,7 @@ public class WorksOn {
 
     public void setProject(Project project) {
         this.project = project;
+        project.addEmployee(this);
     }
 
     public double getPercentage() {

@@ -61,13 +61,6 @@ public interface DBAccess {
 
     public void deleteCompanyCar(CompanyCar car) throws Exception;
 
-    // Adress
-    public Address loadAddress(String zip) throws Exception;
-
-    public void storeAddress(Address adr) throws Exception;
-
-    public void deleteAddress(Address adr) throws Exception;
-
     // Project
     public Project loadProject(long projNr) throws Exception;
 
@@ -78,6 +71,8 @@ public interface DBAccess {
     public void deleteProject(Project proj) throws Exception;
 
     // StatusReport
+    public StatusReport loadStatusReport(long continuousNumber) throws Exception;
+    
     public List<StatusReport> loadStatusReport(Project project) throws Exception;
 
     public void storeStatusReport(StatusReport rep) throws Exception;

@@ -13,7 +13,6 @@ import net.gumbix.dba.companydemo.domain.*;
  */
 public class JdbcAccess implements DBAccess {
 
-    private AddressDAO adrDAO = new AddressDAO(this);
     private CarDAO carDAO = new CarDAO(this);
     private CompanyCarDAO comCarDAO = new CompanyCarDAO(this);
     private DepartmentDAO depDAO = new DepartmentDAO(this);
@@ -113,19 +112,6 @@ public class JdbcAccess implements DBAccess {
         workDAO.delete(worker);
     }
 
-    // Address...
-    public Address loadAddress(String zip) throws Exception {
-        return adrDAO.load(zip);
-    }
-
-    public void storeAddress(Address adr) throws Exception {
-        adrDAO.store(adr);
-    }
-
-    public void deleteAddress(Address adr) throws Exception {
-        adrDAO.delete(adr);
-    }
-
     // Cars...
     public Car loadCar(String modell) throws Exception {
         return carDAO.load(modell);
@@ -191,6 +177,10 @@ public class JdbcAccess implements DBAccess {
     }
 
     // StatusReports...
+    public StatusReport loadStatusReport(long continuousNumber) throws Exception {
+    	return null; // TODO
+    }
+    
     public List<StatusReport> loadStatusReport(Project project) throws Exception {
         return statDAO.load(project);
     }

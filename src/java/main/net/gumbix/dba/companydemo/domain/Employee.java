@@ -1,5 +1,7 @@
 package net.gumbix.dba.companydemo.domain;
 
+import com.db4o.collections.ActivatableHashSet;
+
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +14,7 @@ public class Employee extends Personnel {
 
 	private String phoneNumber;
 	private CompanyCar car;
-	private Set<WorksOn> projects;
+	private Set<WorksOn> projects = new HashSet<WorksOn>();
 
 	public Employee() {
 	}
@@ -21,7 +23,6 @@ public class Employee extends Personnel {
                     GregorianCalendar birthDate, Address adr, String tel) {
 		super(personnelNumber, lastName, firstName, birthDate, adr);
 		this.phoneNumber = tel;
-		this.projects = new HashSet<WorksOn>();
 	}
 
 	public String getPhoneNumber() {
@@ -51,9 +52,9 @@ public class Employee extends Personnel {
 		this.projects = projects;
 	}
 
-	public void addProject(WorksOn project) {
-		projects.add(project);
-	}
+    public void addProject(WorksOn worksOn) {
+        projects.add(worksOn);
+    }
 
     public String toString() {
         return getFirstName() + " " + getLastName() +
@@ -64,7 +65,7 @@ public class Employee extends Personnel {
         String s =  super.toFullString() + "\n" +
                "Telefon:    " + phoneNumber;
         if (car != null) {
-            s += "\nAuto:    " + car;
+            s += "\nAuto:       " + car;
         }
         if (!projects.isEmpty()) {
             s += "\nProjekte:    ";

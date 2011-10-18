@@ -2,6 +2,7 @@ package net.gumbix.dba.companydemo.domain;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
@@ -13,9 +14,7 @@ public class Personnel {
     private long personnelNumber;
     private String lastName;
     private String firstName;
-    private GregorianCalendar birthDate;
-    private String street;
-    private String houseNo;
+    private java.util.Date birthDate;
     private Address address;
     private Department department;
     private String position;
@@ -30,7 +29,9 @@ public class Personnel {
         this.personnelNumber = personnelNumber;
         this.lastName = lastName;
         this.firstName = firstName;
-        this.birthDate = birthDate;
+        if (birthDate != null) {
+            this.birthDate = birthDate.getTime();
+        }
         this.address = adr;
     }
 
@@ -59,27 +60,13 @@ public class Personnel {
     }
 
     public GregorianCalendar getBirthDate() {
-        return birthDate;
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTime(birthDate);
+        return cal;
     }
 
     public void setBirthDate(GregorianCalendar birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getHouseNo() {
-        return houseNo;
-    }
-
-    public void setHouseNo(String houseNo) {
-        this.houseNo = houseNo;
+        this.birthDate = birthDate.getTime();
     }
 
     public Address getAddress() {
@@ -125,12 +112,11 @@ public class Personnel {
                 "Name:       " + firstName + " " + lastName + "\n" +
                         // TODO db4o bug
                         // "Geb.-Datum: " + df.format(birthDate.getTime()) + "\n" +
-                        "Adresse:    " + street + " " + houseNo +
-                        ", " + address.getZip() + " " + address.getCity();
+                        "Adresse:    " + address;
         String depString = "";
         if (department != null) {
-            depString = "\nAbt.:     " + department;
-            depString += "\nFunktion: " + position;
+            depString = "\nAbt.:       " + department;
+            depString += "\nFunktion:   " + position;
         }
         String bossString = "";
         if (boss != null) {

@@ -32,7 +32,6 @@ public class PersonnelDAO extends AbstractDAO {
                 " where p.personalNr = " + personalNr);
 
         Personnel personnel;
-        Address adr = new Address();
         GregorianCalendar birthDate = new GregorianCalendar();
 
         if (rs.next()) {
@@ -61,8 +60,10 @@ public class PersonnelDAO extends AbstractDAO {
             personnel.setFirstName(rs.getString("vorname"));
             personnel.setPersonnelNumber(rs.getLong("personalNr"));
             personnel.setPosition(rs.getString("funktion"));
-            personnel.setStreet(rs.getString("strasse"));
-            personnel.setHouseNo(rs.getString("hausNr"));
+
+            Address adr = new Address();
+            adr.setStreet(rs.getString("strasse"));
+            adr.setHouseNumber(rs.getString("hausNr"));
             adr.setZip(rs.getString("plz"));
             adr.setCity(rs.getString("ortsname"));
             birthDate.setTime(rs.getDate("gebDatum"));
@@ -114,9 +115,6 @@ public class PersonnelDAO extends AbstractDAO {
 
         /*
         PreparedStatement pstmt;
-
-        AddressDAO adrDAO = new AddressDAO();
-        adrDAO.store(pers.getAddress());
 
         if (pers.getPersonnelNumber() == 0) {
 

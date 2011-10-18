@@ -8,7 +8,6 @@ import java.util.Set;
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Marius Czardybon (m.czardybon@gmx.net)
- * 
  */
 public class Project {
 
@@ -52,7 +51,7 @@ public class Project {
 		this.StatusReport = statusReport;
 	}
 
-	public void setStatusReport(StatusReport statusReport) {
+	public void addStatusReport(StatusReport statusReport) {
 		this.StatusReport.add(statusReport);
 	}
 
@@ -60,12 +59,12 @@ public class Project {
 		return employees;
 	}
 
-	public void setEmployees(Set<WorksOn> employees) {
-		this.employees = employees;
+	public void setEmployees(Set<WorksOn> worksOns) {
+		this.employees = worksOns;
 	}
 
-	public void setEmployees(WorksOn employees) {
-		this.employees.add(employees);
+	public void addEmployee(WorksOn worksOn) {
+		employees.add(worksOn);
 	}
 
     public String toString() {

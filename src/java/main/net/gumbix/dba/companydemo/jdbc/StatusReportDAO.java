@@ -2,6 +2,7 @@ package net.gumbix.dba.companydemo.jdbc;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -27,11 +28,11 @@ public class StatusReportDAO extends AbstractDAO {
 
         while (rs.next()) {
             GregorianCalendar date = new GregorianCalendar();
-            StatusReport sta = new StatusReport();
-            sta.setContinuousNumber(rs.getLong("fortlaufendeNr"));
-            sta.setContent(rs.getString("inhalt"));
-            date.setTime(rs.getDate("datum"));
-            sta.setDate(date);
+            
+            long contNumber = rs.getLong("fortlaufendeNr");
+            String content = rs.getString("inhalt");
+            Date ddate = rs.getDate("datum");
+            StatusReport sta = new StatusReport(contNumber, ddate, content, project);
             staList.add(sta);
         }
         return staList;

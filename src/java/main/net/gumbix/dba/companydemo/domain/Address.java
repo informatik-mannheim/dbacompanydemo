@@ -1,70 +1,59 @@
 package net.gumbix.dba.companydemo.domain;
 
 /**
- * @project manager  Markus Gumbel (m.gumbel@hs-mannheim.de)
- * 
+ * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Marius Czardybon  (m.czardybon@gmx.net)
- * 
- * */
-
+ */
 public class Address {
 
-	private String zip;
-	private String city;
+    private String street;
+    private String houseNumber;
+    private String zip;
+    private String city;
 
+    public Address() {
+    }
 
-	public Address(String zip, String city) {
-		this.zip = zip;
-		this.city = city;
-	}
+    public Address(String street, String houseNumber, String zip, String city) {
+        this.street = street;
+        this.houseNumber = houseNumber;
+        this.zip = zip;
+        this.city = city;
+    }
 
-	public Address() {
+    public String getStreet() {
+        return street;
+    }
 
-	}
+    public void setStreet(String street) {
+        this.street = street;
+    }
 
-	public String getZip() {
-		return zip;
-	}
+    public String getHouseNumber() {
+        return houseNumber;
+    }
 
-	public void setZip(String zip) {
-		this.zip = zip;
-	}
+    public void setHouseNumber(String houseNumber) {
+        this.houseNumber = houseNumber;
+    }
 
-	public String getCity() {
-		return city;
-	}
+    public String getZip() {
+        return zip;
+    }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
 
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String toString() {
+        return street + " " + houseNumber + ", " + zip + " " + city;
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

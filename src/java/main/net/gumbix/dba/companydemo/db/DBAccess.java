@@ -62,7 +62,7 @@ public interface DBAccess {
     public void deleteCompanyCar(CompanyCar car) throws Exception;
 
     // Project
-    public Project loadProject(long projNr) throws Exception;
+    public Project loadProject(String projId) throws Exception;
 
     public List<Project> queryProjectByDescription(String queryString) throws Exception;
 

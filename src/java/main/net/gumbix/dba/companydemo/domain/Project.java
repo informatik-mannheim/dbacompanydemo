@@ -11,64 +11,75 @@ import java.util.Set;
  */
 public class Project {
 
-	private long projectNr;
-	private String description;
-	private List<StatusReport> StatusReport;
-	private Set<WorksOn> employees;
+    private String projectId;
+    private String description;
+    private List<StatusReport> statusReports = new ArrayList<StatusReport>();
+    private Set<WorksOn> employees = new HashSet<WorksOn>();
+    public long nextStatusReportNumber = 1;
 
-	public Project() {
-		this.StatusReport = new ArrayList<StatusReport>();
-	}
+    public Project(String projectId, String description) {
+        this.projectId = projectId;
+        this.description = description;
+    }
 
-	public Project(long projectNr, String description) {
-		this.StatusReport = new ArrayList<StatusReport>();
-		this.employees = new HashSet<WorksOn>();
-		this.projectNr = projectNr;
-		this.description = description;
-	}
+    public String getProjectId() {
+        return projectId;
+    }
 
-	public long getProjectNr() {
-		return projectNr;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setProjectNr(long projectNr) {
-		this.projectNr = projectNr;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public List<StatusReport> getStatusReports() {
+        return statusReports;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    /**
+     * Add a status report.
+     * @param statusReport
+     * @return False if report was already added, true if not.
+     */
+    public boolean addStatusReport(StatusReport statusReport) {
+        if (!statusReports.contains(statusReport)) {
+            statusReports.add(statusReport);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	public List<StatusReport> getStatusReport() {
-		return StatusReport;
-	}
+    public boolean removeStatusReport(StatusReport statusReport) {
+        return statusReports.remove(statusReport);
+    }
 
-	public void setStatusReport(List<StatusReport> statusReport) {
-		this.StatusReport = statusReport;
-	}
+    public Set<WorksOn> getEmployees() {
+        return employees;
+    }
 
-	public void addStatusReport(StatusReport statusReport) {
-		this.StatusReport.add(statusReport);
-	}
+    public boolean addEmployee(WorksOn worksOn) {
+        return employees.add(worksOn);
+    }
 
-	public Set<WorksOn> getEmployees() {
-		return employees;
-	}
+    public long getNextStatusReportNumber() {
+        nextStatusReportNumber++;
+        return nextStatusReportNumber;
+    }
 
-	public void setEmployees(Set<WorksOn> worksOns) {
-		this.employees = worksOns;
-	}
-
-	public void addEmployee(WorksOn worksOn) {
-		employees.add(worksOn);
-	}
+    public boolean equals(Object other) {
+        if (other == null || !(other instanceof Project)) {
+            return false;
+        } else {
+            Project otherObject = (Project) other;
+            return getProjectId().equals(otherObject.getProjectId());
+        }
+    }
 
     public String toString() {
-        return description + " (" + projectNr + ")";
+        return description + " (" + projectId + ")";
     }
 
     public String toFullString() {

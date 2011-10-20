@@ -32,8 +32,6 @@ public class PersonnelDAO extends AbstractDAO {
                 " where p.personalNr = " + personalNr);
 
         Personnel personnel;
-        GregorianCalendar birthDate = new GregorianCalendar();
-
         if (rs.next()) {
             if (rs.getLong("wPersNr") != 0) {
                 personnel = createAndCache(personalNr, new Worker());
@@ -66,8 +64,7 @@ public class PersonnelDAO extends AbstractDAO {
             adr.setHouseNumber(rs.getString("hausNr"));
             adr.setZip(rs.getString("plz"));
             adr.setCity(rs.getString("ortsname"));
-            birthDate.setTime(rs.getDate("gebDatum"));
-            personnel.setBirthDate(birthDate);
+            personnel.setBirthDate(rs.getDate("gebDatum"));
 
             long depNr = rs.getLong("abteilungsNr");
             if (depNr != 0) {

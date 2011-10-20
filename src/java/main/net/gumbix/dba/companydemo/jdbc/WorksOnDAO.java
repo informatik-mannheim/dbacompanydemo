@@ -28,7 +28,7 @@ public class WorksOnDAO extends AbstractDAO {
         while (rs.next()) {
             wo = new WorksOn();
             wo.setEmployee(employee);
-            wo.setProject(access.loadProject(rs.getLong("projektNr")));
+            wo.setProject(access.loadProject(rs.getString("projektId")));
             wo.setJob(rs.getString("taetigkeit"));
             wo.setPercentage(rs.getDouble("prozAnteil"));
             set.add(wo);
@@ -41,7 +41,7 @@ public class WorksOnDAO extends AbstractDAO {
         Set<WorksOn> set = new HashSet<WorksOn>();
 
         ResultSet rs = executeSQLQuery("select * from MitarbeiterArbeitetAnProjekt" +
-                " where projektNr = " + proj.getProjectNr());
+                " where projektId = '" + proj.getProjectId() + "'");
 
         while (rs.next()) {
             wo = new WorksOn();
@@ -56,9 +56,11 @@ public class WorksOnDAO extends AbstractDAO {
 
     // Store or Update an WorksOn Object in Table "Projekt"
     public void store(WorksOn wo) throws Exception {
+        // TODO
     }
 
     // Delete an WorksOn Object from Table "MitarbeiterArbeitetAnProjekt"
     public void delete(WorksOn wo) throws Exception {
+        // TODO
     }
 }

@@ -181,25 +181,25 @@ insert into Firmenwagen values ('MA-MA 117', 'Phaeton', 17);
 
 -- Projekt (projektNr, bezeichnung)
 insert into Projekt values
-(1, 'Kundenumfrage'),
-(2, 'Verkaufsmesse'),
-(3, 'Leute einstellen'),
-(4, 'DB portieren'),
+('KUM', 'Kundenumfrage', 1),
+('VEM', 'Verkaufsmesse', 1),
+('LES', 'Leute einstellen', 1),
+('DBA', 'DB portieren', 1),
 -- author Patrick Sturm:
-(5, 'Prozessoptimierung');
+('PRO', 'Prozessoptimierung', 1);
 
 -- MitarbeiterArbeitetAnProjekt (personalNr#, projektNr#, prozAnteil, taetigkeit)
 insert into MitarbeiterArbeitetAnProjekt values
-(1, 3, 'erstellt Kundenprofil', 25.50), -- Sophia Lorenz, Personal
-(2, 2, 'Ausstellungsstücke einkaufen', 10.00), -- Tatjana Hohl, Einkauf
-(3, 2, 'Ausstellungsstücke einkaufen', 100.00), -- Theodor Willschrei, Einkauf
-(7, 3, 'telefonieren', 20.00), -- Hans Richter, Verkauf
-(5, 2, 'ist Verkäufer', 70.00), -- Brunhilde Wiesenland, Verkauf
-(5, 3, 'erstellt Statistiken', 30.00),
-(6, 2, 'ist Aushilfe', 100.00),
+(1, 'KUM', 'erstellt Kundenprofil', 25.50), -- Sophia Lorenz, Personal
+(2, 'VEM', 'Ausstellungsstücke einkaufen', 10.00), -- Tatjana Hohl, Einkauf
+(3, 'VEM', 'Ausstellungsstücke einkaufen', 100.00), -- Theodor Willschrei, Einkauf
+(7, 'VEM', 'telefonieren', 20.00), -- Hans Richter, Verkauf
+(5, 'VEM', 'ist Verkäufer', 70.00), -- Brunhilde Wiesenland, Verkauf
+(5, 'KUM', 'erstellt Statistiken', 30.00),
+(6, 'VEM', 'ist Aushilfe', 100.00),
 -- author Patrick Sturm:
-(10, 5, 'erfasst IT-Prozesse, führt neue Prozessabläufe ein', 25.00), -- Peter Zieger, IT-Abteilung
-(26, 5, 'optimiert IT-Prozesse', 100.00); -- Dieter Müller, IT-Abteilung
+(10, 'PRO', 'erfasst IT-Prozesse, führt neue Prozessabläufe ein', 25.00), -- Peter Zieger, IT-Abteilung
+(26, 'PRO', 'optimiert IT-Prozesse', 100.00); -- Dieter Müller, IT-Abteilung
 
 insert into Statusbericht values 
-(3, 1, '2011-10-15', 'Das ist ein Statusbericht');
+('LES', 1, '2011-10-15', 'Das ist ein Statusbericht');

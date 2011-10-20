@@ -2,6 +2,8 @@ package net.gumbix.dba.companydemo.jdbc;
 
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
 import net.gumbix.dba.companydemo.domain.Project;
+import net.gumbix.dba.companydemo.domain.StatusReport;
+import net.gumbix.dba.companydemo.domain.WorksOn;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,28 +17,31 @@ import java.util.WeakHashMap;
  */
 public class ProjectDAO extends AbstractDAO {
 
-    public WeakHashMap<Long, Project> cache
-            = new WeakHashMap<Long, Project>();
+    public WeakHashMap<String, Project> cache
+            = new WeakHashMap<String, Project>();
 
     public ProjectDAO(JdbcAccess access) {
         super(access);
     }
 
     // Loads an Project Objects from Table "Projekt" reference to the personnel number
-    public Project load(long projNr) throws Exception {
+    public Project load(String projectId) throws Exception {
         ResultSet rs =
-                executeSQLQuery("select * from Projekt where projektNr = " + projNr);
-
-        // StatusReportDAO statDAO = new StatusReportDAO();
-        // WorksOnDAO woDAO = new WorksOnDAO();
+                executeSQLQuery("select * from Projekt where projektId = '" + projectId + "'");
 
         if (rs.next()) {
-            Project proj = createAndCache(projNr, new Project(rs.getLong("projektNr"), rs.getString("bezeichnung")));
-            proj.setStatusReport(access.loadStatusReport(proj));
-            proj.setEmployees(access.loadWorksOn(proj));
+            Project proj = createAndCache(projectId, new Project(rs.getString("projektId"), rs.getString("bezeichnung")));
+            for (StatusReport statusReport : access.loadStatusReport(proj)) {
+                proj.addStatusReport(statusReport);
+            }
+            for (WorksOn worksOn : access.loadWorksOn(proj)) {
+                proj.addEmployee(worksOn);
+            }
+            Project.class.getField("nextStatusReportNumber")
+                    .setLong(proj, rs.getLong("naechsteStatusNummer"));
             return proj;
         } else {
-            throw new ObjectNotFoundException(Project.class, projNr + "");
+            throw new ObjectNotFoundException(Project.class, projectId + "");
         }
     }
 
@@ -50,7 +55,7 @@ public class ProjectDAO extends AbstractDAO {
 
         while (rs.next()) {
             // TODO Never do that, please revise!
-            projects.add(load(rs.getLong("projektNr")));
+            projects.add(load(rs.getString("projektId")));
         }
 
         return projects;
@@ -61,13 +66,13 @@ public class ProjectDAO extends AbstractDAO {
 
     public void delete(Project proj) throws Exception {
         PreparedStatement pstmt =
-                access.connection.prepareStatement("delete from Projekt where projektNr = ?");
-        pstmt.setLong(1, proj.getProjectNr());
+                access.connection.prepareStatement("delete from Projekt where projektId = ?");
+        pstmt.setString(1, proj.getProjectId());
         pstmt.execute();
     }
 
-    private Project createAndCache(long projNumber, Project project) {
-        cache.put(projNumber, project);
+    private Project createAndCache(String projectId, Project project) {
+        cache.put(projectId, project);
         return project;
     }
 }

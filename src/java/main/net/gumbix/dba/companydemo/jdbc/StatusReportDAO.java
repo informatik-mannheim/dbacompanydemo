@@ -3,7 +3,6 @@ package net.gumbix.dba.companydemo.jdbc;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import net.gumbix.dba.companydemo.domain.Project;
@@ -24,15 +23,13 @@ public class StatusReportDAO extends AbstractDAO {
         List<StatusReport> staList = new ArrayList<StatusReport>();
 
         ResultSet rs = executeSQLQuery("select * from Statusbericht " +
-                " where projektNr = " + project.getProjectNr());
+                " where projektId = '" + project.getProjectId() + "'");
 
         while (rs.next()) {
-            GregorianCalendar date = new GregorianCalendar();
-            
             long contNumber = rs.getLong("fortlaufendeNr");
             String content = rs.getString("inhalt");
-            Date ddate = rs.getDate("datum");
-            StatusReport sta = new StatusReport(contNumber, ddate, content, project);
+            Date date = rs.getDate("datum");
+            StatusReport sta = new StatusReport(contNumber, date, content, project);
             staList.add(sta);
         }
         return staList;
@@ -40,6 +37,8 @@ public class StatusReportDAO extends AbstractDAO {
 
     public void store(StatusReport statusReport) throws Exception {
         // TODO
+        // Also store project because of the next status number:
+        access.storeProject(statusReport.getProject());
     }
 
     public void delete(StatusReport statusReport) throws Exception {

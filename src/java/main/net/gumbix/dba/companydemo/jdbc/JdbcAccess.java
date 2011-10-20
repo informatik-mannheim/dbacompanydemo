@@ -160,8 +160,8 @@ public class JdbcAccess implements DBAccess {
     }
 
     // Projects...
-    public Project loadProject(long projNr) throws Exception {
-        return projDAO.load(projNr);
+    public Project loadProject(String projectId) throws Exception {
+        return projDAO.load(projectId);
     }
 
     public List<Project> queryProjectByDescription(String queryString) throws Exception {

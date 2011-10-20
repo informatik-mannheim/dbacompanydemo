@@ -1,10 +1,8 @@
 package net.gumbix.dba.companydemo.domain;
 
-import com.db4o.collections.ActivatableHashSet;
-
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Date;
 
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
@@ -20,7 +18,7 @@ public class Employee extends Personnel {
 	}
 
 	public Employee(long personnelNumber, String lastName, String firstName,
-                    GregorianCalendar birthDate, Address adr, String tel) {
+                    Date birthDate, Address adr, String tel) {
 		super(personnelNumber, lastName, firstName, birthDate, adr);
 		this.phoneNumber = tel;
 	}

@@ -90,30 +90,31 @@ foreign key (personalNr) references Angestellter(personalNr)
 
 -- Projekt (projektNr, bezeichnung)
 create table Projekt (
-projektNr integer primary key not null,
-bezeichnung varchar(30)
+projektId char(3) primary key not null,
+bezeichnung varchar(30),
+naechsteStatusNummer integer not null -- wg. zusammengesetzen Schlüssel ProjNr, StatusNr
 );
 create index bezeichnungIdx on Projekt(bezeichnung);
 
--- Statusbericht (projektNr#, fortlaufendeNr, datum, inhalt)
+-- Statusbericht (projektId#, fortlaufendeNr, datum, inhalt)
 create table Statusbericht (
-projektNr integer not null,
+projektId char(3) not null,
 fortlaufendeNr integer not null,
 datum date,
 inhalt text,
-primary key (projektNr, fortlaufendeNr),
-foreign key (projektNr) references Projekt(projektNr)
+primary key (projektId, fortlaufendeNr),
+foreign key (projektId) references Projekt(projektId)
 );
 
--- MitarbeiterArbeitetAnProjekt (personalNr#, projektNr#, prozAnteil, taetigkeit)
+-- MitarbeiterArbeitetAnProjekt (personalNr#, projektId#, prozAnteil, taetigkeit)
 create table MitarbeiterArbeitetAnProjekt (
 personalNr integer not null,
-projektNr integer not null,
+projektId char(3) not null,
 taetigkeit varchar(255),
 prozAnteil decimal(5, 2), -- 5 Zahlen insgesamt, davon 2 Nachkommastellen (000,00)
-primary key (personalNr, projektNr),
+primary key (personalNr, projektId),
 foreign key (personalNr) references Mitarbeiter(personalNr),
-foreign key (projektNr) references Projekt(projektNr)
+foreign key (projektId) references Projekt(projektId)
 );
 
 -- Einige Views für die Programmierung

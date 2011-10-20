@@ -40,6 +40,7 @@ public class CompanyCarDAO extends AbstractDAO {
 
     // Loads an CompanyCar Object from Table "Firmenwagen" using the primary key
     public List<CompanyCar> queryByModel(String model) throws Exception {
+        model = model.replace('*', '%');
         PreparedStatement prep = prepareStatement("select * from Firmenwagen" +
                 " where modell like ?");
         prep.setString(1, model);

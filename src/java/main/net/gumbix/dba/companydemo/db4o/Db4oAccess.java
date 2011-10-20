@@ -41,11 +41,12 @@ public class Db4oAccess implements DBAccess {
 		db.ext().configure().updateDepth(5);
 		// db.ext().configure().objectClass(StatusReport.class).persistStaticFieldValues();
 		
+		// Load the auto-increment ids:
 		ObjectSet<IdGenerator> ids = db.queryByExample(new Db4oIdGenerator());
 		if (ids.hasNext()) {
 			IdGenerator.generator = ids.next();
 		} else {
-			System.out.println("Neue IDs");
+			System.out.println("IDs fangen bei 1 an.");
 			IdGenerator.generator = new Db4oIdGenerator();
 			db.store(IdGenerator.generator);
 		}
@@ -235,13 +236,13 @@ public class Db4oAccess implements DBAccess {
 		db.delete(car);
 	}
 
-	public Project loadProject(long projNr) throws Exception {
-		ObjectSet<Project> set = db.queryByExample(new Project(projNr, null));
+	public Project loadProject(String projectNumber) throws Exception {
+		ObjectSet<Project> set = db.queryByExample(new Project(projectNumber, null));
 
 		if (set.hasNext()) {
 			return set.next();
 		} else {
-			throw new ObjectNotFoundException(Project.class, projNr + "");
+			throw new ObjectNotFoundException(Project.class, projectNumber + "");
 		}
 	}
 
@@ -299,8 +300,8 @@ public class Db4oAccess implements DBAccess {
 				.query(new Predicate<StatusReport>() {
 					public boolean match(StatusReport report) {
 						// TODO better via equals()!
-						return report.getProject().getProjectNr() == project
-								.getProjectNr();
+						return report.getProject().getProjectId() == project
+								.getProjectId();
 					}
 				});
 		return Arrays.asList(reports.toArray(new StatusReport[0]));
@@ -328,8 +329,8 @@ public class Db4oAccess implements DBAccess {
 	public Set<WorksOn> loadWorksOn(final Project proj) throws Exception {
 		ObjectSet<WorksOn> worksOns = db.query(new Predicate<WorksOn>() {
 			public boolean match(WorksOn worksOn) {
-				return worksOn.getProject().getProjectNr() == proj
-						.getProjectNr();
+				return worksOn.getProject().getProjectId() == proj
+						.getProjectId();
 			}
 		});
 		return new HashSet(Arrays.asList(worksOns.toArray(new Project[0])));

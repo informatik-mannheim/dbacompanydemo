@@ -51,7 +51,7 @@ public class ExampleData {
 
 		// Create personnel:
 		Employee employeeLohe = new Employee(1000, "Lohe", "Fransiska",
-				new GregorianCalendar(1967, 12, 01), new Address("Chefstraße",
+				new GregorianCalendar(1967, 12, 01).getTime(), new Address("Chefstraße",
 						"1a", "68113", "Mannheim"), "+49 621 12345-100");
 		employeeLohe.setCar(companyCar1234);
 		employeeLohe.setDepartment(management);
@@ -59,7 +59,7 @@ public class ExampleData {
 		access.storePersonnel(employeeLohe);
 
 		Employee employeeMüller = new Employee(1200, "Müller", "Walter",
-				new GregorianCalendar(1949, 02, 11), new Address("Flussweg",
+				new GregorianCalendar(1949, 02, 11).getTime(), new Address("Flussweg",
 						"23", "68113", "Mannheim"), "+49 621 12345-200");
 		// employeeLohe.setCar(companyCar1234);
 		employeeMüller.setDepartment(produktion);
@@ -67,7 +67,7 @@ public class ExampleData {
 		access.storePersonnel(employeeMüller);
 
 		Worker workerKleinschmidt = new Worker(2001, "Kleinschmidt", "August",
-				new GregorianCalendar(1955, 7, 23), new Address(
+				new GregorianCalendar(1955, 7, 23).getTime(), new Address(
 						"Wasserturmstraße", "29", "69214", "Eppelheim"),
 				"Platz 300a");
 		workerKleinschmidt.setBoss(employeeMüller);
@@ -76,7 +76,7 @@ public class ExampleData {
 		access.storePersonnel(workerKleinschmidt);
 
 		// Projects
-		Project hirePeople = new Project(10, "Leute einstellen.");
+		Project hirePeople = new Project("LES", "Leute einstellen.");
 		WorksOn hirePeopleLohe = new WorksOn(employeeLohe, hirePeople, 10,
 				"Verträge ausstellen.");
 		access.storeWorksOn(hirePeopleLohe);
@@ -92,7 +92,7 @@ public class ExampleData {
 				"Das ist noch ein Statusbericht", hirePeople);
 		access.storeStatusReport(hirePeopleReport2);
 
-		Project research = new Project(15, "Neues Produkt entwickeln.");
+		Project research = new Project("FOP", "Neues Produkt entwickeln.");
 		access.storeProject(research);
 
 		access.close();

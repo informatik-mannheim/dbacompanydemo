@@ -14,7 +14,7 @@ public class Personnel {
     private long personnelNumber;
     private String lastName;
     private String firstName;
-    private java.util.Date birthDate;
+    private Date birthDate;
     private Address address;
     private Department department;
     private String position;
@@ -25,13 +25,11 @@ public class Personnel {
     }
 
     public Personnel(long personnelNumber, String lastName, String firstName,
-                     GregorianCalendar birthDate, Address adr) {
+                     Date birthDate, Address adr) {
         this.personnelNumber = personnelNumber;
         this.lastName = lastName;
         this.firstName = firstName;
-        if (birthDate != null) {
-            this.birthDate = birthDate.getTime();
-        }
+        this.birthDate = birthDate;
         this.address = adr;
     }
 
@@ -59,14 +57,12 @@ public class Personnel {
         this.firstName = firstName;
     }
 
-    public GregorianCalendar getBirthDate() {
-        GregorianCalendar cal = new GregorianCalendar();
-        cal.setTime(birthDate);
-        return cal;
+    public Date getBirthDate() {
+        return birthDate;
     }
 
-    public void setBirthDate(GregorianCalendar birthDate) {
-        this.birthDate = birthDate.getTime();
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
     }
 
     public Address getAddress() {
@@ -111,7 +107,7 @@ public class Personnel {
         String base =
                 "Name:       " + firstName + " " + lastName + "\n" +
                         // TODO db4o bug
-                        // "Geb.-Datum: " + df.format(birthDate.getTime()) + "\n" +
+                        "Geb.-Datum: " + df.format(birthDate) + "\n" +
                         "Adresse:    " + address;
         String depString = "";
         if (department != null) {
@@ -120,7 +116,7 @@ public class Personnel {
         }
         String bossString = "";
         if (boss != null) {
-            bossString = "\nChef: " + boss;
+            bossString = "\nChef:       " + boss;
         }
         return base + depString + bossString;
     }

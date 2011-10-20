@@ -6,7 +6,6 @@ import java.sql.*;
  * @author Marius Czardybon (m.czardybon@gmx.net)
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-
 abstract public class AbstractDAO {
 
     protected JdbcAccess access;

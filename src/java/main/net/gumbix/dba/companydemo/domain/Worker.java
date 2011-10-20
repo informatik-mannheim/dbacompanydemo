@@ -1,6 +1,6 @@
 package net.gumbix.dba.companydemo.domain;
 
-import java.util.GregorianCalendar;
+import java.util.Date;
 
 /**
  * @author Marius Czardybon (m.czardybon@gmx.net)
@@ -14,7 +14,7 @@ public class Worker extends Personnel {
     }
 
     public Worker(long personnelNumber, String lastName, String firstName,
-                  GregorianCalendar birthDate, Address adr, String workspace) {
+                  Date birthDate, Address adr, String workspace) {
         super(personnelNumber, lastName, firstName, birthDate, adr);
         setWorkspace(workspace);
     }

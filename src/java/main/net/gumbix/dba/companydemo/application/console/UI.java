@@ -474,8 +474,7 @@ public class UI {
 
     private static void gotoAbteilungenMenu() throws Exception {
         int menuChoice;
-        Department dep = new Department();
-
+        Department dep;
         do {
             System.out.println("*** Abteilungen verwalten ***\n\n"
                     + "Was möchten Sie tun? \n\n"

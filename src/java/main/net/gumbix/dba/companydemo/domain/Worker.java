@@ -10,9 +10,6 @@ public class Worker extends Personnel {
 
     private String workspace;
 
-    public Worker() {
-    }
-
     public Worker(long personnelNumber, String lastName, String firstName,
                   Date birthDate, Address adr, String workspace) {
         super(personnelNumber, lastName, firstName, birthDate, adr);

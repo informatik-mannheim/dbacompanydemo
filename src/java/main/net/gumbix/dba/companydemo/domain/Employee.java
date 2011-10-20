@@ -14,9 +14,6 @@ public class Employee extends Personnel {
 	private CompanyCar car;
 	private Set<WorksOn> projects = new HashSet<WorksOn>();
 
-	public Employee() {
-	}
-
 	public Employee(long personnelNumber, String lastName, String firstName,
                     Date birthDate, Address adr, String tel) {
 		super(personnelNumber, lastName, firstName, birthDate, adr);
@@ -46,6 +43,7 @@ public class Employee extends Personnel {
 		return projects;
 	}
 
+    // TODO adapt like Project
 	public void setProjects(Set<WorksOn> projects) {
 		this.projects = projects;
 	}

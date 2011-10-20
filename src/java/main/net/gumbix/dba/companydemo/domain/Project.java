@@ -15,7 +15,8 @@ public class Project {
     private String description;
     private List<StatusReport> statusReports = new ArrayList<StatusReport>();
     private Set<WorksOn> employees = new HashSet<WorksOn>();
-    public long nextStatusReportNumber = 1;
+    // private long nextStatusReportNumber = 1;
+    public long nextStatusReportNumber = 1;  // TODO, reflection does not work yet.
 
     public Project(String projectId, String description) {
         this.projectId = projectId;

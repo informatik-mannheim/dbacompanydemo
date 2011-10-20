@@ -21,9 +21,6 @@ public class Personnel {
     private Personnel boss;
 
 
-    public Personnel() {
-    }
-
     public Personnel(long personnelNumber, String lastName, String firstName,
                      Date birthDate, Address adr) {
         this.personnelNumber = personnelNumber;
@@ -95,6 +92,15 @@ public class Personnel {
 
     public void setBoss(Personnel boss) {
         this.boss = boss;
+    }
+
+    public boolean equals(Object other) {
+        if (other == null || !(other instanceof Personnel)) {
+            return false;
+        } else {
+            Personnel otherObject = (Personnel) other;
+            return getPersonnelNumber() == otherObject.getPersonnelNumber();
+        }
     }
 
     public String toString() {

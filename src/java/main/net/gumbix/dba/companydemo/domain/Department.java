@@ -6,34 +6,36 @@ package net.gumbix.dba.companydemo.domain;
  */
 public class Department {
 
-	private long depNumber;
-	private String name;
+    private long depNumber;
+    private String name;
 
-	public Department() {
-	}
+    public Department(long depNumber, String name) {
+        this.depNumber = depNumber;
+        this.name = name;
+    }
 
-	public Department(long depNumber, String name) {
-		this.depNumber = depNumber;
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public long getDepNumber() {
+        return depNumber;
+    }
 
-	public long getDepNumber() {
-		return depNumber;
-	}
+    public boolean equals(Object other) {
+        if (other == null || !(other instanceof Department)) {
+            return false;
+        } else {
+            Department otherObject = (Department) other;
+            return getDepNumber() == otherObject.getDepNumber();
+        }
+    }
 
-	public void setDepNumber(long depNumber) {
-		this.depNumber = depNumber;
-	}
-
-	public String toString() {
-		return depNumber + ": " + name;
-	}
+    public String toString() {
+        return depNumber + ": " + name;
+    }
 }

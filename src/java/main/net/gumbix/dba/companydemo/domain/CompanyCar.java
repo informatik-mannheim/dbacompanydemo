@@ -45,6 +45,15 @@ public class CompanyCar {
         }
     }
 
+    public boolean equals(Object other) {
+        if (other == null || !(other instanceof CompanyCar)) {
+            return false;
+        } else {
+            CompanyCar otherObject = (CompanyCar) other;
+            return getLicensePlate() == otherObject.getLicensePlate();
+        }
+    }
+
     public String toString() {
         return licensePlate;
     }

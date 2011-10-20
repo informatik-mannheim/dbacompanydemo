@@ -5,6 +5,7 @@ import net.gumbix.dba.companydemo.domain.Project;
 import net.gumbix.dba.companydemo.domain.StatusReport;
 import net.gumbix.dba.companydemo.domain.WorksOn;
 
+import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -37,8 +38,9 @@ public class ProjectDAO extends AbstractDAO {
             for (WorksOn worksOn : access.loadWorksOn(proj)) {
                 proj.addEmployee(worksOn);
             }
-            Project.class.getField("nextStatusReportNumber")
-                    .setLong(proj, rs.getLong("naechsteStatusNummer"));
+            Field nextReportNumber = Project.class.getField("nextStatusReportNumber");
+            nextReportNumber.setAccessible(true);
+            nextReportNumber.setLong(proj, rs.getLong("naechsteStatusNummer"));
             return proj;
         } else {
             throw new ObjectNotFoundException(Project.class, projectId + "");

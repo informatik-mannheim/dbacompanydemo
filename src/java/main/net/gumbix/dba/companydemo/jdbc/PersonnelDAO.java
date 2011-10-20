@@ -32,39 +32,44 @@ public class PersonnelDAO extends AbstractDAO {
                 " where p.personalNr = " + personalNr);
 
         Personnel personnel;
-        if (rs.next()) {
-            if (rs.getLong("wPersNr") != 0) {
-                personnel = createAndCache(personalNr, new Worker());
-                ((Worker) personnel).setWorkspace(rs.getString("arbeitsplatz"));
-            } else if (rs.getLong("aPersNr") != 0) {
-                personnel = createAndCache(personalNr, new Employee());
-                Employee employee = (Employee) personnel;
-                employee.setPhoneNumber(rs.getString("telefonNr"));
-                // Try to assign a company car:
-                ResultSet rsC = executeSQLQuery("select * from Firmenwagen f" +
-                        " where f.personalNr = " + personalNr);
-                if (rsC.next()) {
-                    CompanyCar car = access.loadCompanyCar(rsC.getString("nummernschild"));
-                    employee.setCar(car);
-                }
-                rsC.close();
-                // Try to load projects:
-                Set<WorksOn> wOns = access.loadWorksOn(employee);
-                employee.setProjects(wOns);
-            } else {
-                personnel = createAndCache(personalNr, new Personnel());
-            }
-            personnel.setLastName(rs.getString("nachname"));
-            personnel.setFirstName(rs.getString("vorname"));
-            personnel.setPersonnelNumber(rs.getLong("personalNr"));
-            personnel.setPosition(rs.getString("funktion"));
 
+        if (rs.next()) {
+            String lastName = rs.getString("nachname");
+            String firstName = rs.getString("vorname");
             Address adr = new Address();
             adr.setStreet(rs.getString("strasse"));
             adr.setHouseNumber(rs.getString("hausNr"));
             adr.setZip(rs.getString("plz"));
             adr.setCity(rs.getString("ortsname"));
-            personnel.setBirthDate(rs.getDate("gebDatum"));
+            Date birthDate = rs.getDate("gebDatum");
+
+            if (rs.getLong("wPersNr") != 0) {
+                String workplace = rs.getString("arbeitsplatz");
+                Worker newWorker =
+                        new Worker(personalNr, lastName, firstName, birthDate, adr, workplace);
+                personnel = createAndCache(personalNr, newWorker);
+            } else if (rs.getLong("aPersNr") != 0) {
+                String telephone = rs.getString("telefonNr");
+                Employee newEmployee =
+                        new Employee(personalNr, lastName, firstName, birthDate, adr, telephone);
+                personnel = createAndCache(personalNr, newEmployee);
+                // Try to assign a company car:
+                ResultSet rsC = executeSQLQuery("select * from Firmenwagen f" +
+                        " where f.personalNr = " + personalNr);
+                if (rsC.next()) {
+                    CompanyCar car = access.loadCompanyCar(rsC.getString("nummernschild"));
+                    newEmployee.setCar(car);
+                }
+                rsC.close();
+                // Try to load projects:
+                Set<WorksOn> wOns = access.loadWorksOn(newEmployee);
+                newEmployee.setProjects(wOns);
+            } else {
+                Personnel newPersonnel =
+                        new Personnel(personalNr, lastName, firstName, birthDate, adr);
+                personnel = createAndCache(personalNr, newPersonnel);
+            }
+            personnel.setPosition(rs.getString("funktion"));
 
             long depNr = rs.getLong("abteilungsNr");
             if (depNr != 0) {

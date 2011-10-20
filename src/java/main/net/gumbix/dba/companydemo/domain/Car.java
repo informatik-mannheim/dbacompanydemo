@@ -9,13 +9,6 @@ public class Car {
 	private String model;
 	private String type;
 
-	public Car(){
-	}
-
-	public Car(String model) {
-		this.model = model;
-	}
-
 	public Car(String model, String type) {
 		this.model = model;
 		this.type = type;
@@ -23,10 +16,6 @@ public class Car {
 
 	public String getModel() {
 		return model;
-	}
-
-	public void setModel(String model) {
-		this.model = model;
 	}
 
 	public String getType() {

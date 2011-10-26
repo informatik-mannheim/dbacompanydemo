@@ -1,3 +1,23 @@
+/*
+A full-blown database demo developed at the
+Mannheim University of Applied Sciences.
+
+Copyright (C) 2011  the authors listed below.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 package net.gumbix.dba.companydemo.application.console;
 
 import net.gumbix.dba.companydemo.db.DBAccess;
@@ -19,6 +39,8 @@ import java.util.Locale;
  */
 public class UI {
 
+    private static String NAME = "CompanyDemo";
+    private static String VERSION = "0.1.0";
     private static String PROMPT = "Ihre Eingabe (Zahl): ";
     private static String INVALID_INPUT = "Fehlerhafte Eingabe \n\n";
     private static DBAccess db;
@@ -27,7 +49,7 @@ public class UI {
         try {
             selectDB();
             System.out
-                    .println("Vielen Dank, dass Sie DBA CompanyDemo genutzt haben.");
+                    .println("\nVielen Dank, dass Sie " + NAME + " genutzt haben.");
             System.out.println("Wir hoffen, dass es Spass gemacht hat.");
             credits();
         } catch (Exception e) {
@@ -43,14 +65,15 @@ public class UI {
 
         do {
             System.out
-                    .println("*** Willkommen im Datenbank-Auswahl-Menu ***\n\n"
+                    .println("*** Willkommen zu " + NAME + " " + VERSION + " ***\n\n"
                             + "Welche Datenbankzugriffsart möchten sie nutzen? \n\n"
                             + "1 SQL-Datenbank der Hochschule Mannheim (über JDBC) \n"
                             + "2 SQL-Datenbank der Hochschule Mannheim (über Hibernate) \n"
                             + "3 eigene SQL-Datenbank (über JDBC) \n"
                             + "4 eigene SQL-Datenbank (über Hibernate) \n"
                             + "5 eigene DB4O-Datenbank (Servermode) \n"
-                            + "6 lokale DB4O-Datenbank \n\n" + "9 Credits \n\n"
+                            + "6 lokale DB4O-Datenbank \n\n"
+                            + "9 Credits \n\n"
                             + "0 Programm beenden");
 
             menuChoice = getMenuChoice();
@@ -222,7 +245,7 @@ public class UI {
                     String workplace = getUserInputString();
                     worker.setWorkspace(workplace);
                     db.storePersonnel(worker);
-                    System.out.println(worker  + " angelegt.");
+                    System.out.println(worker + " angelegt.");
                     pressAnyKey();
                     break;
 
@@ -235,7 +258,7 @@ public class UI {
                     String telephone = getUserInputString();
                     employee.setPhoneNumber(telephone);
                     db.storePersonnel(employee);
-                    System.out.println(employee  + " angelegt.");
+                    System.out.println(employee + " angelegt.");
                     pressAnyKey();
                     break;
 
@@ -417,9 +440,8 @@ public class UI {
                 case 0:
                     break;
 
-                // invalide input
                 default:
-                    System.out.println("fehlerhafte Eingabe");
+                    System.out.println(INVALID_INPUT);
                     break;
             }
         } while (menuChoice != 0);
@@ -555,7 +577,7 @@ public class UI {
                     }
                     pressAnyKey();
                     break;
-                // menu "Abteilung anlegen"
+
                 case 3:
                     System.out.println("*** Abteilung anlegen ***\n");
 
@@ -594,7 +616,6 @@ public class UI {
                     }
                     break;
 
-                // menu "Abteilung löschen"
                 case 5:
                     System.out.println("*** Abteilung löschen ***\n");
 
@@ -608,7 +629,6 @@ public class UI {
                 case 0:
                     break;
 
-                // invalide input
                 default:
                     System.out.println(INVALID_INPUT);
                     break;
@@ -663,10 +683,16 @@ public class UI {
     }
 
     private static void credits() {
+
+        System.out.println("\n" + NAME + " version " + VERSION + ", Copyright (C) 2011");
+        System.out.println("CompanyDemo comes with ABSOLUTELY NO WARRANTY;");
+        System.out.println("This is free software, and you are welcome ");
+        System.out.println("to redistribute it under certain conditions;");
+        System.out.println("See gpl2.0.txt for details.");
         System.out
                 .println("\nFolgende Personen haben an diesem Projekt mitgearbeitet:");
-        System.out.println(" Marius Czardybon");
-        System.out.println(" Patrick Sturm");
-        System.out.println(" Markus Gumbel");
+        System.out.println(" - Marius Czardybon");
+        System.out.println(" - Patrick Sturm");
+        System.out.println(" - Markus Gumbel");
     }
 }

@@ -62,14 +62,6 @@ public class JdbcAccess extends AbstractDBAccess {
         JdbcIdGenerator.generator = new JdbcIdGenerator(this);
     }
 
-    public Object load(Class clazz, long id) throws Exception {
-        return null;
-    }
-
-    public void delete(Object object) throws Exception {
-        // TODO
-    }
-
     // Personnel
     public Personnel loadPersonnel(long persNr) throws Exception {
         return persDAO.load(persNr);
@@ -168,8 +160,8 @@ public class JdbcAccess extends AbstractDBAccess {
     }
 
     // StatusReports...
-    public StatusReport loadStatusReport(long continuousNumber) throws Exception {
-        return null; // TODO
+    public StatusReport loadStatusReport(Project project, long continuousNumber) throws Exception {
+        return statDAO.load(project, continuousNumber);
     }
 
     public List<StatusReport> loadStatusReport(Project project) throws Exception {
@@ -199,6 +191,10 @@ public class JdbcAccess extends AbstractDBAccess {
 
     public void deleteWorksOn(WorksOn wo) throws Exception {
         woOnDAO.delete(wo);
+    }
+
+    public void close() {
+        // TODO what to close?
     }
 }
 

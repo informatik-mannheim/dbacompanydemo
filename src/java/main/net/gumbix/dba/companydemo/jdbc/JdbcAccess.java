@@ -17,10 +17,10 @@ public class JdbcAccess implements DBAccess {
     private CompanyCarDAO comCarDAO = new CompanyCarDAO(this);
     private DepartmentDAO depDAO = new DepartmentDAO(this);
     private PersonnelDAO persDAO = new PersonnelDAO(this);
-    private EmployeeDAO empDAO = new EmployeeDAO(this);
+    private EmployeeDAO emplDAO = new EmployeeDAO(this);
     private ProjectDAO projDAO = new ProjectDAO(this);
     private StatusReportDAO statDAO = new StatusReportDAO(this);
-    private WorkerDAO workDAO = new WorkerDAO(this);
+    private WorkerDAO workerDAO = new WorkerDAO(this);
     private WorksOnDAO woOnDAO = new WorksOnDAO(this);
 
     public Connection connection;
@@ -38,6 +38,7 @@ public class JdbcAccess implements DBAccess {
     public JdbcAccess(String url, String user, String pwd) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         connection = DriverManager.getConnection(url, user, pwd);
+        JdbcIdGenerator.generator = new JdbcIdGenerator(this);
     }
 
     public Object load(Class clazz, long id) throws Exception {
@@ -59,57 +60,36 @@ public class JdbcAccess implements DBAccess {
 
     public void storePersonnel(Personnel pers) throws Exception {
         if (pers instanceof Worker) {
-            storeWorker((Worker) pers);
+            workerDAO.store((Worker) pers);
         } else if (pers instanceof Employee) {
-            storeEmployee((Employee) pers);
+            emplDAO.store((Employee) pers);
         } else {
-            // TODO
+            persDAO.store(pers);
         }
     }
 
     public void deletePersonnel(Personnel pers) throws Exception {
         if (pers instanceof Worker) {
-            deleteWorker((Worker) pers);
+            workerDAO.delete((Worker) pers);
         } else if (pers instanceof Employee) {
-            deleteEmployee((Employee) pers);
+            emplDAO.delete((Employee) pers);
         } else {
-            // TODO
+            persDAO.delete(pers);
         }
+    }
+
+    public long nextPersonnelId() throws Exception{
+        return persDAO.nextId();
     }
 
     // Employees...
     public Employee loadEmployee(long persNr) throws Exception {
-        // empDAO.load(persNr);
-        return (Employee) persDAO.load(persNr);
-    }
-
-    public List<Employee> loadEmployee(String firstName, String lastName) throws Exception {
-        return empDAO.load(firstName, lastName);
-    }
-
-    public void storeEmployee(Employee emp) throws Exception {
-        empDAO.store(emp);
-    }
-
-    public void deleteEmployee(Employee emp) throws Exception {
-        empDAO.delete(emp);
+        return emplDAO.load(persNr);
     }
 
     // Worker...
     public Worker loadWorker(long persNr) throws Exception {
-        return workDAO.load(persNr);
-    }
-
-    public List<Worker> queryWorkerByName(String firstName, String lastName) throws Exception {
-        return workDAO.load(firstName, lastName);
-    }
-
-    public void storeWorker(Worker work) throws Exception {
-        workDAO.store(work);
-    }
-
-    public void deleteWorker(Worker worker) throws Exception {
-        workDAO.delete(worker);
+        return workerDAO.load(persNr);
     }
 
     // Cars...

@@ -10,46 +10,46 @@ import java.util.Date;
  */
 public class Employee extends Personnel {
 
-	private String phoneNumber;
-	private CompanyCar car;
-	private Set<WorksOn> projects = new HashSet<WorksOn>();
+    private String phoneNumber;
+    private CompanyCar car;
+    private Set<WorksOn> projects = new HashSet<WorksOn>();
 
-	public Employee(long personnelNumber, String lastName, String firstName,
+    public Employee(long personnelNumber, String lastName, String firstName,
                     Date birthDate, Address adr, String tel) {
-		super(personnelNumber, lastName, firstName, birthDate, adr);
-		this.phoneNumber = tel;
-	}
+        super(personnelNumber, lastName, firstName, birthDate, adr);
+        this.phoneNumber = tel;
+    }
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
-	public CompanyCar getCar() {
-		return car;
-	}
+    public CompanyCar getCar() {
+        return car;
+    }
 
-	public void setCar(CompanyCar car) {
-		this.car = car;
+    public void setCar(CompanyCar car) {
+        this.car = car;
         if (car.getDriver() != this) {
             car.setDriver(this);
         }
-	}
+    }
 
-	public Set<WorksOn> getProjects() {
-		return projects;
-	}
+    public Set<WorksOn> getProjects() {
+        return projects;
+    }
 
-    // TODO adapt like Project
-	public void setProjects(Set<WorksOn> projects) {
-		this.projects = projects;
-	}
-
-    public void addProject(WorksOn worksOn) {
-        projects.add(worksOn);
+    /**
+     * Add a project.
+     * @param worksOn
+     * @return False if project was already added, true if not.
+     */
+    public boolean addProject(WorksOn worksOn) {
+        return projects.add(worksOn);
     }
 
     public String toString() {
@@ -58,8 +58,8 @@ public class Employee extends Personnel {
     }
 
     public String toFullString() {
-        String s =  super.toFullString() + "\n" +
-               "Telefon:    " + phoneNumber;
+        String s = super.toFullString() + "\n" +
+                "Telefon:    " + phoneNumber;
         if (car != null) {
             s += "\nAuto:       " + car;
         }

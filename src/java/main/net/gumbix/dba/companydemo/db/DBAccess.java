@@ -29,12 +29,8 @@ public interface DBAccess {
     // Employee
     public Employee loadEmployee(long persNr) throws Exception;
 
-    public List<Employee> loadEmployee(String firstName, String lastName) throws Exception;
-
     // Worker
     public Worker loadWorker(long persNr) throws Exception;
-
-    public List<Worker> queryWorkerByName(String firstName, String lastName) throws Exception;
 
     // Department
     public Department loadDepartment(long depNumber) throws Exception;

@@ -8,7 +8,6 @@ import net.gumbix.dba.companydemo.jdbc.JdbcAccess;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Date;
 import java.util.Locale;
@@ -117,22 +116,22 @@ public class UI {
             switch (menuChoice) {
                 // menu "1 Mitarbeiter verwalten"
                 case 1:
-                    goToPersonnelMenu();
+                    personnelMenu();
                     break;
 
                 // menu "2 Projekte verwalten"
                 case 2:
-                    gotoProjekteMenu();
+                    projectsMenu();
                     break;
 
                 // menu "3 Firmenwagen verwalten"
                 case 3:
-                    gotoFirmenwagenMenu();
+                    companyCarMenu();
                     break;
 
                 // menu "4 Abteilungen verwalten"
                 case 4:
-                    gotoAbteilungenMenu();
+                    departmentsMenu();
                     break;
 
                 // menu zurueck
@@ -146,26 +145,26 @@ public class UI {
         } while (menuChoice != 0);
     }
 
-    private static void goToPersonnelMenu() throws Exception {
+    private static void personnelMenu() throws Exception {
         int menuChoice;
 
         do {
             System.out.println("*** Personal verwalten ***\n\n"
                     + "Was möchten Sie tun?\n\n"
-                    + "1 Mitarbeiter suchen (Personalnr.)\n"
-                    + "2 Mitarbeiter suchen (Name, Vorname)\n"
+                    + "1 Mitarbeiter/Arbeiter/Angestellter suchen (Personalnr.)\n"
+                    + "2 Mitarbeiter/Arbeiter/Angestellter suchen (Name, Vorname)\n"
                     + "3 Mitarbeiter neu anlegen \n"
                     + "4 Mitarbeiter editieren \n"
-                    + "5 Arbeiter neu anlegen \n" + "6 Arbeiter editieren \n"
+                    + "5 Arbeiter neu anlegen \n"
+                    + "6 Arbeiter editieren \n"
                     + "7 Angestellte neu anlegen \n"
-                    + "8 Angestellte editieren \n" + "9 Mitarbeiter löschen\n"
+                    + "8 Angestellte editieren \n"
+                    + "9 Mitarbeiter/Arbeiter/Angestellter löschen\n"
                     + "0 Zurück");
 
             menuChoice = getMenuChoice();
 
             switch (menuChoice) {
-
-                // Mitarbeiter suchen
                 case 1:
                     System.out
                             .println("*** Mitarbeiter suchen (nach Personalnummer) ***\n");
@@ -204,7 +203,52 @@ public class UI {
                     }
                     pressAnyKey();
                     break;
-                // menu "0 Zurück"
+
+                case 3:
+                    System.out
+                            .println("*** Mitarbeiter eingeben ***\n");
+                    Personnel personnel = new Personnel(null, null, null, null);
+                    createPersonnel(personnel);
+                    db.storePersonnel(personnel);
+                    System.out.println("Mitarbeiter " + personnel + " erzeugt.");
+                    break;
+
+                case 5:
+                    System.out
+                            .println("*** Arbeiter eingeben ***\n");
+                    Worker worker = new Worker(0, null, null, null, null, null);
+                    createPersonnel(worker);
+                    System.out.print("Arbeitsplatz: ");
+                    String workplace = getUserInputString();
+                    worker.setWorkspace(workplace);
+                    db.storePersonnel(worker);
+                    break;
+
+                case 7:
+                    System.out
+                            .println("*** Angestellten eingeben ***\n");
+                    Employee employee = new Employee(0, null, null, null, null, null);
+                    createPersonnel(employee);
+                    System.out.print("Telefon: ");
+                    String telephone = getUserInputString();
+                    employee.setPhoneNumber(telephone);
+                    db.storePersonnel(employee);
+                    break;
+
+                case 9:
+                    System.out
+                            .println("*** Mitarbeiter/Arbeiter/Angestellten löschen ***\n");
+
+                    System.out.print("Personalnr: ");
+                    long personalNumber = getUserInputLong();
+                    try {
+                        personnel = db.loadPersonnel(personalNumber);
+                        db.deletePersonnel(personnel);
+                    } catch (ObjectNotFoundException e) {
+                       System.out.println("Keine(n) Mitarbeiter gefunden!\n");
+                    }
+                    break;
+
                 case 0:
                     break;
 
@@ -216,39 +260,36 @@ public class UI {
         } while (menuChoice != 0);
     }
 
-    private void createPersonnel(Personnel personnel) throws Exception {
-        System.out.println("*** Arbeiter anlegen ***\n");
+    private static void createPersonnel(Personnel personnel) throws Exception {
 
-        /*
-           * System.out.println("Personalnummer eingeben: "); not used because of
-           * auto incremented value in database persNrStr = getUserInputString();
-           * persNr = Long.valueOf(persNrStr);
-           */
-        System.out.println("-------- Personalien -------- \n");
-        System.out.print("Nachname eingeben: ");
+        System.out.println("-------- Personalien -------- ");
+        if (personnel.getLastName() != null) {
+            System.out.println("Nachname: " + personnel.getLastName());
+        }
+        System.out.print("Nachname: ");
         String lastName = getUserInputString();
 
-        System.out.print("Vorname eingeben: ");
+        System.out.print("Vorname: ");
         String firstName = getUserInputString();
 
-        System.out.print("Geburtsdatum eingeben (z.B. 30.11.1957):");
+        System.out.print("Geburtsdatum (z.B. 30.11.1957):");
         String bDate = getUserInputString();
 
-        System.out.println("-------- Adresse -------- \n");
-        System.out.println("Strasse eingeben: ");
+        System.out.println("-------- Adresse -------- ");
+        System.out.print("Strasse: ");
         String street = getUserInputString();
 
-        System.out.println("Haus Nr. eingeben: ");
+        System.out.print("Hausnr.: ");
         String houseNo = getUserInputString();
 
-        System.out.println("Postleitzahl eingeben: ");
+        System.out.print("Postleitzahl: ");
         String zip = getUserInputString();
 
-        System.out.println("Stadt eingeben: ");
+        System.out.print("Stadt: ");
         String city = getUserInputString();
 
-        System.out.println("-------- Arbeitsplatz -------- \n");
-        System.out.println("Arbeitsplatz eingeben: ");
+        System.out.println("-------- Arbeitsplatz -------- ");
+        System.out.print("Arbeitsplatz: ");
         String workspace = getUserInputString();
 
         Address adr = new Address(street, houseNo, zip, city);
@@ -259,7 +300,7 @@ public class UI {
         personnel.setAddress(adr);
     }
 
-    private static void gotoProjekteMenu() throws Exception {
+    private static void projectsMenu() throws Exception {
 
         int menuChoice;
 
@@ -384,7 +425,7 @@ public class UI {
         } while (menuChoice != 0);
     }
 
-    private static void gotoFirmenwagenMenu() throws Exception {
+    private static void companyCarMenu() throws Exception {
         int menuChoice;
         Car car;
 
@@ -414,7 +455,7 @@ public class UI {
                     }
                     pressAnyKey();
                     break;
-                // menu "Firmenwagen anlegen"
+
                 case 2:
                     System.out.println("*** Firmenwagen anlegen ***\n");
 
@@ -472,7 +513,7 @@ public class UI {
         } while (menuChoice != 0);
     }
 
-    private static void gotoAbteilungenMenu() throws Exception {
+    private static void departmentsMenu() throws Exception {
         int menuChoice;
         Department dep;
         do {

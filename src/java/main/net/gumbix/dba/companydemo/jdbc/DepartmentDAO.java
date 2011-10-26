@@ -55,6 +55,7 @@ public class DepartmentDAO extends AbstractDAO {
             pstmt.setString(1, department.getName());
             pstmt.setLong(2, department.getDepNumber());
             pstmt.execute();
+            pstmt.close();
 
         } catch (ObjectNotFoundException e) {
             // new record
@@ -63,11 +64,13 @@ public class DepartmentDAO extends AbstractDAO {
             pstmt.setLong(1, department.getDepNumber());
             pstmt.setString(2, department.getName());
             pstmt.execute();
+            pstmt.close();
         }
     }
 
     public void delete(Department department) throws Exception {
         executeSQLQuery("delete from Abteilung where abteilungsNr = " +
                 "'" + department.getDepNumber() + "'");
+
     }
 }

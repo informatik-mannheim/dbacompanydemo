@@ -1,5 +1,7 @@
 package net.gumbix.dba.companydemo.domain;
 
+import net.gumbix.dba.companydemo.db.IdGenerator;
+
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,9 +22,12 @@ public class Personnel {
     private String position;
     private Personnel boss;
 
+    public Personnel(String lastName, String firstName, Date birthDate, Address adr) {
+        this(IdGenerator.generator.getNextLong(Personnel.class),
+                lastName, firstName, birthDate, adr);
+    }
 
-    public Personnel(long personnelNumber, String lastName, String firstName,
-                     Date birthDate, Address adr) {
+    public Personnel(long personnelNumber, String lastName, String firstName, Date birthDate, Address adr) {
         this.personnelNumber = personnelNumber;
         this.lastName = lastName;
         this.firstName = firstName;

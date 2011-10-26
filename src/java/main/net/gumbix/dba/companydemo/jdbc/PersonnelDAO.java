@@ -3,9 +3,9 @@ package net.gumbix.dba.companydemo.jdbc;
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
 import net.gumbix.dba.companydemo.domain.*;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 /**
  * @author Patrick Sturm
@@ -28,7 +28,7 @@ public class PersonnelDAO extends AbstractDAO {
             return e;
         }
 
-        ResultSet rs = executeSQLQuery("select * from Personnel p" +
+        ResultSet rs = executeSQLQuery("select * from MitarbeiterAlleKlassen p" +
                 " where p.personalNr = " + personalNr);
 
         Personnel personnel;
@@ -63,7 +63,9 @@ public class PersonnelDAO extends AbstractDAO {
                 rsC.close();
                 // Try to load projects:
                 Set<WorksOn> wOns = access.loadWorksOn(newEmployee);
-                newEmployee.setProjects(wOns);
+                for (WorksOn wOn : wOns) {
+                    newEmployee.addProject(wOn);
+                }
             } else {
                 Personnel newPersonnel =
                         new Personnel(personalNr, lastName, firstName, birthDate, adr);
@@ -110,50 +112,64 @@ public class PersonnelDAO extends AbstractDAO {
         return persons;
     }
 
-    // Store or Update an Personnel Object in Table "Mitarbeiter"
     public void store(Personnel pers) throws Exception {
 
         // TODO consider cache!
 
-        /*
-        PreparedStatement pstmt;
+        try {
+            Personnel dep = load(pers.getPersonnelNumber());
 
-        if (pers.getPersonnelNumber() == 0) {
-
-            // new record
-            pstmt = connection.prepareStatement("insert into Mitarbeiter values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+            // update TODO fields missing
+            PreparedStatement pstmt =
+                    prepareStatement("update Mitarbeiter set vorname = ?, " +
+                            " set nachname = ?, set strasse = ?, " +
+                            " set hausNr = ?, set plz = ?, " +
+                            " set gebDatum = ?, set abteilungsNr = ?, " +
+                            " funktion = ?, vorgesetzterNr = ? " +
+                            " where personalNr = ?");
+            pstmt.setString(1, pers.getFirstName());
+            pstmt.setString(2, pers.getLastName());
+            pstmt.setString(3, pers.getAddress().getStreet());
+            pstmt.setString(4, pers.getAddress().getHouseNumber());
+            pstmt.setString(5, pers.getAddress().getZip());
+            pstmt.setDate(6, new java.sql.Date(pers.getBirthDate().getTime()));
+            pstmt.setLong(7, pers.getDepartment().getDepNumber());
+            pstmt.setString(8, pers.getPosition());
+            pstmt.setLong(9, pers.getBoss().getPersonnelNumber());
+            pstmt.execute();
+        } catch (ObjectNotFoundException e) {
+            // new
+            PreparedStatement pstmt =
+                    prepareStatement("insert into Mitarbeiter values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
             pstmt.setLong(1, pers.getPersonnelNumber());
             pstmt.setString(2, pers.getFirstName());
             pstmt.setString(3, pers.getLastName());
-            pstmt.setString(4, pers.getStreet());
-            pstmt.setString(5, pers.getHouseNo());
+            pstmt.setString(4, pers.getAddress().getStreet());
+            pstmt.setString(5, pers.getAddress().getHouseNumber());
             pstmt.setString(6, pers.getAddress().getZip());
-            pstmt.setDate(7, new java.sql.Date(pers.getBirthDate().getTimeInMillis()));
+            pstmt.setDate(7, new java.sql.Date(pers.getBirthDate().getTime()));
             pstmt.setObject(8, pers.getDepartment());
             pstmt.setString(9, pers.getPosition());
             pstmt.setObject(10, pers.getBoss());
             pstmt.execute();
-
-        } else {
-
-            // update
-            pstmt = connection.prepareStatement("update Mitarbeiter set abteilungsNr = ?, funktion = ?, vorgesetzterNr = ? where personalNr = ?");
-            pstmt.setLong(1, pers.getDepartment().getDepNumber());
-            pstmt.setString(2, pers.getPosition());
-            pstmt.setLong(3, pers.getBoss().getPersonnelNumber());
-            pstmt.setLong(4, pers.getPersonnelNumber());
-            pstmt.execute();
-
         }
-        */
     }
 
-    // Delete an Personnel Object from Table "Mitarbeiter"
     public void delete(Personnel personnel) throws Exception {
         PreparedStatement pstmt =
-                access.connection.prepareStatement("delete from Mitarbeiter where personalNr = ?");
+                prepareStatement("delete from Mitarbeiter where personalNr = ?");
         pstmt.setLong(1, personnel.getPersonnelNumber());
         pstmt.execute();
+        pstmt.close();
+        cache.remove(personnel.getPersonnelNumber());
+    }
+
+    public long nextId() throws Exception {
+        ResultSet rs = executeSQLQuery("select max(personalNr) from Mitarbeiter");
+        rs.next();
+        long next = rs.getLong(1);
+        rs.close();
+        return next;
     }
 
     private Personnel createAndCache(long personalNr, Personnel personnel) {

@@ -5,7 +5,7 @@ drop table if exists Statusbericht, MitarbeiterArbeitetAnProjekt, Projekt;
 drop table if exists Firmenwagen, Auto; 
 drop table if exists Angestellter, Arbeiter, Mitarbeiter;
 drop table if exists Ort, Abteilung;
-drop view if exists Personnel;
+drop view if exists MitarbeiterAlleKlassen;
 
 /*
 Wir verwenden Constraints wie z.B. foreign-key. Das bedeutet aber:
@@ -120,7 +120,7 @@ foreign key (projektId) references Projekt(projektId)
 -- Einige Views für die Programmierung
 
 -- Wird für das Laden von Mitarbeitern benötigt:
-create view Personnel as
+create view MitarbeiterAlleKlassen as
 select m.*, o.ortsname, w.personalNr as wPersNr, w.arbeitsplatz, a.personalNr as aPersNr, a.telefonNr
 from Mitarbeiter m left outer join Arbeiter w on m.personalNr = w.personalNr
 left outer join Angestellter a on m.personalNr = a.personalNr natural join Ort o;

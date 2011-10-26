@@ -24,6 +24,7 @@ import java.sql.*;
 import java.util.List;
 import java.util.Set;
 
+import net.gumbix.dba.companydemo.db.AbstractDBAccess;
 import net.gumbix.dba.companydemo.db.DBAccess;
 import net.gumbix.dba.companydemo.domain.*;
 
@@ -31,7 +32,7 @@ import net.gumbix.dba.companydemo.domain.*;
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Marius Czardybon (m.czardybon@gmx.net)
  */
-public class JdbcAccess implements DBAccess {
+public class JdbcAccess extends AbstractDBAccess {
 
     private CarDAO carDAO = new CarDAO(this);
     private CompanyCarDAO comCarDAO = new CompanyCarDAO(this);
@@ -98,18 +99,8 @@ public class JdbcAccess implements DBAccess {
         }
     }
 
-    public long nextPersonnelId() throws Exception{
+    public long nextPersonnelId() throws Exception {
         return persDAO.nextId();
-    }
-
-    // Employees...
-    public Employee loadEmployee(long persNr) throws Exception {
-        return emplDAO.load(persNr);
-    }
-
-    // Worker...
-    public Worker loadWorker(long persNr) throws Exception {
-        return workerDAO.load(persNr);
     }
 
     // Cars...
@@ -178,9 +169,9 @@ public class JdbcAccess implements DBAccess {
 
     // StatusReports...
     public StatusReport loadStatusReport(long continuousNumber) throws Exception {
-    	return null; // TODO
+        return null; // TODO
     }
-    
+
     public List<StatusReport> loadStatusReport(Project project) throws Exception {
         return statDAO.load(project);
     }

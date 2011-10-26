@@ -32,11 +32,6 @@ import java.util.Set;
  */
 public interface DBAccess {
 
-    // Experimental...
-    public Object load(Class clazz, long id) throws Exception;
-
-    public void delete(Object object) throws Exception;
-
     // Personnel
     public Personnel loadPersonnel(long persNr) throws Exception;
 

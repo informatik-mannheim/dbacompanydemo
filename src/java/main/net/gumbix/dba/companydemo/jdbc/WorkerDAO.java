@@ -37,19 +37,6 @@ public class WorkerDAO extends PersonnelDAO {
         super(access);
     }
 
-    public Worker load(long persNr) throws Exception {
-        // Note: An ObjectNotFound exception can be thrown anyway:
-        Personnel personnel = access.loadPersonnel(persNr);
-        if (personnel instanceof Worker) {
-            return (Worker) personnel;
-        } else {
-            throw new ObjectNotFoundException(personnel.getClass(),
-                    "Personnelnumber " +
-                            persNr + " refers to an object of type " +
-                            personnel.getClass().getName());
-        }
-    }
-
     public void store(Worker worker) throws Exception {
         // First create an entry in table Mitarbeiter:
         super.store(worker);

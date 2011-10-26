@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.gumbix.dba.companydemo.db.AbstractDBAccess;
 import net.gumbix.dba.companydemo.db.DBAccess;
 import net.gumbix.dba.companydemo.db.IdGenerator;
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
@@ -47,320 +48,288 @@ import com.db4o.query.Predicate;
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Marius Czardybon (m.czardybon@gmx.net)
  */
-public class Db4oAccess implements DBAccess {
+public class Db4oAccess extends AbstractDBAccess {
 
-	public ObjectContainer db;
+    public ObjectContainer db;
 
-	public Db4oAccess() {
-		// ServerConfiguration config =
-		// Db4oClientServer.newServerConfiguration();
-		db = Db4oClientServer.openClient("localhost", 8732, "firmenwelt",
-				"firmenwelt10");
+    public Db4oAccess() {
+        // ServerConfiguration config =
+        // Db4oClientServer.newServerConfiguration();
+        db = Db4oClientServer.openClient("localhost", 8732, "firmenwelt",
+                "firmenwelt10");
 
-		db.ext().configure().activationDepth(5);
-		db.ext().configure().updateDepth(5);
-		// db.ext().configure().objectClass(StatusReport.class).persistStaticFieldValues();
-		
-		// Load the auto-increment ids:
-		ObjectSet<IdGenerator> ids = db.queryByExample(new Db4oIdGenerator());
-		if (ids.hasNext()) {
-			IdGenerator.generator = ids.next();
-		} else {
-			System.out.println("IDs fangen bei 1 an.");
-			IdGenerator.generator = new Db4oIdGenerator();
-			db.store(IdGenerator.generator);
-		}
-	}
-	
-	public void close() {
-		db.store(IdGenerator.generator);
-		db.commit();
-		db.close();
-	}
+        db.ext().configure().activationDepth(5);
+        db.ext().configure().updateDepth(5);
+        // db.ext().configure().objectClass(StatusReport.class).persistStaticFieldValues();
 
-	public Object load(Class clazz, long id) throws Exception {
-		return null; // To change body of implemented methods use File |
-						// Settings | File Templates.
-	}
+        // Load the auto-increment ids:
+        ObjectSet<IdGenerator> ids = db.queryByExample(new Db4oIdGenerator());
+        if (ids.hasNext()) {
+            IdGenerator.generator = ids.next();
+        } else {
+            System.out.println("IDs fangen bei 1 an.");
+            IdGenerator.generator = new Db4oIdGenerator();
+            db.store(IdGenerator.generator);
+        }
+    }
 
-	public void delete(Object object) throws Exception {
-		// To change body of implemented methods use File | Settings | File
-		// Templates.
-	}
+    public void close() {
+        db.store(IdGenerator.generator);
+        db.commit();
+        db.close();
+    }
 
-	public Personnel loadPersonnel(long persNr) throws Exception {
-		ObjectSet<Personnel> set = db.queryByExample(new Personnel(persNr,
-				null, null, null, null));
+    public Personnel loadPersonnel(long persNr) throws Exception {
+        ObjectSet<Personnel> set = db.queryByExample(new Personnel(persNr,
+                null, null, null, null));
 
-		if (set.hasNext()) {
-			return set.next();
-		} else {
-			throw new ObjectNotFoundException(Personnel.class, persNr + "");
-		}
-	}
+        if (set.hasNext()) {
+            return set.next();
+        } else {
+            throw new ObjectNotFoundException(Personnel.class, persNr + "");
+        }
+    }
 
-	public List<Personnel> queryPersonnelByName(final String firstName,
-			final String lastName) throws Exception {
-		// If query string contains a *, we remove the * and use startsWith:
-		final String firstNameStartsWith;
-		if (firstName.endsWith("*")) {
-			firstNameStartsWith = firstName
-					.substring(0, firstName.length() - 1);
-		} else {
-			firstNameStartsWith = null;
-		}
-		final String lastNameStartsWith;
-		if (lastName.endsWith("*")) {
-			lastNameStartsWith = lastName.substring(0, lastName.length() - 1);
-		} else {
-			lastNameStartsWith = null;
-		}
+    public List<Personnel> queryPersonnelByName(final String firstName,
+                                                final String lastName) throws Exception {
+        // If query string contains a *, we remove the * and use startsWith:
+        final String firstNameStartsWith;
+        if (firstName.endsWith("*")) {
+            firstNameStartsWith = firstName
+                    .substring(0, firstName.length() - 1);
+        } else {
+            firstNameStartsWith = null;
+        }
+        final String lastNameStartsWith;
+        if (lastName.endsWith("*")) {
+            lastNameStartsWith = lastName.substring(0, lastName.length() - 1);
+        } else {
+            lastNameStartsWith = null;
+        }
 
-		ObjectSet<Personnel> carList = db.query(new Predicate<Personnel>() {
-			public boolean match(Personnel personnel) {
-				boolean first = false;
-				if (firstNameStartsWith != null) {
-					first = personnel.getFirstName().startsWith(
-							firstNameStartsWith);
-				} else {
-					first = personnel.getFirstName().equals(firstName);
-				}
-				boolean last = false;
-				if (lastNameStartsWith != null) {
-					last = personnel.getLastName().startsWith(
-							lastNameStartsWith);
-				} else {
-					last = personnel.getLastName().equals(lastName);
-				}
-				return first && last;
-			}
-		});
-		return Arrays.asList(carList.toArray(new Personnel[0]));
-	}
+        ObjectSet<Personnel> carList = db.query(new Predicate<Personnel>() {
+            public boolean match(Personnel personnel) {
+                boolean first = false;
+                if (firstNameStartsWith != null) {
+                    first = personnel.getFirstName().startsWith(
+                            firstNameStartsWith);
+                } else {
+                    first = personnel.getFirstName().equals(firstName);
+                }
+                boolean last = false;
+                if (lastNameStartsWith != null) {
+                    last = personnel.getLastName().startsWith(
+                            lastNameStartsWith);
+                } else {
+                    last = personnel.getLastName().equals(lastName);
+                }
+                return first && last;
+            }
+        });
+        return Arrays.asList(carList.toArray(new Personnel[0]));
+    }
 
-	public void storePersonnel(Personnel personnel) throws Exception {
-		db.store(personnel);
-	}
+    public void storePersonnel(Personnel personnel) throws Exception {
+        db.store(personnel);
+    }
 
-	public void deletePersonnel(Personnel personnel) throws Exception {
-		db.delete(personnel);
-	}
+    public void deletePersonnel(Personnel personnel) throws Exception {
+        db.delete(personnel);
+    }
 
-	public Employee loadEmployee(long persNr) throws Exception {
-		return null; // To change body of implemented methods use File |
-						// Settings | File Templates.
-	}
+    public Department loadDepartment(long depNumber) throws Exception {
+        ObjectSet<Department> set = db.queryByExample(new Department(depNumber,
+                null));
 
-	public List<Employee> loadEmployee(String firstName, String lastName)
-			throws Exception {
-		return null; // To change body of implemented methods use File |
-						// Settings | File Templates.
-	}
+        if (set.hasNext()) {
+            return set.next();
+        } else {
+            throw new ObjectNotFoundException(Department.class, depNumber + "");
+        }
+    }
 
-	public Worker loadWorker(long persNr) throws Exception {
-		return null; // To change body of implemented methods use File |
-						// Settings | File Templates.
-	}
+    public List<Department> queryDepartmentByName(final String queryString)
+            throws Exception {
+        // If query string contains a *, we remove the * and use startsWith:
+        final String startsWith;
+        if (queryString.endsWith("*")) {
+            startsWith = queryString.substring(0, queryString.length() - 1);
+        } else {
+            startsWith = null;
+        }
 
-	public List<Worker> queryWorkerByName(String firstName, String lastName)
-			throws Exception {
-		return null; // To change body of implemented methods use File |
-						// Settings | File Templates.
-	}
+        ObjectSet<Department> depList = db.query(new Predicate<Department>() {
+            public boolean match(Department department) {
+                if (startsWith != null) {
+                    return department.getName().startsWith(startsWith);
+                } else {
+                    return department.getName().equals(queryString);
+                }
+            }
+        });
+        return Arrays.asList(depList.toArray(new Department[0]));
+    }
 
-	public Department loadDepartment(long depNumber) throws Exception {
-		ObjectSet<Department> set = db.queryByExample(new Department(depNumber,
-				null));
+    public void storeDepartment(Department department) throws Exception {
+        db.store(department);
+    }
 
-		if (set.hasNext()) {
-			return set.next();
-		} else {
-			throw new ObjectNotFoundException(Department.class, depNumber + "");
-		}
-	}
+    public void deleteDepartment(Department department) throws Exception {
+        db.delete(department);
+    }
 
-	public List<Department> queryDepartmentByName(final String queryString)
-			throws Exception {
-		// If query string contains a *, we remove the * and use startsWith:
-		final String startsWith;
-		if (queryString.endsWith("*")) {
-			startsWith = queryString.substring(0, queryString.length() - 1);
-		} else {
-			startsWith = null;
-		}
+    public Car loadCar(String model) throws Exception {
+        ObjectSet<Car> set = db.queryByExample(new Car(model, null));
 
-		ObjectSet<Department> depList = db.query(new Predicate<Department>() {
-			public boolean match(Department department) {
-				if (startsWith != null) {
-					return department.getName().startsWith(startsWith);
-				} else {
-					return department.getName().equals(queryString);
-				}
-			}
-		});
-		return Arrays.asList(depList.toArray(new Department[0]));
-	}
+        if (set.hasNext()) {
+            return set.next();
+        } else {
+            throw new ObjectNotFoundException(Car.class, model);
+        }
+    }
 
-	public void storeDepartment(Department department) throws Exception {
-		db.store(department);
-	}
+    public void storeCar(Car car) throws Exception {
+        db.store(car);
+    }
 
-	public void deleteDepartment(Department department) throws Exception {
-		db.delete(department);
-	}
+    public void deleteCar(Car car) throws Exception {
+        db.delete(car);
+    }
 
-	public Car loadCar(String model) throws Exception {
-		ObjectSet<Car> set = db.queryByExample(new Car(model, null));
+    public CompanyCar loadCompanyCar(String licensePlate) throws Exception {
+        ObjectSet<CompanyCar> set = db.queryByExample(new CompanyCar(
+                licensePlate, null));
 
-		if (set.hasNext()) {
-			return set.next();
-		} else {
-			throw new ObjectNotFoundException(Car.class, model);
-		}
-	}
+        if (set.hasNext()) {
+            return set.next();
+        } else {
+            throw new ObjectNotFoundException(CompanyCar.class, licensePlate);
+        }
+    }
 
-	public void storeCar(Car car) throws Exception {
-		db.store(car);
-	}
+    public void storeCompanyCar(CompanyCar car) throws Exception {
+        db.store(car);
+    }
 
-	public void deleteCar(Car car) throws Exception {
-		db.delete(car);
-	}
+    public List<CompanyCar> queryCompanyCarByModel(final String model)
+            throws Exception {
+        ObjectSet<CompanyCar> carList = db.query(new Predicate<CompanyCar>() {
+            public boolean match(CompanyCar car) {
+                return car.getCar().getModel().equalsIgnoreCase(model);
+            }
+        });
+        return Arrays.asList(carList.toArray(new CompanyCar[0]));
+    }
 
-	public CompanyCar loadCompanyCar(String licensePlate) throws Exception {
-		ObjectSet<CompanyCar> set = db.queryByExample(new CompanyCar(
-				licensePlate, null));
+    public void deleteCompanyCar(CompanyCar car) throws Exception {
+        db.delete(car);
+    }
 
-		if (set.hasNext()) {
-			return set.next();
-		} else {
-			throw new ObjectNotFoundException(CompanyCar.class, licensePlate);
-		}
-	}
+    public Project loadProject(String projectNumber) throws Exception {
+        ObjectSet<Project> set = db.queryByExample(new Project(projectNumber, null));
 
-	public void storeCompanyCar(CompanyCar car) throws Exception {
-		db.store(car);
-	}
+        if (set.hasNext()) {
+            return set.next();
+        } else {
+            throw new ObjectNotFoundException(Project.class, projectNumber + "");
+        }
+    }
 
-	public List<CompanyCar> queryCompanyCarByModel(final String model)
-			throws Exception {
-		ObjectSet<CompanyCar> carList = db.query(new Predicate<CompanyCar>() {
-			public boolean match(CompanyCar car) {
-				return car.getCar().getModel().equalsIgnoreCase(model);
-			}
-		});
-		return Arrays.asList(carList.toArray(new CompanyCar[0]));
-	}
+    public List<Project> queryProjectByDescription(final String queryString)
+            throws Exception {
+        // If query string contains a *, we remove the * and use startsWith:
+        final String startsWith;
+        if (queryString.endsWith("*")) {
+            startsWith = queryString.substring(0, queryString.length() - 1);
+        } else {
+            startsWith = null;
+        }
 
-	public void deleteCompanyCar(CompanyCar car) throws Exception {
-		db.delete(car);
-	}
+        ObjectSet<Project> projects = db.query(new Predicate<Project>() {
+            public boolean match(Project project) {
+                if (startsWith != null) {
+                    return project.getDescription().startsWith(startsWith);
+                } else {
+                    return project.getDescription().equalsIgnoreCase(
+                            queryString);
+                }
+            }
+        });
+        return Arrays.asList(projects.toArray(new Project[0]));
+    }
 
-	public Project loadProject(String projectNumber) throws Exception {
-		ObjectSet<Project> set = db.queryByExample(new Project(projectNumber, null));
+    public void storeProject(Project proj) throws Exception {
+        db.store(proj);
+    }
 
-		if (set.hasNext()) {
-			return set.next();
-		} else {
-			throw new ObjectNotFoundException(Project.class, projectNumber + "");
-		}
-	}
+    public void deleteProject(Project proj) throws Exception {
+        db.delete(proj);
+    }
 
-	public List<Project> queryProjectByDescription(final String queryString)
-			throws Exception {
-		// If query string contains a *, we remove the * and use startsWith:
-		final String startsWith;
-		if (queryString.endsWith("*")) {
-			startsWith = queryString.substring(0, queryString.length() - 1);
-		} else {
-			startsWith = null;
-		}
+    // StatusReport
+    public StatusReport loadStatusReport(final long continuousNumber)
+            throws Exception {
+        ObjectSet<StatusReport> reports = db
+                .query(new Predicate<StatusReport>() {
+                    public boolean match(StatusReport report) {
+                        return report.getContinuousNumber() == continuousNumber;
+                    }
+                });
+        if (reports.hasNext()) {
+            return reports.next();
+        } else {
+            throw new ObjectNotFoundException(StatusReport.class,
+                    continuousNumber + "");
+        }
+    }
 
-		ObjectSet<Project> projects = db.query(new Predicate<Project>() {
-			public boolean match(Project project) {
-				if (startsWith != null) {
-					return project.getDescription().startsWith(startsWith);
-				} else {
-					return project.getDescription().equalsIgnoreCase(
-							queryString);
-				}
-			}
-		});
-		return Arrays.asList(projects.toArray(new Project[0]));
-	}
+    public List<StatusReport> loadStatusReport(final Project project)
+            throws Exception {
+        ObjectSet<StatusReport> reports = db
+                .query(new Predicate<StatusReport>() {
+                    public boolean match(StatusReport report) {
+                        // TODO better via equals()!
+                        return report.getProject().getProjectId() == project
+                                .getProjectId();
+                    }
+                });
+        return Arrays.asList(reports.toArray(new StatusReport[0]));
+    }
 
-	public void storeProject(Project proj) throws Exception {
-		db.store(proj);
-	}
+    public void storeStatusReport(StatusReport report) throws Exception {
+        db.store(report);
+    }
 
-	public void deleteProject(Project proj) throws Exception {
-		db.delete(proj);
-	}
+    public void deleteStatusReport(StatusReport report) throws Exception {
+        db.delete(report);
+    }
 
-	// StatusReport
-	public StatusReport loadStatusReport(final long continuousNumber)
-			throws Exception {
-		ObjectSet<StatusReport> reports = db
-				.query(new Predicate<StatusReport>() {
-					public boolean match(StatusReport report) {
-						return report.getContinuousNumber() == continuousNumber;
-					}
-				});
-		if (reports.hasNext()) {
-			return reports.next();
-		} else {
-			throw new ObjectNotFoundException(StatusReport.class,
-					continuousNumber + "");
-		}
-	}
+    // WorksOn...
+    public Set<WorksOn> loadWorksOn(final Employee employee) throws Exception {
+        ObjectSet<WorksOn> worksOns = db.query(new Predicate<WorksOn>() {
+            public boolean match(WorksOn worksOn) {
+                return worksOn.getEmployee().getPersonnelNumber() == employee
+                        .getPersonnelNumber();
+            }
+        });
+        return new HashSet(Arrays.asList(worksOns.toArray(new Project[0])));
+    }
 
-	public List<StatusReport> loadStatusReport(final Project project)
-			throws Exception {
-		ObjectSet<StatusReport> reports = db
-				.query(new Predicate<StatusReport>() {
-					public boolean match(StatusReport report) {
-						// TODO better via equals()!
-						return report.getProject().getProjectId() == project
-								.getProjectId();
-					}
-				});
-		return Arrays.asList(reports.toArray(new StatusReport[0]));
-	}
+    public Set<WorksOn> loadWorksOn(final Project proj) throws Exception {
+        ObjectSet<WorksOn> worksOns = db.query(new Predicate<WorksOn>() {
+            public boolean match(WorksOn worksOn) {
+                return worksOn.getProject().getProjectId() == proj
+                        .getProjectId();
+            }
+        });
+        return new HashSet(Arrays.asList(worksOns.toArray(new Project[0])));
+    }
 
-	public void storeStatusReport(StatusReport report) throws Exception {
-		db.store(report);
-	}
+    public void storeWorksOn(WorksOn wo) throws Exception {
+        db.store(wo);
+    }
 
-	public void deleteStatusReport(StatusReport report) throws Exception {
-		db.delete(report);
-	}
-
-	// WorksOn...
-	public Set<WorksOn> loadWorksOn(final Employee employee) throws Exception {
-		ObjectSet<WorksOn> worksOns = db.query(new Predicate<WorksOn>() {
-			public boolean match(WorksOn worksOn) {
-				return worksOn.getEmployee().getPersonnelNumber() == employee
-						.getPersonnelNumber();
-			}
-		});
-		return new HashSet(Arrays.asList(worksOns.toArray(new Project[0])));
-	}
-
-	public Set<WorksOn> loadWorksOn(final Project proj) throws Exception {
-		ObjectSet<WorksOn> worksOns = db.query(new Predicate<WorksOn>() {
-			public boolean match(WorksOn worksOn) {
-				return worksOn.getProject().getProjectId() == proj
-						.getProjectId();
-			}
-		});
-		return new HashSet(Arrays.asList(worksOns.toArray(new Project[0])));
-	}
-
-	public void storeWorksOn(WorksOn wo) throws Exception {
-		db.store(wo);
-	}
-
-	public void deleteWorksOn(WorksOn wo) throws Exception {
-		db.delete(wo);
-	}
+    public void deleteWorksOn(WorksOn wo) throws Exception {
+        db.delete(wo);
+    }
 }

@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package net.gumbix.dba.companydemo.db4o;
 
 import net.gumbix.dba.companydemo.db.IdGenerator;
+import net.gumbix.dba.companydemo.domain.Personnel;
 
 public class Db4oIdGenerator extends IdGenerator {
 
@@ -28,13 +29,20 @@ public class Db4oIdGenerator extends IdGenerator {
 		generator = new Db4oIdGenerator();
 	}
 
-	protected long next = 0;
+	private long nextPersonnel = 0;
 
 	public Db4oIdGenerator() {
 	}
 
 	public long getNextLong(Class clazz) {
-		next++;
-		return next;
+        try {
+            if (clazz.equals(Personnel.class)) {
+                nextPersonnel++;
+                return nextPersonnel;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        throw new IllegalArgumentException("Unknown class: " + clazz);
 	}
 }

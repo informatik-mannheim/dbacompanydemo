@@ -29,6 +29,9 @@ import java.io.File;
 import java.util.GregorianCalendar;
 
 /**
+ * Create example data via the Java API. This is the only way for
+ * db4o (in contrast to SQL insert-statements).
+ *
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
 public class ExampleData {
@@ -98,7 +101,7 @@ public class ExampleData {
         Employee employeeMüller = new Employee("Müller", "Walter",
                 new GregorianCalendar(1949, 02, 11).getTime(), new Address("Flussweg",
                 "23", "68113", "Mannheim"), "+49 621 12345-200");
-        // employeeLohe.setCar(companyCar1234);
+        employeeLohe.setCar(companyCar1234);
         employeeMüller.setDepartment(produktion);
         employeeMüller.setBoss(employeeLohe);
         access.storePersonnel(employeeMüller);
@@ -106,7 +109,7 @@ public class ExampleData {
         Worker workerKleinschmidt = new Worker("Kleinschmidt", "August",
                 new GregorianCalendar(1955, 7, 23).getTime(), new Address(
                 "Wasserturmstraße", "29", "69214", "Eppelheim"),
-                "Platz 300a");
+                "Halle A/Platz 30");
         workerKleinschmidt.setBoss(employeeMüller);
         workerKleinschmidt.setDepartment(produktion);
         workerKleinschmidt.setPosition("Nachfüller");
@@ -114,6 +117,7 @@ public class ExampleData {
 
         // Projects
         Project hirePeople = new Project("LES", "Leute einstellen.");
+        access.storeProject(hirePeople);
         WorksOn hirePeopleLohe = new WorksOn(employeeLohe, hirePeople, 10,
                 "Verträge ausstellen.");
         access.storeWorksOn(hirePeopleLohe);

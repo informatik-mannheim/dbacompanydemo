@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package net.gumbix.dba.companydemo.jdbc;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
@@ -42,9 +43,11 @@ public class WorkerDAO extends PersonnelDAO {
         super.store(worker);
 
         // Then also fill in the data for the worker:
-        try {
-            Personnel personnel = load(worker.getPersonnelNumber());
+        ResultSet rs =
+                executeSQLQuery("select * from Arbeiter" +
+                        " where personalNr = " + worker.getPersonnelNumber());
 
+        if (rs.next()) {
             // update
             PreparedStatement pstmt =
                     prepareStatement("update Arbeiter set arbeitsplatz = ? " +
@@ -53,7 +56,7 @@ public class WorkerDAO extends PersonnelDAO {
             pstmt.setLong(2, worker.getPersonnelNumber());
             pstmt.execute();
             pstmt.close();
-        } catch (ObjectNotFoundException e) {
+        } else {
             // new
             PreparedStatement pstmt =
                     prepareStatement("insert into Arbeiter values (?, ?)");

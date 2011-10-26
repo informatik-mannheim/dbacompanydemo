@@ -66,7 +66,7 @@ public class WorksOnDAO extends AbstractDAO {
 
         while (rs.next()) {
             wo = new WorksOn();
-            wo.setEmployee((Employee) access.loadPersonnel(rs.getLong("personalNr")));
+            wo.setEmployee(access.loadEmployee(rs.getLong("personalNr")));
             wo.setProject(proj);
             wo.setJob(rs.getString("taetigkeit"));
             wo.setPercentage(rs.getDouble("prozAnteil"));
@@ -77,8 +77,27 @@ public class WorksOnDAO extends AbstractDAO {
 
     // Store or Update an WorksOn Object in Table "Projekt"
     public void store(WorksOn wo) throws Exception {
-        // TODO undone
-        // throw new RuntimeException("Noch net fetisch!");
+
+        PreparedStatement pstmt = prepareStatement("select * from MitarbeiterArbeitetAnProjekt" +
+                " where personalNr = ? and projektId = ?");
+        pstmt.setLong(1, wo.getEmployee().getPersonnelNumber());
+        pstmt.setString(2, wo.getProject().getProjectId());
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            // update
+            // TODO undone
+            throw new RuntimeException("Noch net fetisch!");
+        } else {
+            // new
+            PreparedStatement pstmtInsert =
+                    prepareStatement("insert into MitarbeiterArbeitetAnProjekt" +
+                            " values (?, ?, ?, ?)");
+            pstmtInsert.setLong(1, wo.getEmployee().getPersonnelNumber());
+            pstmtInsert.setString(2, wo.getProject().getProjectId());
+            pstmtInsert.setString(3, wo.getJob());
+            pstmtInsert.setDouble(4, wo.getPercentage());
+            pstmtInsert.execute();
+        }
     }
 
     // Delete an WorksOn Object from Table "MitarbeiterArbeitetAnProjekt"

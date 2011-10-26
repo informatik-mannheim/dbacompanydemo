@@ -28,6 +28,7 @@ import net.gumbix.dba.companydemo.domain.WorksOn;
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
@@ -84,6 +85,24 @@ public class ProjectDAO extends AbstractDAO {
     }
 
     public void store(Project proj) throws Exception {
+        PreparedStatement pstmt;
+        try {
+            Project project = load(proj.getProjectId());
+            // update
+            pstmt = prepareStatement("update Projekt set bezeichnung = ?, " +
+                    " naechsteStatusNummer = ? where projektId = ?");
+            pstmt.setString(1, proj.getDescription());
+            pstmt.setLong(2, proj.getNextStatusReportNumber());
+            pstmt.setString(3, proj.getProjectId());
+            pstmt.execute();
+        } catch (ObjectNotFoundException e) {
+            // new record
+            pstmt = prepareStatement("insert into Projekt values (?, ?, ?)");
+            pstmt.setString(1, proj.getProjectId());
+            pstmt.setString(2, proj.getDescription());
+            pstmt.setLong(3, proj.getNextStatusReportNumber());
+            pstmt.execute();
+        }
     }
 
     public void delete(Project proj) throws Exception {

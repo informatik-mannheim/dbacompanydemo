@@ -47,10 +47,10 @@ public class EmployeeDAO extends PersonnelDAO {
         // First create an entry in table Mitarbeiter:
         super.store(employee);
 
-        // Then also fill in the data for the employee:
-        try {
-            Personnel personnel = load(employee.getPersonnelNumber());
-
+        ResultSet rs =
+                executeSQLQuery("select * from Angestellter" +
+                        " where personalNr = " + employee.getPersonnelNumber());
+        if (rs.next()) {
             // update
             PreparedStatement pstmt =
                     prepareStatement("update Angestellter set telefonNr = ?" +
@@ -59,7 +59,7 @@ public class EmployeeDAO extends PersonnelDAO {
             pstmt.setLong(2, employee.getPersonnelNumber());
             pstmt.execute();
             pstmt.close();
-        } catch (ObjectNotFoundException e) {
+        } else {
             // new
             PreparedStatement pstmt =
                     prepareStatement("insert into Angestellter values (?, ?)");

@@ -216,23 +216,27 @@ public class UI {
                 case 5:
                     System.out
                             .println("*** Arbeiter eingeben ***\n");
-                    Worker worker = new Worker(0, null, null, null, null, null);
+                    Worker worker = new Worker(null, null, null, null, null);
                     createPersonnel(worker);
                     System.out.print("Arbeitsplatz: ");
                     String workplace = getUserInputString();
                     worker.setWorkspace(workplace);
                     db.storePersonnel(worker);
+                    System.out.println(worker  + " angelegt.");
+                    pressAnyKey();
                     break;
 
                 case 7:
                     System.out
                             .println("*** Angestellten eingeben ***\n");
-                    Employee employee = new Employee(0, null, null, null, null, null);
+                    Employee employee = new Employee(null, null, null, null, null);
                     createPersonnel(employee);
                     System.out.print("Telefon: ");
                     String telephone = getUserInputString();
                     employee.setPhoneNumber(telephone);
                     db.storePersonnel(employee);
+                    System.out.println(employee  + " angelegt.");
+                    pressAnyKey();
                     break;
 
                 case 9:
@@ -245,7 +249,7 @@ public class UI {
                         personnel = db.loadPersonnel(personalNumber);
                         db.deletePersonnel(personnel);
                     } catch (ObjectNotFoundException e) {
-                       System.out.println("Keine(n) Mitarbeiter gefunden!\n");
+                        System.out.println("Keine(n) Mitarbeiter gefunden!\n");
                     }
                     break;
 
@@ -287,10 +291,6 @@ public class UI {
 
         System.out.print("Stadt: ");
         String city = getUserInputString();
-
-        System.out.println("-------- Arbeitsplatz -------- ");
-        System.out.print("Arbeitsplatz: ");
-        String workspace = getUserInputString();
 
         Address adr = new Address(street, houseNo, zip, city);
 

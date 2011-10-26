@@ -46,7 +46,7 @@ public class EmployeeDAO extends PersonnelDAO {
 
             // update
             PreparedStatement pstmt =
-                    prepareStatement("update Angstellter set telefonNr = ?, " +
+                    prepareStatement("update Angestellter set telefonNr = ?, " +
                             " where personalNr = ?");
             pstmt.setString(1, employee.getPhoneNumber());
             pstmt.setLong(2, employee.getPersonnelNumber());
@@ -55,7 +55,7 @@ public class EmployeeDAO extends PersonnelDAO {
         } catch (ObjectNotFoundException e) {
             // new
             PreparedStatement pstmt =
-                    prepareStatement("insert into Angstellter values (?, ?)");
+                    prepareStatement("insert into Angestellter values (?, ?)");
             pstmt.setLong(1, employee.getPersonnelNumber());
             pstmt.setString(2, employee.getPhoneNumber());
             pstmt.execute();

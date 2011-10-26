@@ -1,5 +1,7 @@
 package net.gumbix.dba.companydemo.domain;
 
+import net.gumbix.dba.companydemo.db.IdGenerator;
+
 import java.util.Date;
 
 /**
@@ -9,6 +11,12 @@ import java.util.Date;
 public class Worker extends Personnel {
 
     private String workspace;
+
+    public Worker(String lastName, String firstName,
+                  Date birthDate, Address adr, String workspace) {
+        this(IdGenerator.generator.getNextLong(Personnel.class),
+                lastName, firstName, birthDate, adr, workspace);
+    }
 
     public Worker(long personnelNumber, String lastName, String firstName,
                   Date birthDate, Address adr, String workspace) {

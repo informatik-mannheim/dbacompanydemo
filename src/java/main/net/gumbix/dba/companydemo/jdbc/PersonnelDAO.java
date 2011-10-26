@@ -119,7 +119,8 @@ public class PersonnelDAO extends AbstractDAO {
         try {
             Personnel dep = load(pers.getPersonnelNumber());
 
-            // update TODO fields missing
+            // update
+            createZip(pers.getAddress());
             PreparedStatement pstmt =
                     prepareStatement("update Mitarbeiter set vorname = ?, " +
                             " set nachname = ?, set strasse = ?, " +
@@ -139,6 +140,7 @@ public class PersonnelDAO extends AbstractDAO {
             pstmt.execute();
         } catch (ObjectNotFoundException e) {
             // new
+            createZip(pers.getAddress());
             PreparedStatement pstmt =
                     prepareStatement("insert into Mitarbeiter values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
             pstmt.setLong(1, pers.getPersonnelNumber());
@@ -167,7 +169,7 @@ public class PersonnelDAO extends AbstractDAO {
     public long nextId() throws Exception {
         ResultSet rs = executeSQLQuery("select max(personalNr) from Mitarbeiter");
         rs.next();
-        long next = rs.getLong(1);
+        long next = rs.getLong(1) + 1;
         rs.close();
         return next;
     }
@@ -176,5 +178,23 @@ public class PersonnelDAO extends AbstractDAO {
         cache.put(personalNr, personnel);
         personnel.setPersonnelNumber(personalNr);
         return personnel;
+    }
+
+    /**
+     * Ensure to have a valid zip code.
+     *
+     * @param adr
+     * @throws Exception
+     */
+    private void createZip(Address adr) throws Exception {
+        ResultSet rs = executeSQLQuery("select * from Ort " +
+                "where plz = '" + adr.getZip() + "'");
+        if (!rs.next()) {
+            ResultSet rs2 = executeSQLQuery("insert into Ort " +
+                    "values ('" + adr.getZip() +
+                    "', '" + adr.getCity() + "')");
+            if (rs2 != null) rs2.close();
+        }
+        rs.close();
     }
 }

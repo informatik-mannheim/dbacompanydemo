@@ -1,5 +1,7 @@
 package net.gumbix.dba.companydemo.domain;
 
+import net.gumbix.dba.companydemo.db.IdGenerator;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Date;
@@ -13,6 +15,12 @@ public class Employee extends Personnel {
     private String phoneNumber;
     private CompanyCar car;
     private Set<WorksOn> projects = new HashSet<WorksOn>();
+
+    public Employee(String lastName, String firstName,
+                    Date birthDate, Address adr, String tel) {
+        this(IdGenerator.generator.getNextLong(Personnel.class),
+                lastName, firstName, birthDate, adr, tel);
+    }
 
     public Employee(long personnelNumber, String lastName, String firstName,
                     Date birthDate, Address adr, String tel) {
@@ -45,6 +53,7 @@ public class Employee extends Personnel {
 
     /**
      * Add a project.
+     *
      * @param worksOn
      * @return False if project was already added, true if not.
      */

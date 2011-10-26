@@ -47,7 +47,7 @@ public class WorkerDAO extends PersonnelDAO {
 
             // update
             PreparedStatement pstmt =
-                    prepareStatement("update Arbeiter set arbeitsplatz = ?, " +
+                    prepareStatement("update Arbeiter set arbeitsplatz = ? " +
                             " where personalNr = ?");
             pstmt.setString(1, worker.getWorkspace());
             pstmt.setLong(2, worker.getPersonnelNumber());

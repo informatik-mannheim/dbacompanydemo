@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.db4o.Db4o;
+import com.db4o.Db4oEmbedded;
 import net.gumbix.dba.companydemo.db.AbstractDBAccess;
 import net.gumbix.dba.companydemo.db.DBAccess;
 import net.gumbix.dba.companydemo.db.IdGenerator;
@@ -53,11 +55,22 @@ public class Db4oAccess extends AbstractDBAccess {
     public ObjectContainer db;
 
     public Db4oAccess() {
+        this("localhost", 8732, "firmenwelt", "firmenwelt10");
+    }
+
+    public Db4oAccess(String filename) {
+        db = Db4oEmbedded.openFile(filename);
+        init();
+    }
+
+    public Db4oAccess(String host, int port, String user, String pwd) {
         // ServerConfiguration config =
         // Db4oClientServer.newServerConfiguration();
-        db = Db4oClientServer.openClient("localhost", 8732, "firmenwelt",
-                "firmenwelt10");
+        db = Db4oClientServer.openClient(host, 8732, user, pwd);
+        init();
+    }
 
+    private void init() {
         db.ext().configure().activationDepth(5);
         db.ext().configure().updateDepth(5);
         // db.ext().configure().objectClass(StatusReport.class).persistStaticFieldValues();
@@ -267,19 +280,20 @@ public class Db4oAccess extends AbstractDBAccess {
     }
 
     // StatusReport
-    public StatusReport loadStatusReport(final long continuousNumber)
+    public StatusReport loadStatusReport(final Project project, final long continuousNumber)
             throws Exception {
         ObjectSet<StatusReport> reports = db
                 .query(new Predicate<StatusReport>() {
                     public boolean match(StatusReport report) {
-                        return report.getContinuousNumber() == continuousNumber;
+                        return report.getProject().equals(project) &&
+                                report.getContinuousNumber() == continuousNumber;
                     }
                 });
         if (reports.hasNext()) {
             return reports.next();
         } else {
             throw new ObjectNotFoundException(StatusReport.class,
-                    continuousNumber + "");
+                    project.getProjectId() + "." + continuousNumber + "");
         }
     }
 

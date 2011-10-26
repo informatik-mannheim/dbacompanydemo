@@ -137,7 +137,6 @@ public class Personnel {
 
         String base =
                 "Name:       " + firstName + " " + lastName + "\n" +
-                        // TODO db4o bug
                         "Geb.-Datum: " + df.format(birthDate) + "\n" +
                         "Adresse:    " + address;
         String depString = "";

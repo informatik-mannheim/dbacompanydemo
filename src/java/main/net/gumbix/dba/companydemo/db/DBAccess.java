@@ -57,7 +57,7 @@ public interface DBAccess {
     public void deleteDepartment(Department department) throws Exception;
 
     // Car
-    public Car loadCar(final String modell) throws Exception;
+    public Car loadCar(String modell) throws Exception;
 
     public void storeCar(Car car) throws Exception;
 
@@ -66,9 +66,9 @@ public interface DBAccess {
     // CompanyCar
     public CompanyCar loadCompanyCar(String licensePlate) throws Exception;
 
-    public void storeCompanyCar(CompanyCar car) throws Exception;
-
     public List<CompanyCar> queryCompanyCarByModel(String model) throws Exception;
+
+    public void storeCompanyCar(CompanyCar car) throws Exception;
 
     public void deleteCompanyCar(CompanyCar car) throws Exception;
 
@@ -82,7 +82,7 @@ public interface DBAccess {
     public void deleteProject(Project proj) throws Exception;
 
     // StatusReport
-    public StatusReport loadStatusReport(long continuousNumber) throws Exception;
+    public StatusReport loadStatusReport(Project project, long continuousNumber) throws Exception;
     
     public List<StatusReport> loadStatusReport(Project project) throws Exception;
 
@@ -98,4 +98,6 @@ public interface DBAccess {
     public void storeWorksOn(WorksOn wo) throws Exception;
 
     public void deleteWorksOn(WorksOn wo) throws Exception;
+
+    public void close();
 }

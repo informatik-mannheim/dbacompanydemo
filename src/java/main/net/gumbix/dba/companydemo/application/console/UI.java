@@ -52,6 +52,7 @@ public class UI {
                     .println("\nVielen Dank, dass Sie " + NAME + " genutzt haben.");
             System.out.println("Wir hoffen, dass es Spass gemacht hat.");
             credits();
+            pressAnyKey();
         } catch (Exception e) {
             System.out.println("### Fehler verursacht: " + e.getMessage());
             e.printStackTrace();
@@ -99,12 +100,13 @@ public class UI {
                     break;
 
                 case 5:
-                    db = new Db4oAccess();
+                    db = new Db4oAccess("localhost", 8732, "firmenwelt",
+                            "firmenwelt10");
                     menu();
                     break;
 
                 case 6:
-                    db = new Db4oAccess();
+                    db = new Db4oAccess("firmenwelt.yap");
                     menu();
                     break;
 
@@ -129,35 +131,33 @@ public class UI {
         int menuChoice;
 
         do {
-            System.out.println("*** Willkommen im DBA-Firmenbeispiel ***\n\n"
-                    + "Was möchten Sie tun?\n\n" + "1 Personal verwalten\n"
-                    + "2 Projekte verwalten\n" + "3 Firmenwagen verwalten\n"
-                    + "4 Abteilungen verwalten\n\n" + "0 Zurück");
+            System.out.println("*** DBA-Firmenbeispiel-Hauptmenu ***\n\n"
+                    + "Was möchten Sie tun?\n\n"
+                    + "1 Personal verwalten\n"
+                    + "2 Projekte verwalten\n"
+                    + "3 Firmenwagen verwalten\n"
+                    + "4 Abteilungen verwalten\n\n"
+                    + "0 Zurück");
 
             menuChoice = getMenuChoice();
 
             switch (menuChoice) {
-                // menu "1 Mitarbeiter verwalten"
                 case 1:
                     personnelMenu();
                     break;
 
-                // menu "2 Projekte verwalten"
                 case 2:
                     projectsMenu();
                     break;
 
-                // menu "3 Firmenwagen verwalten"
                 case 3:
                     companyCarMenu();
                     break;
 
-                // menu "4 Abteilungen verwalten"
                 case 4:
                     departmentsMenu();
                     break;
 
-                // menu zurueck
                 case 0:
                     break;
 
@@ -174,8 +174,8 @@ public class UI {
         do {
             System.out.println("*** Personal verwalten ***\n\n"
                     + "Was möchten Sie tun?\n\n"
-                    + "1 Mitarbeiter/Arbeiter/Angestellter suchen (Personalnr.)\n"
-                    + "2 Mitarbeiter/Arbeiter/Angestellter suchen (Name, Vorname)\n"
+                    + "1 Mitarbeiter/Arbeiter/Angestellter suchen (über Personalnr.)\n"
+                    + "2 Mitarbeiter/Arbeiter/Angestellter suchen (über Name, Vorname)\n"
                     + "3 Mitarbeiter neu anlegen \n"
                     + "4 Mitarbeiter editieren \n"
                     + "5 Arbeiter neu anlegen \n"
@@ -190,7 +190,7 @@ public class UI {
             switch (menuChoice) {
                 case 1:
                     System.out
-                            .println("*** Mitarbeiter suchen (nach Personalnummer) ***\n");
+                            .println("*** Mitarbeiter suchen (über Personalnummer) ***\n");
 
                     System.out.print("Personalnummer: ");
                     long persNr = getUserInputLong();
@@ -206,7 +206,7 @@ public class UI {
 
                 case 2:
                     System.out
-                            .println("*** Arbeiter suchen (nach Nachname, Vorname) ***\n");
+                            .println("*** Mitarbeiter suchen (über Nachname, Vorname) ***\n");
 
                     System.out.print("Nachname (* am Ende möglich): ");
                     String lastName = getUserInputString();
@@ -229,16 +229,16 @@ public class UI {
 
                 case 3:
                     System.out
-                            .println("*** Mitarbeiter eingeben ***\n");
+                            .println("*** Mitarbeiter neu anlegen ***\n");
                     Personnel personnel = new Personnel(null, null, null, null);
                     createPersonnel(personnel);
                     db.storePersonnel(personnel);
-                    System.out.println("Mitarbeiter " + personnel + " erzeugt.");
+                    System.out.println(personnel + " angelegt.");
                     break;
 
                 case 5:
                     System.out
-                            .println("*** Arbeiter eingeben ***\n");
+                            .println("*** Arbeiter neu anlegen ***\n");
                     Worker worker = new Worker(null, null, null, null, null);
                     createPersonnel(worker);
                     System.out.print("Arbeitsplatz: ");
@@ -251,7 +251,7 @@ public class UI {
 
                 case 7:
                     System.out
-                            .println("*** Angestellten eingeben ***\n");
+                            .println("*** Angestellten neu anlegen ***\n");
                     Employee employee = new Employee(null, null, null, null, null);
                     createPersonnel(employee);
                     System.out.print("Telefon: ");
@@ -266,13 +266,14 @@ public class UI {
                     System.out
                             .println("*** Mitarbeiter/Arbeiter/Angestellten löschen ***\n");
 
-                    System.out.print("Personalnr: ");
+                    System.out.print("Personalnr.: ");
                     long personalNumber = getUserInputLong();
                     try {
                         personnel = db.loadPersonnel(personalNumber);
                         db.deletePersonnel(personnel);
+                        System.out.println(personnel + " gelöscht.");
                     } catch (ObjectNotFoundException e) {
-                        System.out.println("Keine(n) Mitarbeiter gefunden!\n");
+                        System.out.println("Mitarbeiter zum Löschen nicht gefunden!\n");
                     }
                     break;
 
@@ -331,19 +332,21 @@ public class UI {
             System.out.println("*** Projekte verwalten ***\n\n"
                     + "Was möchten Sie tun?\n\n"
                     + "1 Projekt suchen (nach Bezeichnung)\n"
-                    + "2 Projekt anlegen \n" + "3 Projekt löschen\n\n"
+                    + "2 Projekt neu anlegen \n"
+                    + "3 Projekt löschen\n\n"
                     + "4 Statusberichte für Projekt ausgeben\n"
                     + "5 Statusbericht eingeben\n"
-                    + "6 Statusbericht ändern\n\n" + "0 Zurück");
+                    + "6 Statusbericht ändern\n\n"
+                    + "0 Zurück");
 
             menuChoice = getMenuChoice();
 
             switch (menuChoice) {
                 case 1:
                     System.out
-                            .println("*** Projekt suchen (nach Bezeichnung) ***\n");
+                            .println("*** Projekt suchen (über Bezeichnung) ***\n");
 
-                    System.out.print("Bezeichnung (* erlaubt): ");
+                    System.out.print("Bezeichnung (* am Ende möglich): ");
                     String description = getUserInputString();
                     List<Project> list = db.queryProjectByDescription(description);
                     for (Project p : list) {
@@ -357,8 +360,7 @@ public class UI {
                     break;
 
                 case 2:
-                    System.out.println("*** Projekt anlegen ***\n");
-
+                    System.out.println("*** Projekt neu anlegen ***\n");
                     System.out.print("Projektkürzel: ");
                     String projId = getUserInputString();
                     System.out.print("Projektbezeichnung: ");
@@ -376,10 +378,12 @@ public class UI {
                     try {
                         project = db.loadProject(projId);
                         db.deleteProject(project);
+                        System.out.println(project + " gelöscht.");
                     } catch (ObjectNotFoundException e) {
                         System.out
-                                .println("Projekt kann nicht gelöscht werden, da nicht vorhanden.");
+                                .println("Kein Projekt zum Löschen gefunden.");
                     }
+                    pressAnyKey();
                     break;
 
                 case 4:
@@ -397,7 +401,7 @@ public class UI {
                         System.out.println("---");
 
                     } catch (ObjectNotFoundException e) {
-                        System.out.println("Projekt nicht gefunden!");
+                        System.out.println("Projekt für diesen Statusbericht nicht gefunden!");
                     }
                     pressAnyKey();
                     break;
@@ -413,28 +417,40 @@ public class UI {
                         String content = getUserInputString();
                         StatusReport newReport = new StatusReport(content, project);
                         db.storeStatusReport(newReport);
+                        System.out.println(newReport + " angelegt.");
 
                     } catch (ObjectNotFoundException e) {
-                        System.out.println("Projekt nicht gefunden!");
+                        System.out.println("Projekt für diesen Statusbericht nicht gefunden!");
                     }
+                    pressAnyKey();
                     break;
 
                 case 6:
                     System.out.println("*** Statusbericht ändern ***\n");
                     try {
+                        System.out.print("Projektkürzel: ");
+                        projId = getUserInputString();
+                        project = db.loadProject(projId);
+                    } catch (ObjectNotFoundException e) {
+                        System.out.println("Projekt für diesen Statusbericht nicht gefunden!");
+                        continue;
+                    }
+                    try {
                         System.out.print("Statusbericht: ");
                         long contNumber = getUserInputLong();
-                        StatusReport report = db.loadStatusReport(contNumber);
+                        StatusReport report = db.loadStatusReport(project, contNumber);
                         System.out.println("Inhalt: " + report.getContent());
 
                         System.out.print("Neuer Inhalt: ");
                         String content = getUserInputString();
                         report.setContent(content);
                         db.storeStatusReport(report);
+                        System.out.println(report + " wurde aktualisiert.");
 
                     } catch (ObjectNotFoundException e) {
-                        System.out.println("Statusbericht nicht gefunden!");
+                        System.out.println("Statusbericht zum Ändern nicht gefunden!");
                     }
+                    pressAnyKey();
                     break;
 
                 case 0:
@@ -454,9 +470,11 @@ public class UI {
         do {
             System.out.println("*** Firmenwagen verwalten ***\n\n"
                     + "Was möchten Sie tun?\n\n"
-                    + "1 Firmenwagen suchen (nach Modell)\n"
-                    + "2 Firmenwagen anlegen\n" + "3 Firmenwagen löschen\n"
-                    + "4 Modell anlegen \n" + "5 Modell löschen\n\n"
+                    + "1 Firmenwagen suchen (über Modell)\n"
+                    + "2 Firmenwagen neu anlegen\n"
+                    + "3 Firmenwagen löschen\n"
+                    + "4 Modell anlegen \n"
+                    + "5 Modell löschen\n\n"
                     + "0 Zurück");
 
             menuChoice = getMenuChoice();
@@ -465,9 +483,9 @@ public class UI {
 
                 case 1:
                     System.out
-                            .println("*** Firmenwagen suchen (nach Modell) ***\n");
+                            .println("*** Firmenwagen suchen (über Modell) ***\n");
 
-                    System.out.print("Modell eingeben (* Wildcard): ");
+                    System.out.print("Modell eingeben (* am Ende möglich): ");
                     String queryString = getUserInputString();
                     List<CompanyCar> result = db
                             .queryCompanyCarByModel(queryString);
@@ -479,7 +497,7 @@ public class UI {
                     break;
 
                 case 2:
-                    System.out.println("*** Firmenwagen anlegen ***\n");
+                    System.out.println("*** Firmenwagen neu anlegen ***\n");
 
                     System.out.print("Modell: ");
                     String modell = getUserInputString();
@@ -492,16 +510,24 @@ public class UI {
                     CompanyCar comCar = new CompanyCar(num, car);
 
                     db.storeCompanyCar(comCar);
+                    System.out.println(comCar + " angelegt.");
+                    pressAnyKey();
                     break;
 
                 case 3:
                     System.out.println("*** Firmenwagen löschen ***\n");
 
-                    System.out.print("Nummernschild: ");
-                    num = getUserInputString();
+                    try {
+                        System.out.print("Nummernschild: ");
+                        num = getUserInputString();
 
-                    CompanyCar companyCar = db.loadCompanyCar(num);
-                    db.deleteCompanyCar(companyCar);
+                        CompanyCar companyCar = db.loadCompanyCar(num);
+                        db.deleteCompanyCar(companyCar);
+                        System.out.println(companyCar + " gelöscht.");
+                    } catch (ObjectNotFoundException e) {
+                        System.out.println("Wagen zum Löschen nicht gefunden!");
+                    }
+                    pressAnyKey();
                     break;
 
                 case 4:
@@ -514,15 +540,23 @@ public class UI {
 
                     car = new Car(modell, type);
                     db.storeCar(car);
+                    System.out.println(car + " angelegt.");
+                    pressAnyKey();
                     break;
 
                 case 5:
                     System.out.println("*** Modell löschen ***\n");
-                    System.out.println("Modell: ");
-                    type = getUserInputString();
+                    try {
+                        System.out.println("Modell: ");
+                        type = getUserInputString();
 
-                    car = db.loadCar(type);
-                    db.deleteCar(car);
+                        car = db.loadCar(type);
+                        db.deleteCar(car);
+                        System.out.println(car + " gelöscht.");
+                    } catch (ObjectNotFoundException e) {
+                        System.out.println("Modell zum Löschen nicht gefunden!");
+                    }
+                    pressAnyKey();
                     break;
 
                 case 0:
@@ -541,19 +575,21 @@ public class UI {
         do {
             System.out.println("*** Abteilungen verwalten ***\n\n"
                     + "Was möchten Sie tun? \n\n"
-                    + "1 Abteilung suchen (nach ID)\n"
-                    + "2 Abteilung suchen (nach Bezeichnung)\n"
-                    + "3 Abteilung anlegen \n" + "4 Abteilung editieren \n"
-                    + "5 Abteilung löschen \n\n" + "0 Zurück");
+                    + "1 Abteilung suchen (über ID)\n"
+                    + "2 Abteilung suchen (über Bezeichnung)\n"
+                    + "3 Abteilung neu anlegen \n"
+                    + "4 Abteilung ändern \n"
+                    + "5 Abteilung löschen \n\n"
+                    + "0 Zurück");
 
             menuChoice = getMenuChoice();
 
             switch (menuChoice) {
 
                 case 1:
-                    System.out.println("*** Abteilung suchen (nach ID) ***\n");
+                    System.out.println("*** Abteilung suchen (über ID) ***\n");
 
-                    System.out.print("Abteilungnummer eingeben: ");
+                    System.out.print("Abteilungnr. eingeben: ");
                     long depNr = getUserInputLong();
 
                     try {
@@ -566,7 +602,7 @@ public class UI {
 
                 case 2:
                     System.out
-                            .println("*** Abteilung suchen (nach Bezeichnung) ***\n");
+                            .println("*** Abteilung suchen (über Bezeichnung) ***\n");
 
                     System.out
                             .print("Abteilungsbezeichnung eingeben (* am Ende möglich): ");
@@ -581,7 +617,7 @@ public class UI {
                 case 3:
                     System.out.println("*** Abteilung anlegen ***\n");
 
-                    System.out.print("Abteilungnr: ");
+                    System.out.print("Abteilungnr.: ");
                     long id = getUserInputLong();
 
                     try {
@@ -599,7 +635,7 @@ public class UI {
                     break;
 
                 case 4:
-                    System.out.println("*** Abteilung editieren ***\n");
+                    System.out.println("*** Abteilung ändern ***\n");
 
                     System.out.println("Abteilungnummer eingeben: ");
                     depNr = getUserInputLong();
@@ -612,18 +648,22 @@ public class UI {
                         dep.setName(name);
                         db.storeDepartment(dep);
                     } catch (ObjectNotFoundException e) {
-                        System.out.println("Abteilung nicht gefunden!");
+                        System.out.println("Abteilung zum Ändern nicht gefunden!");
                     }
                     break;
 
                 case 5:
                     System.out.println("*** Abteilung löschen ***\n");
 
-                    System.out.println("Abteilunsnummer : ");
-                    depNr = getUserInputLong();
+                    try {
+                        System.out.println("Abteilunsnummer : ");
+                        depNr = getUserInputLong();
 
-                    dep = db.loadDepartment(depNr);
-                    db.deleteDepartment(dep);
+                        dep = db.loadDepartment(depNr);
+                        db.deleteDepartment(dep);
+                    } catch (ObjectNotFoundException e) {
+                        System.out.println("Abteilung zum Löschen nicht gefunden!");
+                    }
                     break;
 
                 case 0:

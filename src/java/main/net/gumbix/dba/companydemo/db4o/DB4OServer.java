@@ -45,6 +45,7 @@ public class DB4OServer {
                     Thread.sleep(9999999);
                 }
             } catch (Exception e) {
+                System.out.println(e);
                 System.out.println("Exception. Restarting server.");
             }
         }

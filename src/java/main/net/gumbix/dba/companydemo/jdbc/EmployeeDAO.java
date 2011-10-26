@@ -53,7 +53,7 @@ public class EmployeeDAO extends PersonnelDAO {
 
             // update
             PreparedStatement pstmt =
-                    prepareStatement("update Angestellter set telefonNr = ?, " +
+                    prepareStatement("update Angestellter set telefonNr = ?" +
                             " where personalNr = ?");
             pstmt.setString(1, employee.getPhoneNumber());
             pstmt.setLong(2, employee.getPersonnelNumber());

@@ -24,6 +24,7 @@ import net.gumbix.dba.companydemo.domain.Employee;
 import net.gumbix.dba.companydemo.domain.Project;
 import net.gumbix.dba.companydemo.domain.WorksOn;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashSet;
 import java.util.Set;
@@ -76,11 +77,13 @@ public class WorksOnDAO extends AbstractDAO {
 
     // Store or Update an WorksOn Object in Table "Projekt"
     public void store(WorksOn wo) throws Exception {
-        // TODO
+        // TODO undone
+        // throw new RuntimeException("Noch net fetisch!");
     }
 
     // Delete an WorksOn Object from Table "MitarbeiterArbeitetAnProjekt"
     public void delete(WorksOn wo) throws Exception {
-        // TODO
+        // TODO undone
+        throw new RuntimeException("Noch net fetisch!");
     }
 }

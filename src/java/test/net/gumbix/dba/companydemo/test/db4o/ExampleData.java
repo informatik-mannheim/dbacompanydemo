@@ -20,8 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.test.db4o;
 
+import net.gumbix.dba.companydemo.db.DBAccess;
 import net.gumbix.dba.companydemo.db4o.Db4oAccess;
 import net.gumbix.dba.companydemo.domain.*;
+import net.gumbix.dba.companydemo.jdbc.JdbcAccess;
 
 import java.io.File;
 import java.util.GregorianCalendar;
@@ -32,9 +34,24 @@ import java.util.GregorianCalendar;
 public class ExampleData {
 
     public static void main(String[] args) throws Exception {
-        // new File("firmenwelt.yap").delete();
-        Db4oAccess access = new Db4oAccess();
+        // db4oEmbedded();
+        jdbc();
+    }
 
+    private static void jdbc() throws Exception {
+        createData(new JdbcAccess("firmenwelt", "firmenwelt10"));
+    }
+
+    private static void db4oEmbedded() throws Exception {
+        new File("firmenwelt.yap").delete();
+        createData(new Db4oAccess("firmenwelt.yap"));
+    }
+
+    private static void db4oServer() throws Exception {
+        createData(new Db4oAccess());
+    }
+
+    private static void createData(DBAccess access) throws Exception {
         // Create some car types:
         Car touran = new Car("Touran", "VW");
         access.storeCar(touran);
@@ -115,6 +132,7 @@ public class ExampleData {
         Project research = new Project("FOP", "Neues Produkt entwickeln.");
         access.storeProject(research);
 
+        // Important! Otherwise the generated ids won't be updated.
         access.close();
         System.out.println("Beispieldaten erzeugt.");
     }

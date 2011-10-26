@@ -154,9 +154,17 @@ public class PersonnelDAO extends AbstractDAO {
             pstmt.setString(4, pers.getAddress().getHouseNumber());
             pstmt.setString(5, pers.getAddress().getZip());
             pstmt.setDate(6, new java.sql.Date(pers.getBirthDate().getTime()));
-            pstmt.setLong(7, pers.getDepartment().getDepNumber());
+            if (pers.getDepartment() != null) {
+                pstmt.setLong(7, pers.getDepartment().getDepNumber());
+            } else {
+                pstmt.setNull(7, Types.INTEGER);
+            }
             pstmt.setString(8, pers.getPosition());
-            pstmt.setLong(9, pers.getBoss().getPersonnelNumber());
+            if (pers.getBoss() != null) {
+                pstmt.setLong(9, pers.getBoss().getPersonnelNumber());
+            } else {
+                pstmt.setNull(9, Types.INTEGER);
+            }
             pstmt.execute();
         } catch (ObjectNotFoundException e) {
             // new
@@ -170,9 +178,17 @@ public class PersonnelDAO extends AbstractDAO {
             pstmt.setString(5, pers.getAddress().getHouseNumber());
             pstmt.setString(6, pers.getAddress().getZip());
             pstmt.setDate(7, new java.sql.Date(pers.getBirthDate().getTime()));
-            pstmt.setObject(8, pers.getDepartment());
+            if (pers.getDepartment() != null) {
+                pstmt.setLong(8, pers.getDepartment().getDepNumber());
+            } else {
+                pstmt.setNull(8, Types.INTEGER);
+            }
             pstmt.setString(9, pers.getPosition());
-            pstmt.setObject(10, pers.getBoss());
+            if (pers.getBoss() != null) {
+                pstmt.setLong(10, pers.getBoss().getPersonnelNumber());
+            } else {
+                pstmt.setNull(10, Types.INTEGER);
+            }
             pstmt.execute();
         }
     }

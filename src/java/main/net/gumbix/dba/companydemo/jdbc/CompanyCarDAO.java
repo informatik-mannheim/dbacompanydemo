@@ -90,7 +90,7 @@ public class CompanyCarDAO extends AbstractDAO {
             pstmt.execute();
         } catch (Exception e) {
             // new record
-            pstmt = prepareStatement("insert into Firmenwagen values (?, ?, ? )");
+            pstmt = prepareStatement("insert into Firmenwagen values (?, ?, ?)");
             pstmt.setString(1, car.getLicensePlate());
             pstmt.setString(2, car.getCar().getModel());
             if (car.getDriver() != null) {

@@ -1,8 +1,13 @@
 use firmenwelt;
 
 /*
+Hinweise:
+
 Wir benutzen die Auto-Inkrement-Funktion hier absichtlich nicht, damit
 wir die Referenzen einfacher nachverfolgen können.
+
+Die gleichen Daten sollten (noch nicht der Fall) mit der Anwendung
+net.gumbix.dba.companydemo.test.ExampleData erzeugt werden.
 */
 
 -- Abteilung (abteilungsNr, bezeichnung)

@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-package net.gumbix.dba.companydemo.test.db4o;
+package net.gumbix.dba.companydemo.test;
 
 import net.gumbix.dba.companydemo.db.DBAccess;
 import net.gumbix.dba.companydemo.db4o.Db4oAccess;
@@ -37,24 +37,35 @@ import java.util.GregorianCalendar;
 public class ExampleData {
 
     public static void main(String[] args) throws Exception {
-        // db4oEmbedded();
-        jdbc();
+        ExampleData data = new ExampleData();
+        // data.db4oEmbedded();
+        data.jdbcLocal();
     }
 
-    private static void jdbc() throws Exception {
-        createData(new JdbcAccess("firmenwelt", "firmenwelt10"));
+    private DBAccess access;
+
+    public void jdbcLocal() throws Exception {
+        access = new JdbcAccess("firmenwelt", "firmenwelt10");
+        createData();
     }
 
-    private static void db4oEmbedded() throws Exception {
+    public void jdbc() throws Exception {
+        access = new JdbcAccess(); // codd.hs-mannheim.de
+        createData();
+    }
+
+    public void db4oEmbedded() throws Exception {
         new File("firmenwelt.yap").delete();
-        createData(new Db4oAccess("firmenwelt.yap"));
+        access = new Db4oAccess("firmenwelt.yap");
+        createData();
     }
 
-    private static void db4oServer() throws Exception {
-        createData(new Db4oAccess());
+    public void db4oServer() throws Exception {
+        access = new Db4oAccess();
+        createData();
     }
 
-    private static void createData(DBAccess access) throws Exception {
+    private void createData() throws Exception {
         // Create some car types:
         Car touran = new Car("Touran", "VW");
         access.storeCar(touran);
@@ -64,8 +75,10 @@ public class ExampleData {
         access.storeCar(sklasse);
 
         // Create some company cars:
-        CompanyCar companyCar1234 = new CompanyCar("MA-MA 1234", touran);
+        CompanyCar companyCar1234 = new CompanyCar("MA-MA 1234", sklasse);
         access.storeCompanyCar(companyCar1234);
+        CompanyCar companyCar1235 = new CompanyCar("MA-MA 1235", passat);
+        access.storeCompanyCar(companyCar1235);
 
         // Create some departments:
         Department management = new Department(1, "Management");
@@ -90,30 +103,25 @@ public class ExampleData {
         access.storeDepartment(kundendienst);
 
         // Create personnel:
-        Employee employeeLohe = new Employee("Lohe", "Fransiska",
-                new GregorianCalendar(1967, 12, 01).getTime(), new Address("Chefstraße",
-                "1a", "68113", "Mannheim"), "+49 621 12345-100");
-        employeeLohe.setCar(companyCar1234);
-        employeeLohe.setDepartment(management);
-        employeeLohe.setPosition("Vorstands-Chefin");
-        access.storePersonnel(employeeLohe);
+        Employee employeeLohe = addEmployee("Lohe", "Fransiska",
+                1967, 12, 01, "Chefstraße", "1a", "68305", "Mannheim",
+                "+49 621 12345-100", management, "Vorstand", null, companyCar1234);
 
-        Employee employeeMüller = new Employee("Müller", "Walter",
-                new GregorianCalendar(1949, 02, 11).getTime(), new Address("Flussweg",
-                "23", "68113", "Mannheim"), "+49 621 12345-200");
-        employeeLohe.setCar(companyCar1234);
-        employeeMüller.setDepartment(produktion);
-        employeeMüller.setBoss(employeeLohe);
-        access.storePersonnel(employeeMüller);
+        Employee employeeMüller = addEmployee("Müller", "Walter", 1949, 02, 11,
+                "Flussweg", "23", "68113", "Mannheim", "+49 621 12345-200",
+                produktion, "Produktionsleiter", employeeLohe, companyCar1235);
 
-        Worker workerKleinschmidt = new Worker("Kleinschmidt", "August",
-                new GregorianCalendar(1955, 7, 23).getTime(), new Address(
-                "Wasserturmstraße", "29", "69214", "Eppelheim"),
-                "Halle A/Platz 30");
-        workerKleinschmidt.setBoss(employeeMüller);
-        workerKleinschmidt.setDepartment(produktion);
-        workerKleinschmidt.setPosition("Nachfüller");
-        access.storePersonnel(workerKleinschmidt);
+        Employee employeeZiegler = addEmployee("Ziegler", "Peter",
+                1967, 01, 13, "Ulmenweg", "34", "69115", "Heidelberg",
+                "+49 621 12345-300", it, "IT-Leiter", employeeLohe, null);
+
+        Worker workerKleinschmidt = addWorker("Kleinschmidt", "August",
+                1955, 7, 23, "Wasserturmstraße", "29", "69214", "Eppelheim",
+                "Halle A/Platz 30", produktion, "Nachfüller", employeeMüller);
+
+        Worker workerZiegler = addWorker("Ziegler", "Peter",
+                1961, 11, 15, "Wasserweg", "4", "69115", "Heidelberg",
+                "Halle A/Platz 31", produktion, "Auffüller", employeeMüller);
 
         // Projects
         Project hirePeople = new Project("LES", "Leute einstellen.");
@@ -139,5 +147,37 @@ public class ExampleData {
         // Important! Otherwise the generated ids won't be updated.
         access.close();
         System.out.println("Beispieldaten erzeugt.");
+    }
+
+    private Employee addEmployee(String lastName, String firstName,
+                                 int year, int month, int day,
+                                 String street, String houseNumber,
+                                 String zip, String city, String phone,
+                                 Department dep, String position, Personnel boss,
+                                 CompanyCar car) throws Exception {
+        Employee employee = new Employee(lastName, firstName,
+                new GregorianCalendar(year, month, day).getTime(),
+                new Address(street, houseNumber, zip, city), phone);
+        employee.setCar(car);
+        employee.setDepartment(dep);
+        employee.setPosition(position);
+        employee.setBoss(boss);
+        access.storePersonnel(employee);
+        return employee;
+    }
+
+    private Worker addWorker(String lastName, String firstName,
+                             int year, int month, int day,
+                             String street, String houseNumber,
+                             String zip, String city, String workplace,
+                             Department dep, String position, Personnel boss) throws Exception {
+        Worker worker = new Worker(lastName, firstName,
+                new GregorianCalendar(year, month, day).getTime(),
+                new Address(street, houseNumber, zip, city), workplace);
+        worker.setDepartment(dep);
+        worker.setPosition(position);
+        worker.setBoss(boss);
+        access.storePersonnel(worker);
+        return worker;
     }
 }

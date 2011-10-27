@@ -60,7 +60,7 @@ public class CarDAO extends AbstractDAO {
             pstmt.setString(1, car.getType());
             pstmt.setString(2, car.getModel());
             pstmt.execute();
-        } catch (Exception e) {
+        } catch (ObjectNotFoundException e) {
             // new record
             pstmt = prepareStatement("insert into Auto values ( ?, ? )");
             pstmt.setString(1, car.getModel());

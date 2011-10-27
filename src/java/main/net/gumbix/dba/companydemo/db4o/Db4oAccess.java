@@ -139,7 +139,7 @@ public class Db4oAccess extends AbstractDBAccess {
                 return first && last;
             }
         });
-        return Arrays.asList(carList.toArray(new Personnel[0]));
+        return carList;
     }
 
     public void storePersonnel(Personnel personnel) throws Exception {
@@ -180,7 +180,7 @@ public class Db4oAccess extends AbstractDBAccess {
                 }
             }
         });
-        return Arrays.asList(depList.toArray(new Department[0]));
+        return depList;
     }
 
     public void storeDepartment(Department department) throws Exception {
@@ -231,7 +231,7 @@ public class Db4oAccess extends AbstractDBAccess {
                 return car.getCar().getModel().equalsIgnoreCase(model);
             }
         });
-        return Arrays.asList(carList.toArray(new CompanyCar[0]));
+        return carList;
     }
 
     public void deleteCompanyCar(CompanyCar car) throws Exception {
@@ -268,7 +268,7 @@ public class Db4oAccess extends AbstractDBAccess {
                 }
             }
         });
-        return Arrays.asList(projects.toArray(new Project[0]));
+        return projects;
     }
 
     public void storeProject(Project proj) throws Exception {
@@ -302,12 +302,10 @@ public class Db4oAccess extends AbstractDBAccess {
         ObjectSet<StatusReport> reports = db
                 .query(new Predicate<StatusReport>() {
                     public boolean match(StatusReport report) {
-                        // TODO better via equals()!
-                        return report.getProject().getProjectId() == project
-                                .getProjectId();
+                        return report.getProject().equals(project);
                     }
                 });
-        return Arrays.asList(reports.toArray(new StatusReport[0]));
+        return reports;
     }
 
     public void storeStatusReport(StatusReport report) throws Exception {
@@ -322,8 +320,7 @@ public class Db4oAccess extends AbstractDBAccess {
     public Set<WorksOn> loadWorksOn(final Employee employee) throws Exception {
         ObjectSet<WorksOn> worksOns = db.query(new Predicate<WorksOn>() {
             public boolean match(WorksOn worksOn) {
-                return worksOn.getEmployee().getPersonnelNumber() == employee
-                        .getPersonnelNumber();
+                return worksOn.getEmployee().equals(employee);
             }
         });
         return new HashSet(Arrays.asList(worksOns.toArray(new Project[0])));
@@ -332,8 +329,7 @@ public class Db4oAccess extends AbstractDBAccess {
     public Set<WorksOn> loadWorksOn(final Project proj) throws Exception {
         ObjectSet<WorksOn> worksOns = db.query(new Predicate<WorksOn>() {
             public boolean match(WorksOn worksOn) {
-                return worksOn.getProject().getProjectId() == proj
-                        .getProjectId();
+                return worksOn.getProject().equals(proj);
             }
         });
         return new HashSet(Arrays.asList(worksOns.toArray(new Project[0])));

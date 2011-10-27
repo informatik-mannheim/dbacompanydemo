@@ -75,6 +75,16 @@ public class WorksOn {
         this.job = job;
     }
 
+    public boolean equals(Object other) {
+        if (other == null || !(other instanceof WorksOn)) {
+            return false;
+        } else {
+            WorksOn otherObject = (WorksOn) other;
+            return employee.equals(otherObject.getEmployee()) &&
+                    project.equals(otherObject.getProject());
+        }
+    }
+
     public String toString() {
         return employee + " arbeitet an " + project;
     }

@@ -42,7 +42,7 @@ public class StatusReportDAO extends AbstractDAO {
 
     public StatusReport load(Project project, long continuousNumber) throws Exception {
         ResultSet rs = executeSQLQuery("select * from Statusbericht " +
-                " where projektId = '" + project.getProjectId() + "' and" +
+                " where projektId = '" + project.getProjectId() + "' " +
                 " and fortlaufendeNr = " + continuousNumber);
 
         if (rs.next()) {
@@ -87,7 +87,7 @@ public class StatusReportDAO extends AbstractDAO {
             pstmt.setString(3, statusReport.getProject().getProjectId());
             pstmt.setLong(4, statusReport.getContinuousNumber());
             pstmt.execute();
-        } catch (Exception e) {
+        } catch (ObjectNotFoundException e) {
             // new record
             pstmt = prepareStatement("insert into Statusbericht values (?, ?, ?, ? )");
             pstmt.setString(1, statusReport.getProject().getProjectId());

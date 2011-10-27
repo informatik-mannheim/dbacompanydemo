@@ -25,24 +25,20 @@ import net.gumbix.dba.companydemo.domain.Personnel;
 
 public class Db4oIdGenerator extends IdGenerator {
 
-	static {
-		generator = new Db4oIdGenerator();
-	}
+    static {
+        generator = new Db4oIdGenerator();
+    }
 
-	private long nextPersonnel = 0;
+    private long nextPersonnel = 0;
 
-	public Db4oIdGenerator() {
-	}
+    public Db4oIdGenerator() {
+    }
 
-	public long getNextLong(Class clazz) {
-        try {
-            if (clazz.equals(Personnel.class)) {
-                nextPersonnel++;
-                return nextPersonnel;
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    public long getNextLong(Class clazz) {
+        if (clazz.equals(Personnel.class)) {
+            nextPersonnel++;
+            return nextPersonnel;
         }
         throw new IllegalArgumentException("Unknown class: " + clazz);
-	}
+    }
 }

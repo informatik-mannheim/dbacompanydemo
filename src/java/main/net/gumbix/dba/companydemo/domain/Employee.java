@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.domain;
 
+import EDU.purdue.cs.bloat.reflect.Catch;
 import net.gumbix.dba.companydemo.db.IdGenerator;
 
 import java.util.HashSet;
@@ -62,7 +63,7 @@ public class Employee extends Personnel {
 
     public void setCar(CompanyCar car) {
         this.car = car;
-        if (car.getDriver() != this) {
+        if (car != null && car.getDriver() != this) {
             car.setDriver(this);
         }
     }
@@ -93,7 +94,7 @@ public class Employee extends Personnel {
             s += "\nAuto:       " + car;
         }
         if (!projects.isEmpty()) {
-            s += "\nProjekte:    ";
+            s += "\nProjekte:   ";
             for (WorksOn w : projects) {
                 s += w.getProject() + "; ";
             }

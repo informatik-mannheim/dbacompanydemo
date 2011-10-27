@@ -1,0 +1,82 @@
+<project name="CompanyDemo" default="dist" basedir=".">
+    <!-- set global properties for this build -->
+    <property name="jarname" value="companydemo"/>
+    <property name="version" value="0.1.0"/>
+
+    <property name="javasrc" location="src/java/main"/>
+    <property name="sqlsrc" location="sql"/>
+    <property name="shellsrc" location="src/shell"/>
+    <property name="docsrc" location="doc"/>
+    <property name="lib" location="lib"/>
+    <property name="doc" location="doc"/>
+    <property name="build" location="build"/>
+    <property name="dist" location="dist"/>
+    <property name="javadoc" location="${build}/javadoc"/>
+    <property name="buildclasses" location="${build}/classes"/>
+    <property name="buildlib" location="${build}/lib"/>
+
+    <path id="project.class.path">
+        <pathelement location="${basedir}/lib/db4o-8.0.184.15484-all-java5.jar"/>
+        <pathelement location="${basedir}/lib/mysql-connector-java-5.0.8-bin.jar"/>
+        <pathelement path="${java.class.path}/"/>
+        <pathelement path="${buildclasses}/"/>
+    </path>
+
+    <target name="init">
+        <tstamp/>
+        <mkdir dir="${build}"/>
+        <mkdir dir="${buildclasses}"/>
+        <mkdir dir="${buildlib}"/>
+    </target>
+
+    <target name="javac" depends="init" description="compile the java sources">
+        <javac destdir="${buildclasses}">
+            <src path="${javasrc}"/>
+            <classpath refid="project.class.path"/>
+            <include name="net/gumbix/dba/companydemo/**/*.java"/>
+        </javac>
+    </target>
+
+    <target name="jar" depends="javac" description="generate the distribution">
+        <jar jarfile="${buildlib}/${jarname}-${version}.jar" basedir="${buildclasses}"/>
+    </target>
+
+    <target name="dist" depends="jar" description="generate the distribution">
+        <mkdir dir="${build}/doc"/>
+        <mkdir dir="${dist}"/>
+        <copydir dest="${build}/doc" src="${docsrc}">
+            <exclude name="~*"/>
+            <exclude name="*~"/>
+            <!--
+            <include name="DBA*.pdf"/>
+            <include name="DBA*.docx"/>
+            <include name="DBA*.dia"/>
+            -->
+        </copydir>
+        <copydir dest="${build}/shell" src="${shellsrc}">
+            <include name="*.bat"/>
+        </copydir>
+        <replace dir="${build}/shell" value="${version}">
+            <include name="**/*.bat"/>
+            <replacetoken>@{version}</replacetoken>
+        </replace>
+        <zip zipfile="${dist}/${jarname}-${version}.zip">
+            <zipfileset dir="${buildlib}" prefix="lib"/>
+            <fileset dir="${build}/shell"/>
+            <zipfileset dir="${javasrc}" prefix="src"/>
+            <zipfileset dir="${sqlsrc}" prefix="sql">
+                <exclude name="*.bak"/>
+            </zipfileset>
+            <zipfileset dir="${build}/doc" prefix="doc"/>
+            <!-- <zipfileset dir="${build}/scaladoc" prefix="scaladoc"/> -->
+            <zipfileset dir="${lib}" prefix="lib">
+                <exclude name="scala-*"/>
+            </zipfileset>
+        </zip>
+    </target>
+
+    <target name="clean" description="clean up">
+        <delete dir="${build}"/>
+        <delete dir="${dist}"/>
+    </target>
+</project>

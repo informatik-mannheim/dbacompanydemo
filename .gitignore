@@ -14,3 +14,7 @@ eclipse-classes
 .classpath
 .project
 *.yap
+build
+dist
+*~
+~*

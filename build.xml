@@ -1,7 +1,7 @@
 <project name="CompanyDemo" default="dist" basedir=".">
     <!-- set global properties for this build -->
     <property name="jarname" value="companydemo"/>
-    <property name="version" value="0.1.0"/>
+    <property name="version" value="0.1.1"/>
 
     <property name="javasrc" location="src/java/main"/>
     <property name="sqlsrc" location="sql"/>
@@ -61,6 +61,10 @@
             <replacetoken>@{version}</replacetoken>
         </replace>
         <zip zipfile="${dist}/${jarname}-${version}.zip">
+            <zipfileset dir="${basedir}">
+                <include name="gpl-2.0.txt"/>
+                <include name="readme.txt"/>
+            </zipfileset>
             <zipfileset dir="${buildlib}" prefix="lib"/>
             <fileset dir="${build}/shell"/>
             <zipfileset dir="${javasrc}" prefix="src"/>

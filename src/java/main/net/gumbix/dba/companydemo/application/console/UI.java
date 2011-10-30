@@ -98,6 +98,7 @@ public class UI {
 
                 case 4:
                     db = new HibernateDBAccess();
+                    menu();
                     break;
 
                 case 5:

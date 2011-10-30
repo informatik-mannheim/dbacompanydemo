@@ -29,8 +29,8 @@ public class Department {
     private long depNumber;
     private String name;
 
-    // Required by Hibernate
-    private Department() {
+    // Required by Hibernate. Must be public to avoid Javassist exception
+    public Department() {
     }
 
     public Department(long depNumber, String name) {
@@ -48,6 +48,11 @@ public class Department {
 
     public long getDepNumber() {
         return depNumber;
+    }
+
+    // Required by Hibernate.
+    public void setDepNumber(long number) {
+        this.depNumber = number;
     }
 
     public boolean equals(Object other) {

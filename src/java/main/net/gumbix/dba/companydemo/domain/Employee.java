@@ -37,6 +37,8 @@ public class Employee extends Personnel {
     private CompanyCar car;
     private Set<WorksOn> projects = new HashSet<WorksOn>();
 
+    public Employee() {}
+
     public Employee(String lastName, String firstName,
                     Date birthDate, Address adr, String tel) {
         this(IdGenerator.generator.getNextLong(Personnel.class),

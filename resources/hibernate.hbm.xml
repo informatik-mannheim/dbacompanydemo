@@ -6,9 +6,40 @@
 
     <class name="Department" table="Abteilung">
         <id name="depNumber" column="abteilungsNr">
-            <generator class="native"/>
         </id>
         <property name="name" column="bezeichnung"/>
     </class>
+
+    <class name="Personnel" table="Mitarbeiter">
+        <id name="personnelNumber" column="personalNr">
+        </id>
+        <property name="firstName" column="vorname"/>
+        <property name="lastName" column="nachname"/>
+        <property name="position" column="funktion"/>
+        <property name="birthDate" column="gebDatum"/>
+
+        <component name="address" >
+            <property name="street" column="strasse"/>
+            <property name="houseNumber" column="hausNr"/>
+            <property name="zip" column="plz"/>
+            <!-- city fehlt -->
+        </component>
+
+        <many-to-one name="department" foreign-key="abteilungsNr"
+                     class="Department"/>
+
+        <one-to-one name="boss" foreign-key="vorgesetzerNr" class="Personnel"/>
+
+        <joined-subclass name="Employee" table="Angestellter">
+            <key column="personalNr"/>
+            <property name="phoneNumber" column="telefonNr"/>
+        </joined-subclass>
+
+        <joined-subclass name="Worker" table="Arbeiter">
+            <key column="personalNr"/>
+            <property name="workspace" column="arbeitsplatz"/>
+        </joined-subclass>
+    </class>
+
 
 </hibernate-mapping>

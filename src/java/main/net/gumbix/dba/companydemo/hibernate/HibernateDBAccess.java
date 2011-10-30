@@ -1,8 +1,10 @@
 package net.gumbix.dba.companydemo.hibernate;
 
 import net.gumbix.dba.companydemo.db.AbstractDBAccess;
+import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
 import net.gumbix.dba.companydemo.domain.*;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import java.util.List;
 import java.util.Set;
@@ -12,48 +14,74 @@ import java.util.Set;
  */
 public class HibernateDBAccess extends AbstractDBAccess {
 
-    private Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+    private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
     public HibernateDBAccess() {
     }
 
+    // Personnels
     public Personnel loadPersonnel(long persNr) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Personnel personnel = (Personnel) session.get(Personnel.class, persNr);
+        session.getTransaction().commit();
+        if (personnel == null) {
+            throw new ObjectNotFoundException(Personnel.class, persNr + "");
+        }
+        return personnel;
     }
 
     public List<Personnel> queryPersonnelByName(String firstName, String lastName) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        firstName = firstName.replace('*', '%');
+        lastName = lastName.replace('*', '%');
+        List result = session.createQuery("from Personnel"
+                + " where firstName like '" + firstName + "'"
+                + " and lastName like '" + lastName + "'").list();
+        session.getTransaction().commit();
+        return result;
     }
 
     public void storePersonnel(Personnel pers) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        save(pers);
     }
 
     public void deletePersonnel(Personnel pers) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        delete(pers);
     }
 
+    // Departments...
     public Department loadDepartment(long depNumber) throws Exception {
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Department dep = (Department) session.load(Department.class, depNumber);
+        Department dep = (Department) session.get(Department.class, depNumber);
         session.getTransaction().commit();
+        if (dep == null) {
+            throw new ObjectNotFoundException(Department.class, depNumber + "");
+        }
         return dep;
     }
 
     public List<Department> queryDepartmentByName(String queryString) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        queryString = queryString.replace('*', '%');
+        List result = session.createQuery("from Department"
+                + " where name like '" + queryString + "'").list();
+        session.getTransaction().commit();
+        return result;
     }
 
     public void storeDepartment(Department department) throws Exception {
-        session.beginTransaction();
-        session.save(department);
-        session.getTransaction().commit();
+        save(department);
     }
 
     public void deleteDepartment(Department department) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        delete(department);
     }
 
+    // Cars
     public Car loadCar(String modell) throws Exception {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
@@ -131,6 +159,20 @@ public class HibernateDBAccess extends AbstractDBAccess {
     }
 
     public void close() {
-        session.close();
+        sessionFactory.close();
+    }
+
+    private void save(Object o) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.save(o);
+        session.getTransaction().commit();
+    }
+
+    private void delete(Object o) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.delete(o);
+        session.getTransaction().commit();
     }
 }

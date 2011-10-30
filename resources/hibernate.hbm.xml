@@ -4,6 +4,19 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="net.gumbix.dba.companydemo.domain">
 
+    <class name="Car" table="Auto">
+        <id name="model" column="modell"/>
+        <property name="type" column="marke"/>
+    </class>
+
+    <class name="CompanyCar" table="Firmenwagen">
+        <id name="licensePlate" column="nummernschild"/>
+        <many-to-one name="car" foreign-key="modell"
+                     class="Car"/>
+        <one-to-one name="driver" foreign-key="personalNr"
+                    class="Personnel"/>
+    </class>
+
     <class name="Department" table="Abteilung">
         <id name="depNumber" column="abteilungsNr">
         </id>
@@ -18,7 +31,7 @@
         <property name="position" column="funktion"/>
         <property name="birthDate" column="gebDatum"/>
 
-        <component name="address" >
+        <component name="address">
             <property name="street" column="strasse"/>
             <property name="houseNumber" column="hausNr"/>
             <property name="zip" column="plz"/>
@@ -33,12 +46,31 @@
         <joined-subclass name="Employee" table="Angestellter">
             <key column="personalNr"/>
             <property name="phoneNumber" column="telefonNr"/>
+            <one-to-one name="car" foreign-key="nummernschild"
+                        class="CompanyCar"/>
+
         </joined-subclass>
 
         <joined-subclass name="Worker" table="Arbeiter">
             <key column="personalNr"/>
             <property name="workspace" column="arbeitsplatz"/>
         </joined-subclass>
+    </class>
+
+    <class name="Project" table="Projekt">
+        <id name="projectId" column="projektId"/>
+        <property name="description" column="bezeichnung"/>
+        <property name="nextStatusReportNumber" column="naechsteStatusNummer"/>
+    </class>
+
+    <class name="StatusReport" table="StatusBericht">
+        <composite-id>
+            <key-many-to-one name="project" foreign-key="projektId" class="Project"/>
+            <key-property name="continuousNumber" column="fortlaufendeNr"/>
+        </composite-id>
+        <property name="content" column="inhalt"/>
+        <property name="date" column="datum"/>
+        <!-- <many-to-one name="project" foreign-key="projektId" class="Project"/> -->
     </class>
 
 

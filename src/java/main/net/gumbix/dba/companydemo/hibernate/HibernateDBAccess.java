@@ -82,52 +82,100 @@ public class HibernateDBAccess extends AbstractDBAccess {
     }
 
     // Cars
-    public Car loadCar(String modell) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Car loadCar(String model) throws Exception {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Car car = (Car) session.get(Car.class, model);
+        session.getTransaction().commit();
+        if (car == null) {
+            throw new ObjectNotFoundException(Personnel.class, model);
+        }
+        return car;
     }
 
     public void storeCar(Car car) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        save(car);
     }
 
     public void deleteCar(Car car) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        delete(car);
     }
 
+    // CompanyCars...
     public CompanyCar loadCompanyCar(String licensePlate) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        CompanyCar car = (CompanyCar) session.get(CompanyCar.class, licensePlate);
+        session.getTransaction().commit();
+        if (car == null) {
+            throw new ObjectNotFoundException(Personnel.class, licensePlate);
+        }
+        return car;
     }
 
     public List<CompanyCar> queryCompanyCarByModel(String model) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        model = model.replace('*', '%');
+        List result = session.createQuery("from CompanyCar as c"
+                + " where c.car.model like '" + model + "'").list();
+        session.getTransaction().commit();
+        return result;
     }
 
     public void storeCompanyCar(CompanyCar car) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        save(car);
     }
 
     public void deleteCompanyCar(CompanyCar car) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        delete(car);
     }
 
+    // Projects...
     public Project loadProject(String projId) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Project project = (Project) session.get(Project.class, projId);
+        session.getTransaction().commit();
+        if (project == null) {
+            throw new ObjectNotFoundException(Project.class, projId);
+        }
+        return project;
     }
 
     public List<Project> queryProjectByDescription(String queryString) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        queryString = queryString.replace('*', '%');
+        List result = session.createQuery("from Project "
+                + " where description like '" + queryString + "'").list();
+        session.getTransaction().commit();
+        return result;
     }
 
     public void storeProject(Project proj) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        save(proj);
     }
 
     public void deleteProject(Project proj) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        delete(proj);
     }
 
+    // StatusReports...
     public StatusReport loadStatusReport(Project project, long continuousNumber) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        List result = session.createQuery("from StatusReport "
+                + " where project.projectId = " + project.getProjectId()
+                + " and continuousNumber =" + continuousNumber).list();
+        if (result.isEmpty()) {
+            throw new ObjectNotFoundException(StatusReport.class,
+                    project.getProjectId() + "." + continuousNumber);
+        } else if (result.size() == 1) {
+            return (StatusReport) result.get(0);
+        } else {
+            throw new RuntimeException("More than one object!");
+        }
     }
 
     public List<StatusReport> loadStatusReport(Project project) throws Exception {
@@ -135,11 +183,11 @@ public class HibernateDBAccess extends AbstractDBAccess {
     }
 
     public void storeStatusReport(StatusReport rep) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        save(rep);
     }
 
     public void deleteStatusReport(StatusReport rep) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        delete(rep);
     }
 
     public Set<WorksOn> loadWorksOn(Employee employee) throws Exception {

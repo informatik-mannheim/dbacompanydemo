@@ -31,8 +31,7 @@ public class WorksOn {
     private String job;
 
 
-    public WorksOn() {
-    }
+    public WorksOn() {}
 
     public WorksOn(Employee employee, Project project, double percentage, String job) {
         setEmployee(employee);

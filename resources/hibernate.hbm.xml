@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="net.gumbix.dba.companydemo.domain">
+
+    <class name="Department" table="Abteilung">
+        <id name="depNumber" column="abteilungsNr">
+            <generator class="native"/>
+        </id>
+        <property name="name" column="bezeichnung"/>
+    </class>
+
+</hibernate-mapping>

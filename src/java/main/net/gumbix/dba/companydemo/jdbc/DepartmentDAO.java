@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Patrick Sturm
+ * @author Patrick Sturm (patrick-sturm@gmx.net)
  * @author Marius Czardybon (m.czardybon@gmx.net)
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */

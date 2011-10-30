@@ -29,6 +29,10 @@ public class Department {
     private long depNumber;
     private String name;
 
+    // Required by Hibernate
+    private Department() {
+    }
+
     public Department(long depNumber, String name) {
         this.depNumber = depNumber;
         this.name = name;

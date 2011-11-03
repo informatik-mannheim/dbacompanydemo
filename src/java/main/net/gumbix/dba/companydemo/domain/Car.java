@@ -29,8 +29,8 @@ public class Car {
 	private String model;
 	private String type;
 
-    // TODO required by Hibernate only
-    public Car() {}
+    // Required by Hibernate only
+    private Car() {}
 
 	public Car(String model, String type) {
 		this.model = model;

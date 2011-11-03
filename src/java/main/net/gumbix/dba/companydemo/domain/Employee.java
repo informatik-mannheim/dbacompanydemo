@@ -74,6 +74,12 @@ public class Employee extends Personnel {
         return projects;
     }
 
+    // Hibernate
+    private void setProjects(Set<WorksOn> projects) {
+        this.projects = projects;
+    }
+
+
     /**
      * Add a project.
      *

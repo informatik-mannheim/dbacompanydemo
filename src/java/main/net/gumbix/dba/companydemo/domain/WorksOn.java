@@ -20,16 +20,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.domain;
 
+import java.io.Serializable;
+
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Marius Czardybon  (m.czardybon@gmx.net)
  */
-public class WorksOn {
+public class WorksOn implements Serializable {
     private Employee employee;
     private Project project;
     private double percentage;
     private String job;
-
 
     public WorksOn() {}
 
@@ -46,7 +47,8 @@ public class WorksOn {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
-        employee.addProject(this);
+        // TODO Hibernate cannot handle this.
+        // employee.addProject(this);
     }
 
     public Project getProject() {
@@ -55,7 +57,7 @@ public class WorksOn {
 
     public void setProject(Project project) {
         this.project = project;
-        project.addEmployee(this);
+        // project.addEmployee(this);
     }
 
     public double getPercentage() {

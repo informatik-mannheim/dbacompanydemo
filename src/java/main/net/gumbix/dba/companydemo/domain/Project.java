@@ -66,6 +66,12 @@ public class Project {
         return statusReports;
     }
 
+    // TODO Hibernate
+    private void setStatusReports(List<StatusReport> statusReports) {
+        this.statusReports = statusReports;
+    }
+
+
     /**
      * Add a status report.
      * @param statusReport
@@ -86,6 +92,10 @@ public class Project {
 
     public Set<WorksOn> getEmployees() {
         return employees;
+    }
+
+    private void setEmployees(Set<WorksOn> employees) {
+        this.employees = employees;
     }
 
     public boolean addEmployee(WorksOn worksOn) {

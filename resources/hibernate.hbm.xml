@@ -2,6 +2,27 @@
 <!DOCTYPE hibernate-mapping PUBLIC
         "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!--
+A full-blown database demo developed at the
+Mannheim University of Applied Sciences.
+
+Copyright (C) 2011  the authors listed below.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+<!-- author Markus Gumbel (m.gumbel@hs-mannheim.de) -->
 <hibernate-mapping package="net.gumbix.dba.companydemo.domain">
 
     <class name="Car" table="Auto">
@@ -11,21 +32,20 @@
 
     <class name="CompanyCar" table="Firmenwagen">
         <id name="licensePlate" column="nummernschild"/>
-        <many-to-one name="car" foreign-key="modell"
+        <many-to-one name="car" column="modell"
                      class="Car"/>
         <one-to-one name="driver" foreign-key="personalNr"
                     class="Personnel"/>
     </class>
 
     <class name="Department" table="Abteilung">
-        <id name="depNumber" column="abteilungsNr">
+        <id name="depNumber" column="abteilungsNr" type="long">
         </id>
         <property name="name" column="bezeichnung"/>
     </class>
 
-    <class name="Personnel" table="Mitarbeiter">
-        <id name="personnelNumber" column="personalNr">
-        </id>
+    <class lazy="false" name="Personnel" table="Mitarbeiter">
+        <id name="personnelNumber" column="personalNr"/>
         <property name="firstName" column="vorname"/>
         <property name="lastName" column="nachname"/>
         <property name="position" column="funktion"/>
@@ -49,6 +69,10 @@
             <one-to-one name="car" foreign-key="nummernschild"
                         class="CompanyCar"/>
 
+            <set name="projects">
+                <key column="personalNr"/>
+                <one-to-many not-found="ignore" class="WorksOn"/>
+            </set>
         </joined-subclass>
 
         <joined-subclass name="Worker" table="Arbeiter">
@@ -57,15 +81,25 @@
         </joined-subclass>
     </class>
 
-    <class name="Project" table="Projekt">
+    <class lazy="false" name="Project" table="Projekt">
         <id name="projectId" column="projektId"/>
         <property name="description" column="bezeichnung"/>
         <property name="nextStatusReportNumber" column="naechsteStatusNummer"/>
+
+        <set name="employees">
+            <key column="projektId"/>
+            <one-to-many class="WorksOn" not-found="ignore"/>
+        </set>
+
+        <bag name="statusReports">
+            <key column="projektId"/>
+            <one-to-many class="StatusReport" not-found="ignore"/>
+        </bag>
     </class>
 
     <class name="StatusReport" table="StatusBericht">
         <composite-id>
-            <key-many-to-one name="project" foreign-key="projektId" class="Project"/>
+            <key-many-to-one name="project" column="projektId" class="Project"/>
             <key-property name="continuousNumber" column="fortlaufendeNr"/>
         </composite-id>
         <property name="content" column="inhalt"/>
@@ -73,5 +107,13 @@
         <!-- <many-to-one name="project" foreign-key="projektId" class="Project"/> -->
     </class>
 
+    <class lazy="false" name="WorksOn" table="MitarbeiterArbeitetAnProjekt">
+        <composite-id>
+            <key-many-to-one name="employee" column="personalNr" class="Employee"/>
+            <key-many-to-one name="project" column="projektId" class="Project"/>
+        </composite-id>
+        <property name="job" column="taetigkeit"/>
+        <property name="percentage" column="prozAnteil"/>
+    </class>
 
 </hibernate-mapping>

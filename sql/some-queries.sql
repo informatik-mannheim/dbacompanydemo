@@ -39,7 +39,22 @@ order by nachname, vorname;
 -- Liste alle Mitarbeiter auf, die einen Vorgesetzten haben:
 select nachname as 'Name', vorname as 'Vorname' 
 from Mitarbeiter 
-where vorgesetzterNr is not null ;
+where vorgesetzterNr is not null;
+
+/*
+Liste alle Mitarbeiter auf, die zwischen 20 und 30 Jahren alt sind. Gib den Nachnamen,
+Vornamen und das aktuelle Alter in Jahren an.
+*/
+select nachname, vorname, gebDatum, datediff(curdate(), gebDatum) / 365.25 as 'Alter'
+from Mitarbeiter
+where datediff(curdate(), gebDatum) >= 20 * 365.25 
+and datediff(curdate(), gebDatum) <= 30 * 365.25;
+
+/*
+Gib das Durchschnittsalter aller Mitarbeiter in Jahren an.
+*/
+select avg(datediff(curdate(), gebDatum) / 365.25) as 'Durchschnittsalter'
+from Mitarbeiter;
 
 -- ###########################
 -- II. Anspruchsvolle Abfragen
@@ -63,6 +78,47 @@ select CONCAT_WS(' ',Mitarbeiter.vorname,Mitarbeiter.nachname) as Mitarbeiter, s
 from Mitarbeiter natural join MitarbeiterArbeitetAnProjekt group by Mitarbeiter.personalNr 
 having sum(prozAnteil) > 100
 order by Mitarbeiter.nachname;
+
+/*
+Welche Abteilungen haben noch keine Mitarbeiter?
+*/
+select bezeichnung as 'leere Abteilung'
+from Abteilung
+where abteilungsNr not in (select abteilungsNr from Mitarbeiter);
+
+select a.bezeichnung as 'leere Abteilung'
+from Abteilung a left outer join Mitarbeiter m on a.abteilungsNr = m.abteilungsNr
+where m.abteilungsNr is null;
+
+/*
+Welcher Angestellten arbeiten aktuell an keinem Projekt?
+*/
+select m.nachname, m.vorname, m.funktion 
+from Mitarbeiter m natural join Angestellter a 
+where a.personalNr not in (select personalNr from MitarbeiterArbeitetAnProjekt)
+order by m.nachname;
+
+/**
+Wie viele Personen (Fulltime Employee Equivalents, FTE) arbeiten an den Projekten?
+*/
+select projektId as 'ID', p.bezeichnung as 'Projekt', sum(prozAnteil) / 100 as 'FTE'
+from MitarbeiterArbeitetAnProjekt m natural join Projekt p
+group by m.projektId;
+
+/*
+Wer fährt alle einen VW?
+*/
+select m.nachname, m.vorname, m.funktion, a.*
+from Auto as a natural join Firmenwagen natural join Mitarbeiter as m
+where a.marke = 'VW';
+
+/*
+In welchen Abteilungen werden welche Fahrzeuge gefahren?
+*/
+select a.bezeichnung, f.modell 
+from Abteilung a natural join Mitarbeiter natural join Firmenwagen f
+order by a.bezeichnung;
+
 
 -- #######################
 -- III. Knifflige Abfragen
@@ -132,8 +188,8 @@ Gib an, wie viele Mitarbeiter jeweils an ihren Chef berichten.
 */
 select m2.nachname, m2.vorname, count(m2.personalNr) as 'Teamgröße'
 from Mitarbeiter m1 join Mitarbeiter m2 on m1.vorgesetzterNr = m2.personalNr
--- order by m2.nachname;
-group by m2.personalNr, m2.nachname, m2.vorname; 
+group by m2.personalNr, m2.nachname, m2.vorname
+order by m2.nachname;
 
 /**
 IV.4

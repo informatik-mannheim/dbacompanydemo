@@ -20,18 +20,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.jdbc;
 
-import java.sql.Connection;
+import net.gumbix.dba.companydemo.domain.CompanyCar;
+import net.gumbix.dba.companydemo.domain.Employee;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
-
-import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
-import net.gumbix.dba.companydemo.domain.Address;
-import net.gumbix.dba.companydemo.domain.Employee;
-import net.gumbix.dba.companydemo.domain.Personnel;
 
 /**
  * @author Marius Czardybon  (m.czardybon@gmx.net)
@@ -68,6 +61,10 @@ public class EmployeeDAO extends PersonnelDAO {
             pstmt.execute();
             pstmt.close();
         }
+        // Also update the company car:
+        if (employee.getCar() != null) {
+            access.storeCompanyCar(employee.getCar());
+        }
     }
 
     public void delete(Employee employee) throws Exception {
@@ -76,6 +73,13 @@ public class EmployeeDAO extends PersonnelDAO {
         pstmt.setLong(1, employee.getPersonnelNumber());
         pstmt.execute();
         pstmt.close();
+
+        // Also update the company car:
+        if (employee.getCar() != null) {
+            CompanyCar car = employee.getCar();
+            car.setDriver(null);
+            access.storeCompanyCar(car);
+        }
 
         super.delete(employee);
     }

@@ -83,10 +83,11 @@ public class CompanyCarDAO extends AbstractDAO {
                     ", personalNr = ? where nummernschild = ?");
             pstmt.setString(1, car.getCar().getModel());
             if (car.getDriver() != null) {
-                pstmt.setLong(3, car.getDriver().getPersonnelNumber());
+                pstmt.setLong(2, car.getDriver().getPersonnelNumber());
             } else {
-                pstmt.setNull(3, Types.INTEGER);
+                pstmt.setNull(2, Types.INTEGER);
             }
+            pstmt.setString(3, car.getLicensePlate());
             pstmt.execute();
         } catch (ObjectNotFoundException e) {
             // new record

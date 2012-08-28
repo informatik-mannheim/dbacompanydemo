@@ -58,6 +58,12 @@ select m.nachname, m.vorname
 from Mitarbeiter as m natural join Abteilung where Abteilung.bezeichnung = 'Produktion'
 order by m.nachname;
 
+-- Wer arbeitet mehr als 100% an Projekten (sortiert nach Name)?
+select CONCAT_WS(' ',Mitarbeiter.vorname,Mitarbeiter.nachname) as Mitarbeiter, sum(prozAnteil) as '%'
+from Mitarbeiter natural join MitarbeiterArbeitetAnProjekt group by Mitarbeiter.personalNr 
+having sum(prozAnteil) > 100
+order by Mitarbeiter.nachname;
+
 -- #######################
 -- III. Knifflige Abfragen
 -- #######################
@@ -89,6 +95,20 @@ Projekt.bezeichnung as 'für Projekt', MitarbeiterArbeitetAnProjekt.prozAnteil a
 from Mitarbeiter natural join MitarbeiterArbeitetAnProjekt natural join Projekt
 order by Mitarbeiter.nachname;
 
+/*
+III.4
+Wo wohnen die meisten Mitarbeiter (gemäß PLZ)? Liste hierzu die PLZ und die Häufigkeit
+absteigend sortiert auf.
+*/
+select plz, anzahl
+from
+(
+ select plz, count(plz) as anzahl from Mitarbeiter
+ group by plz
+) as t
+order by anzahl desc;
+
+
 -- ########################
 -- IV. Abgefahrene Abfragen
 -- ########################
@@ -114,6 +134,22 @@ select m2.nachname, m2.vorname, count(m2.personalNr) as 'Teamgröße'
 from Mitarbeiter m1 join Mitarbeiter m2 on m1.vorgesetzterNr = m2.personalNr
 -- order by m2.nachname;
 group by m2.personalNr, m2.nachname, m2.vorname; 
+
+/**
+IV.4
+wie III.4, jedoch soll nur die PLZ mit der größten Häufigkeit ausgeben werden (d.h. nur eine Zeile).
+*/
+select plz
+from
+(
+ select plz, count(plz) as anzahl from Mitarbeiter
+ group by plz
+) as t
+where anzahl >= all 
+(
+ select count(plz) as anzahl from Mitarbeiter
+ group by plz
+);
 
 -- ab hier noch zu verifizieren...
 

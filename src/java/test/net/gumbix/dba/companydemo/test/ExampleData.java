@@ -41,7 +41,7 @@ public class ExampleData extends TestCase {
     public void testLoadExampleData() throws Exception {
         ExampleData data = importData();
         assertEquals(17, data.access.getNumberOfPersonnel());
-        assertEquals(2, data.access.getNumberOfProjects());
+        assertEquals(4, data.access.getNumberOfProjects());
         // Important! Otherwise the generated ids won't be updated.
         data.access.close();
     }
@@ -237,9 +237,6 @@ public class ExampleData extends TestCase {
                 "Thermodynamik berechnen.");
         access.storeWorksOn(researchThorn);
 
-        // research.addEmployee(hirePeopleLohe);
-        // access.storeProject(hirePeople);
-
         StatusReport researchReport1 = new StatusReport(
                 new GregorianCalendar(2012, 8, 17).getTime(),
                 "Das ist der erste Statusbericht", research);
@@ -248,6 +245,28 @@ public class ExampleData extends TestCase {
                 new GregorianCalendar(2012, 8, 28).getTime(),
                 "Fortschritte beim Modell", research);
         access.storeStatusReport(researchReport2);
+
+        // DB portieren:
+        Project dbPort = new Project("DBP", "DB portieren.");
+        access.storeProject(dbPort);
+        WorksOn dbPortZiegler = new WorksOn(employeeZiegler, dbPort, 20,
+                "Architektur entwerfen.");
+        access.storeWorksOn(dbPortZiegler);
+
+        WorksOn dbPortBauer = new WorksOn(employeeBauer, dbPort, 70,
+                "Skripte schreiben.");
+        access.storeWorksOn(dbPortBauer);
+
+        // Security-Konzept:
+        Project securityConcept = new Project("SEC", "Security-Konzept für Firma");
+        access.storeProject(securityConcept);
+        WorksOn securityConceptZiegler = new WorksOn(employeeZiegler, securityConcept, 40,
+                "Security-Konzept entwerfen.");
+        access.storeWorksOn(securityConceptZiegler);
+
+        WorksOn securityConceptBauer = new WorksOn(employeeBauer, securityConcept, 40,
+                "Hacking");
+        access.storeWorksOn(securityConceptBauer);
 
         System.out.println("Beispieldaten erzeugt.");
     }

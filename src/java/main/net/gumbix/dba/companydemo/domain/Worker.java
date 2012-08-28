@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package net.gumbix.dba.companydemo.domain;
 
 import net.gumbix.dba.companydemo.db.IdGenerator;
+import org.hibernate.jdbc.Work;
 
 import java.util.Date;
 
@@ -31,6 +32,8 @@ import java.util.Date;
 public class Worker extends Personnel {
 
     private String workspace;
+
+    public Worker() {}
 
     public Worker(String lastName, String firstName,
                   Date birthDate, Address adr, String workspace) {

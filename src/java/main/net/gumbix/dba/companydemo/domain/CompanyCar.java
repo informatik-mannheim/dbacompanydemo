@@ -30,8 +30,7 @@ public class CompanyCar {
 	private Car car;
     private Employee driver;
 
-	public CompanyCar() {
-	}
+	public CompanyCar() {}
 
 	public CompanyCar(String licensePlate, Car car) {
 		this.licensePlate = licensePlate;

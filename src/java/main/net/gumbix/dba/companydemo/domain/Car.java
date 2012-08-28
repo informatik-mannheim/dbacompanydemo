@@ -29,6 +29,9 @@ public class Car {
 	private String model;
 	private String type;
 
+    // Required by Hibernate only
+    private Car() {}
+
 	public Car(String model, String type) {
 		this.model = model;
 		this.type = type;
@@ -37,6 +40,11 @@ public class Car {
 	public String getModel() {
 		return model;
 	}
+
+    // TODO required by Hibernate only
+    public void setModel(String model) {
+        this.model = model;
+    }
 
 	public String getType() {
 		return type;

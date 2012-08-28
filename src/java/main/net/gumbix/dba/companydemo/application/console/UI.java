@@ -24,6 +24,7 @@ import net.gumbix.dba.companydemo.db.DBAccess;
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
 import net.gumbix.dba.companydemo.db4o.Db4oAccess;
 import net.gumbix.dba.companydemo.domain.*;
+import net.gumbix.dba.companydemo.hibernate.HibernateDBAccess;
 import net.gumbix.dba.companydemo.jdbc.JdbcAccess;
 
 import java.io.*;
@@ -34,7 +35,7 @@ import java.util.Locale;
 
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
- * @author Patrick Sturm
+ * @author Patrick Sturm (patrick-sturm@gmx.net)
  * @author Marius Czardybon (m.czardybon@gmx.net)
  */
 public class UI {
@@ -96,7 +97,8 @@ public class UI {
                     break;
 
                 case 4:
-                    System.out.println("Noch nicht unterstützt.");
+                    db = new HibernateDBAccess();
+                    menu();
                     break;
 
                 case 5:

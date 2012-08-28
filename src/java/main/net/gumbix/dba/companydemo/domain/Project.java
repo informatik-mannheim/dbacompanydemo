@@ -38,6 +38,8 @@ public class Project {
     // private long nextStatusReportNumber = 1;
     public long nextStatusReportNumber = 1;  // TODO, reflection does not work yet.
 
+    public Project() {}
+
     public Project(String projectId, String description) {
         this.projectId = projectId;
         this.description = description;
@@ -45,6 +47,11 @@ public class Project {
 
     public String getProjectId() {
         return projectId;
+    }
+
+    // TODO Hibernate
+    public void setProjectId(String id) {
+        projectId = id;
     }
 
     public String getDescription() {
@@ -58,6 +65,12 @@ public class Project {
     public List<StatusReport> getStatusReports() {
         return statusReports;
     }
+
+    // TODO Hibernate
+    private void setStatusReports(List<StatusReport> statusReports) {
+        this.statusReports = statusReports;
+    }
+
 
     /**
      * Add a status report.
@@ -81,6 +94,10 @@ public class Project {
         return employees;
     }
 
+    private void setEmployees(Set<WorksOn> employees) {
+        this.employees = employees;
+    }
+
     public boolean addEmployee(WorksOn worksOn) {
         return employees.add(worksOn);
     }
@@ -88,6 +105,11 @@ public class Project {
     public long getNextStatusReportNumber() {
         nextStatusReportNumber++;
         return nextStatusReportNumber;
+    }
+
+    // TODO Hibernate
+    public void setNextStatusReportNumber(long number) {
+        nextStatusReportNumber = number;
     }
 
     public boolean equals(Object other) {

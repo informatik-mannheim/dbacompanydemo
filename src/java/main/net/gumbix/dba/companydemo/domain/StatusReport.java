@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.domain;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -27,12 +28,14 @@ import java.util.Date;
  * @author Marius Czardybon (m.czardybon@gmx.net)
  * @auhtor Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-public class StatusReport {
+public class StatusReport implements Serializable {
 
     private long continuousNumber;
     private Date date;
     private String content;
     private Project project;
+
+    public StatusReport() {}
 
     /**
      * Create a new status report. A unique ID is assigned automatically.
@@ -70,6 +73,11 @@ public class StatusReport {
         return continuousNumber;
     }
 
+    // TODO Hibernate
+    public void setContinuousNumber(long number) {
+        continuousNumber = number;
+    }
+
     public Date getDate() {
         return date;
     }
@@ -88,6 +96,11 @@ public class StatusReport {
 
     public Project getProject() {
         return project;
+    }
+
+    // TODO Hibernate
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     public boolean equals(Object other) {

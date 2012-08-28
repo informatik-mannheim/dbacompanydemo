@@ -107,7 +107,7 @@ public class ExampleData {
                 1967, 12, 01, "Chefstraße", "1a", "68305", "Mannheim",
                 "+49 621 12345-100", management, "Vorstand", null, companyCar1234);
 
-        Employee employeeMüller = addEmployee("Müller", "Walter", 1949, 02, 11,
+        Employee employeeMueller = addEmployee("Müller", "Walter", 1949, 02, 11,
                 "Flussweg", "23", "68113", "Mannheim", "+49 621 12345-200",
                 produktion, "Produktionsleiter", employeeLohe, companyCar1235);
 
@@ -117,11 +117,11 @@ public class ExampleData {
 
         Worker workerKleinschmidt = addWorker("Kleinschmidt", "August",
                 1955, 7, 23, "Wasserturmstraße", "29", "69214", "Eppelheim",
-                "Halle A/Platz 30", produktion, "Nachfüller", employeeMüller);
+                "Halle A/Platz 30", produktion, "Nachfüller", employeeMueller);
 
         Worker workerZiegler = addWorker("Ziegler", "Peter",
                 1961, 11, 15, "Wasserweg", "4", "69115", "Heidelberg",
-                "Halle A/Platz 31", produktion, "Auffüller", employeeMüller);
+                "Halle A/Platz 31", produktion, "Auffüller", employeeMueller);
 
         // Projects
         Project hirePeople = new Project("LES", "Leute einstellen.");

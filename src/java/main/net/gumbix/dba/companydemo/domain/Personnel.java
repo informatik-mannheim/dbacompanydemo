@@ -42,6 +42,8 @@ public class Personnel {
     private String position;
     private Personnel boss;
 
+    public Personnel() {}
+
     public Personnel(String lastName, String firstName, Date birthDate, Address adr) {
         this(IdGenerator.generator.getNextLong(Personnel.class),
                 lastName, firstName, birthDate, adr);

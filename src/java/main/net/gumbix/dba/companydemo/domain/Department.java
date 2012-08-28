@@ -29,6 +29,9 @@ public class Department {
     private long depNumber;
     private String name;
 
+    // Required by Hibernate only.
+    private Department() {}
+
     public Department(long depNumber, String name) {
         this.depNumber = depNumber;
         this.name = name;
@@ -44,6 +47,11 @@ public class Department {
 
     public long getDepNumber() {
         return depNumber;
+    }
+
+    // Required by Hibernate. Private to avoid any modifications.
+    private void setDepNumber(long number) {
+        this.depNumber = number;
     }
 
     public boolean equals(Object other) {

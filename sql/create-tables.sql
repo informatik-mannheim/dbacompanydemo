@@ -33,23 +33,23 @@ ortsname varchar(20)
 
 -- Abteilung (abteilungsNr, bezeichnung)
 create table Abteilung (
-abteilungsNr integer not null auto_increment,
+abteilungsNr bigint not null auto_increment,
 bezeichnung varchar(30),
 primary key (abteilungsNr)
 );
 
 -- Mitarbeiter (personalNr, vorname, nachname, straße, hausNr, plz#, gebDatum, abteilungsNr#, funktion, vorgesetzterNr#)
 create table Mitarbeiter (
-personalNr integer not null auto_increment,
+personalNr bigint not null auto_increment,
 vorname varchar(30),
 nachname varchar(30),
 strasse varchar(30),
 hausNr varchar(5),
 plz char(5),
 gebDatum date,
-abteilungsNr integer,
+abteilungsNr bigint,
 funktion varchar(30), -- innerhalb der Abteilung
-vorgesetzterNr integer,
+vorgesetzterNr bigint,
 primary key (personalNr),
 foreign key (vorgesetzterNr) references Mitarbeiter (personalNr),
 foreign key (abteilungsNr) references Abteilung(abteilungsNr),
@@ -59,7 +59,7 @@ create index nameIdx on Mitarbeiter(nachname);
 
 -- Angestellter (personalNr#, telefonNr)
 create table Angestellter (
-personalNr integer primary key not null,
+personalNr bigint primary key not null,
 telefonNr varchar(20),
 foreign key (personalNr) references Mitarbeiter (personalNr)
   on update cascade on delete cascade
@@ -67,7 +67,7 @@ foreign key (personalNr) references Mitarbeiter (personalNr)
 
 -- Arbeiter (personalNr#, arbeitsplatz)
 create table Arbeiter (
-personalNr integer primary key not null,
+personalNr bigint primary key not null,
 arbeitsplatz varchar(20),
 foreign key (personalNr) references Mitarbeiter (personalNr)
   on update cascade on delete cascade
@@ -83,7 +83,7 @@ marke varchar(20)
 create table Firmenwagen (
 nummernschild varchar(12) primary key not null,
 modell varchar(20),
-personalNr integer,
+personalNr bigint,
 foreign key (modell) references Auto(modell),
 foreign key (personalNr) references Angestellter(personalNr)
 );
@@ -99,7 +99,7 @@ create index bezeichnungIdx on Projekt(bezeichnung);
 -- Statusbericht (projektId#, fortlaufendeNr, datum, inhalt)
 create table Statusbericht (
 projektId char(3) not null,
-fortlaufendeNr integer not null,
+fortlaufendeNr bigint not null,
 datum date,
 inhalt text,
 primary key (projektId, fortlaufendeNr),
@@ -108,12 +108,12 @@ foreign key (projektId) references Projekt(projektId)
 
 -- MitarbeiterArbeitetAnProjekt (personalNr#, projektId#, prozAnteil, taetigkeit)
 create table MitarbeiterArbeitetAnProjekt (
-personalNr integer not null,
+personalNr bigint not null,
 projektId char(3) not null,
 taetigkeit varchar(255),
 prozAnteil decimal(5, 2), -- 5 Zahlen insgesamt, davon 2 Nachkommastellen (000,00)
 primary key (personalNr, projektId),
-foreign key (personalNr) references Mitarbeiter(personalNr),
+foreign key (personalNr) references Angestellter(personalNr),
 foreign key (projektId) references Projekt(projektId)
 );
 

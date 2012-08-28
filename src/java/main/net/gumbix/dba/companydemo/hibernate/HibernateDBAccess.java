@@ -206,6 +206,23 @@ public class HibernateDBAccess extends AbstractDBAccess {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    // Queries
+    public int getNumberOfPersonnel() throws Exception {
+        // TODO
+        throw new RuntimeException("Method not yet implemented");
+    }
+
+    // Queries
+    public int getNumberOfProjects() throws Exception {
+        // TODO
+        throw new RuntimeException("Method not yet implemented");
+    }
+
+    public List<Employee> getIdleEmployees() throws Exception {
+        // TODO
+        throw new RuntimeException("Method not yet implemented");
+    }
+
     public void close() {
         sessionFactory.close();
     }

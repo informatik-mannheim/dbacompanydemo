@@ -99,5 +99,10 @@ public interface DBAccess {
 
     public void deleteWorksOn(WorksOn wo) throws Exception;
 
+    // Queries
+    public int getNumberOfPersonnel() throws Exception;
+    public int getNumberOfProjects() throws Exception;
+    public List<Employee> getIdleEmployees() throws Exception;
+
     public void close();
 }

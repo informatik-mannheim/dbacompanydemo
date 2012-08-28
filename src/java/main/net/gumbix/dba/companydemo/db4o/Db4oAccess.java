@@ -120,7 +120,7 @@ public class Db4oAccess extends AbstractDBAccess {
             lastNameStartsWith = null;
         }
 
-        ObjectSet<Personnel> carList = db.query(new Predicate<Personnel>() {
+        ObjectSet<Personnel> personnelList = db.query(new Predicate<Personnel>() {
             public boolean match(Personnel personnel) {
                 boolean first = false;
                 if (firstNameStartsWith != null) {
@@ -139,7 +139,7 @@ public class Db4oAccess extends AbstractDBAccess {
                 return first && last;
             }
         });
-        return carList;
+        return personnelList;
     }
 
     public void storePersonnel(Personnel personnel) throws Exception {
@@ -261,6 +261,7 @@ public class Db4oAccess extends AbstractDBAccess {
         ObjectSet<Project> projects = db.query(new Predicate<Project>() {
             public boolean match(Project project) {
                 if (startsWith != null) {
+                    // TODO startsWith does not work
                     return project.getDescription().startsWith(startsWith);
                 } else {
                     return project.getDescription().equalsIgnoreCase(
@@ -341,5 +342,19 @@ public class Db4oAccess extends AbstractDBAccess {
 
     public void deleteWorksOn(WorksOn wo) throws Exception {
         db.delete(wo);
+    }
+
+    // Queries
+    public int getNumberOfPersonnel() throws Exception {
+        return db.queryByExample(new Personnel()).size();
+    }
+
+    public int getNumberOfProjects() throws Exception {
+        return db.queryByExample(new Project()).size();
+    }
+
+    public List<Employee> getIdleEmployees() throws Exception {
+        // TODO
+        throw new RuntimeException("Method not yet implemented");
     }
 }

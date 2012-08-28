@@ -51,7 +51,7 @@ public class UI {
             selectDB();
             System.out
                     .println("\nVielen Dank, dass Sie " + NAME + " genutzt haben.");
-            System.out.println("Wir hoffen, dass es Spass gemacht hat.");
+            System.out.println("Wir hoffen, es hat Spass gemacht.");
             credits();
             pressAnyKey();
         } catch (Exception e) {
@@ -138,7 +138,8 @@ public class UI {
                     + "1 Personal verwalten\n"
                     + "2 Projekte verwalten\n"
                     + "3 Firmenwagen verwalten\n"
-                    + "4 Abteilungen verwalten\n\n"
+                    + "4 Abteilungen verwalten\n"
+                    + "5 Berichte\n\n"
                     + "0 Zurück");
 
             menuChoice = getMenuChoice();
@@ -158,6 +159,10 @@ public class UI {
 
                 case 4:
                     departmentsMenu();
+                    break;
+
+                case 5:
+                    reportsMenu();
                     break;
 
                 case 0:
@@ -403,7 +408,7 @@ public class UI {
                         System.out.println("---");
 
                     } catch (ObjectNotFoundException e) {
-                        System.out.println("Projekt für diesen Statusbericht nicht gefunden!");
+                        System.out.println("Projekt (für Statusbericht) nicht gefunden!");
                     }
                     pressAnyKey();
                     break;
@@ -666,6 +671,56 @@ public class UI {
                     } catch (ObjectNotFoundException e) {
                         System.out.println("Abteilung zum Löschen nicht gefunden!");
                     }
+                    break;
+
+                case 0:
+                    break;
+
+                default:
+                    System.out.println(INVALID_INPUT);
+                    break;
+            }
+        } while (menuChoice != 0);
+    }
+
+
+    private static void reportsMenu() throws Exception {
+        int menuChoice;
+        Exception dep;
+        do {
+            System.out.println("\n*** Berichte ***\n\n"
+                    + "Was möchten Sie tun? \n\n"
+                    + "1 Statistik\n"
+                    + "2 Nicht ausgelastete Angestellte\n\n"
+                    + "0 Zurück");
+
+            menuChoice = getMenuChoice();
+
+            switch (menuChoice) {
+
+                case 1:
+                    System.out.println("*** Statistik ***\n");
+
+                    int mc = db.getNumberOfPersonnel();
+                    System.out.println("Anzahl Mitarbeiter: " + mc);
+                    int pc = db.getNumberOfProjects();
+                    System.out.println("Anzahl Projekte:    " + pc);
+                    break;
+
+                case 2:
+                    System.out.println("*** Nicht ausgelastete Angestellte ***\n");
+
+                    List<Employee> list = db.getIdleEmployees();
+
+                    if (!list.isEmpty()) {
+                        for (Employee employee : list) {
+                            System.out.println(employee.toString());
+                            System.out.println(employee.getProjects());
+                        }
+                    } else {
+                        System.out.println("Keine(n) nicht ausgelastete(n) Mitarbeiter gefunden!\n");
+                    }
+                    pressAnyKey();
                     break;
 
                 case 0:

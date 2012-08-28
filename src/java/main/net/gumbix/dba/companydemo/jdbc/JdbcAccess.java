@@ -20,13 +20,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.jdbc;
 
-import java.sql.*;
+import net.gumbix.dba.companydemo.db.AbstractDBAccess;
+import net.gumbix.dba.companydemo.domain.*;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import net.gumbix.dba.companydemo.db.AbstractDBAccess;
-import net.gumbix.dba.companydemo.db.DBAccess;
-import net.gumbix.dba.companydemo.domain.*;
 
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
@@ -191,6 +194,44 @@ public class JdbcAccess extends AbstractDBAccess {
 
     public void deleteWorksOn(WorksOn wo) throws Exception {
         woOnDAO.delete(wo);
+    }
+
+    // Queries
+    public int getNumberOfPersonnel() throws Exception {
+        Statement query = connection.createStatement();
+        ResultSet rs = query.executeQuery("select count(*) from Mitarbeiter");
+        rs.next();
+        int result = rs.getInt(1);
+        rs.close();
+        query.close();
+        return result;
+    }
+
+    public int getNumberOfProjects() throws Exception {
+        Statement query = connection.createStatement();
+        ResultSet rs = query.executeQuery("select count(*) from Projekt");
+        rs.next();
+        int result = rs.getInt(1);
+        rs.close();
+        query.close();
+        return result;
+    }
+
+    public List<Employee> getIdleEmployees() throws Exception {
+        String queryString = "select personalNr, sum(prozAnteil) " +
+                "from Mitarbeiter natural join MitarbeiterArbeitetAnProjekt " +
+                "group by Mitarbeiter.personalNr having sum(prozAnteil) < 50 " +
+                "order by Mitarbeiter.nachname";
+        Statement query = connection.createStatement();
+        ResultSet rs = query.executeQuery(queryString);
+        List<Employee> result = new ArrayList();
+        while (rs.next()) {
+            int personnelNumber = rs.getInt(1);
+            result.add((Employee) emplDAO.load(personnelNumber));
+        }
+        rs.close();
+        query.close();
+        return result;
     }
 
     public void close() {

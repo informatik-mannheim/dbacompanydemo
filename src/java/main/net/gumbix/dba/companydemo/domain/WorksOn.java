@@ -87,7 +87,7 @@ public class WorksOn implements Serializable {
     }
 
     public String toString() {
-        return employee + " arbeitet an " + project;
+        return employee + " arbeitet mit " + percentage + "% an " + project;
     }
 
     public String toFullString() {

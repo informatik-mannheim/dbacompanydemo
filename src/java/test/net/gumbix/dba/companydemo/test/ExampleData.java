@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.test;
 
+import junit.framework.TestCase;
 import net.gumbix.dba.companydemo.db.DBAccess;
 import net.gumbix.dba.companydemo.db4o.Db4oAccess;
 import net.gumbix.dba.companydemo.domain.*;
@@ -34,15 +35,31 @@ import java.util.GregorianCalendar;
  *
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-public class ExampleData {
+public class ExampleData extends TestCase {
+
+
+    public void testLoadExampleData() throws Exception {
+        ExampleData data = importData();
+        assertEquals(17, data.access.getNumberOfPersonnel());
+        assertEquals(2, data.access.getNumberOfProjects());
+        // Important! Otherwise the generated ids won't be updated.
+        data.access.close();
+    }
 
     public static void main(String[] args) throws Exception {
+        ExampleData data = importData();
+        // Important! Otherwise the generated ids won't be updated.
+        data.access.close();
+    }
+
+    public static ExampleData importData() throws Exception {
         ExampleData data = new ExampleData();
         // data.db4oEmbedded();
         data.jdbcLocal();
+        return data;
     }
 
-    private DBAccess access;
+    public DBAccess access;
 
     public void jdbcLocal() throws Exception {
         access = new JdbcAccess("firmenwelt", "firmenwelt10");
@@ -116,7 +133,11 @@ public class ExampleData {
                 1967, 12, 01, "Chefstraße", "1a", "68305", "Mannheim",
                 "+49 621 12345-100", management, "Vorstand", null, companyCar1234);
 
-        // Production:
+        Employee employeeLindemann = addEmployee("Lindemann", "Hans",
+                1968, 1, 21, "Pappelallee", "1a", "10437", "Berlin",
+                "+49 621 12345-110", management, "Personalreferent", employeeLohe, null);
+
+        // Produktion:
         Employee employeeMueller = addEmployee("Müller", "Walter", 1949, 02, 11,
                 "Flussweg", "23", "68113", "Mannheim", "+49 621 12345-200",
                 produktion, "Produktionsleiter", employeeLohe, companyCar1235);
@@ -129,10 +150,13 @@ public class ExampleData {
                 1961, 11, 15, "Wasserweg", "4", "69115", "Heidelberg",
                 "Halle A/Platz 31", produktion, "Auffüller", employeeMueller);
 
-
         Worker workerSchmidt = addWorker("Schmidt", "Hanna",
                 1974, 10, 29, "Wasserweg", "16", "69115", "Heidelberg",
                 "Halle A/Platz 32", produktion, "Auffüller", employeeMueller);
+
+        Worker workerAlbrecht = addWorker("Albrecht", "Justin",
+                1991, 9, 9, "Liesgewann", "6", "69115", "Heidelberg",
+                "Halle A/Platz 33", produktion, "Azubi", workerSchmidt);
 
         // IT
         Employee employeeZiegler = addEmployee("Ziegler", "Peter",
@@ -152,11 +176,34 @@ public class ExampleData {
 
         Employee employeeWalther = addEmployee("Walther, Dr.", "Sabrina",
                 1978, 07, 16, "Hansaweg", "22", "68163", "Mannheim",
-                "+49 621 12345-410", entwicklung, "CAD-Experte", employeeLohe, null);
+                "+49 621 12345-410", entwicklung, "CAD-Experte", employeeFischer, null);
 
         Employee employeeThorn = addEmployee("Thorn", "Max",
                 1956, 01, 30, "Hauptstraße", "110a", "68163", "Mannheim",
-                "+49 621 12345-420", entwicklung, "Physiker", employeeLohe, null);
+                "+49 621 12345-420", entwicklung, "Physiker", employeeFischer, null);
+
+        // Einkauf:
+        Employee employeeGaenzler = addEmployee("Gänzler", "Bernd",
+                1964, 1, 5, "Hauptstraße", "110b", "68163", "Mannheim",
+                "+49 621 12345-600", einkauf, "Einkäufer", employeeLohe, null);
+
+        // Verkauf:
+        Employee employeeRichter = addEmployee("Richter", "Gabi",
+                1970, 6, 6, "Ahornweg", "2", "68163", "Mannheim",
+                "+49 621 12345-500", verkauf, "Verkaufsleitung", employeeLohe, companyCar1237);
+
+        Employee employeeReinhard = addEmployee("Reinhard", "Marcus",
+                1973, 5, 20, "Hauptstraße", "11", "68163", "Mannheim",
+                "+49 621 12345-510", verkauf, "Vertriebler", employeeRichter, null);
+
+        Employee employeeUhl = addEmployee("Uhl", "Paul",
+                1978, 4, 20, "Langestraße", "1", "68163", "Mannheim",
+                "+49 621 12345-520", verkauf, "Vertriebler", employeeRichter, null);
+
+        // Berater:
+        Employee employeeWeiss = addEmployee("Weiß", "Gisela",
+                1959, 8, 10, "Unter den Linden", "141", "12487", "Berlin",
+                "+49 621 12345-599", null, "Beraterin", employeeLohe, null);
 
         // Projects
 
@@ -202,8 +249,6 @@ public class ExampleData {
                 "Fortschritte beim Modell", research);
         access.storeStatusReport(researchReport2);
 
-        // Important! Otherwise the generated ids won't be updated.
-        access.close();
         System.out.println("Beispieldaten erzeugt.");
     }
 

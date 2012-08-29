@@ -34,7 +34,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <id name="licensePlate" column="nummernschild"/>
         <many-to-one name="car" column="modell"
                      class="Car"/>
-        <one-to-one name="driver" foreign-key="personalNr" class="Personnel"/>
+        <one-to-one name="driver" foreign-key="personalNr"
+                    class="Personnel" cascade="all"/>
     </class>
 
     <class name="Department" table="Abteilung">
@@ -72,8 +73,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <joined-subclass name="Employee" table="Angestellter">
             <key column="personalNr"/>
             <property name="phoneNumber" column="telefonNr"/>
-            <one-to-one name="car" foreign-key="nummernschild" class="CompanyCar"/>
-
+            <one-to-one name="car" class="CompanyCar"
+                        cascade="all"/>
             <set name="projects">
                 <key column="personalNr"/>
                 <one-to-many not-found="ignore" class="WorksOn"/>
@@ -84,7 +85,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <key column="personalNr"/>
             <property name="workspace" column="arbeitsplatz"/>
         </joined-subclass>
+    </class>
 
+
+    <class lazy="false" name="WorksOn" table="MitarbeiterArbeitetAnProjekt">
+        <composite-id>
+            <key-many-to-one name="employee" column="personalNr" class="Employee"/>
+            <key-many-to-one name="project" column="projektId" class="Project"/>
+        </composite-id>
+        <property name="job" column="taetigkeit"/>
+        <property name="percentage" column="prozAnteil"/>
     </class>
 
     <class lazy="false" name="Project" table="Projekt">
@@ -94,7 +104,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
         <set name="employees">
             <key column="projektId"/>
-            <one-to-many class="WorksOn" not-found="ignore"/>
+            <one-to-many class="WorksOn"/>
         </set>
 
         <bag name="statusReports">
@@ -112,14 +122,4 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <property name="date" column="datum"/>
         <!-- <many-to-one name="project" foreign-key="projektId" class="Project"/> -->
     </class>
-
-    <class lazy="false" name="WorksOn" table="MitarbeiterArbeitetAnProjekt">
-        <composite-id>
-            <key-many-to-one name="employee" column="personalNr" class="Employee"/>
-            <key-many-to-one name="project" column="projektId" class="Project"/>
-        </composite-id>
-        <property name="job" column="taetigkeit"/>
-        <property name="percentage" column="prozAnteil"/>
-    </class>
-
 </hibernate-mapping>

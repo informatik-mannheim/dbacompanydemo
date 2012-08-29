@@ -181,7 +181,8 @@ public class HibernateDBAccess extends AbstractDBAccess {
     }
 
     public List<StatusReport> loadStatusReport(Project project) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        // TODO
+        throw new RuntimeException("Not implemented!");
     }
 
     public void storeStatusReport(StatusReport rep) throws Exception {
@@ -193,19 +194,21 @@ public class HibernateDBAccess extends AbstractDBAccess {
     }
 
     public Set<WorksOn> loadWorksOn(Employee employee) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        // TODO
+        throw new RuntimeException("Not implemented!");
     }
 
     public Set<WorksOn> loadWorksOn(Project proj) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        // TODO
+        throw new RuntimeException("Not implemented!");
     }
 
     public void storeWorksOn(WorksOn wo) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        save(wo);
     }
 
     public void deleteWorksOn(WorksOn wo) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        delete(wo);
     }
 
     // Queries

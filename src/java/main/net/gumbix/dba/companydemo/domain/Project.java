@@ -50,7 +50,7 @@ public class Project {
     }
 
     // TODO Hibernate
-    public void setProjectId(String id) {
+    private void setProjectId(String id) {
         projectId = id;
     }
 
@@ -108,7 +108,7 @@ public class Project {
     }
 
     // TODO Hibernate
-    public void setNextStatusReportNumber(long number) {
+    private void setNextStatusReportNumber(long number) {
         nextStatusReportNumber = number;
     }
 

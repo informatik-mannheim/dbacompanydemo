@@ -28,7 +28,9 @@ import net.gumbix.dba.companydemo.hibernate.HibernateDBAccess;
 import net.gumbix.dba.companydemo.jdbc.JdbcAccess;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  * Create example data via the Java API. This is the only way for
@@ -39,7 +41,6 @@ import java.util.GregorianCalendar;
 public class ExampleData extends TestCase {
 
     public void testLoadExampleData() throws Exception {
-        Address.ZipCity z = new Address.ZipCity("f", "h");
         ExampleData data = importData();
         assertEquals(21, data.access.getNumberOfPersonnel());
         assertEquals(4, data.access.getNumberOfProjects());
@@ -210,6 +211,8 @@ public class ExampleData extends TestCase {
         Employee employeeFischer = addEmployee("Fischer, Dr.", "Jan",
                 1968, 04, 10, "Untere straße", "2", "68163", "Mannheim",
                 "+49 621 12345-600", entwicklung, "F&E_Leiter", employeeLohe, companyCar1236);
+        // TODO car was also modified...
+        access.storeCompanyCar(companyCar1236);
 
         Employee employeeWalther = addEmployee("Walther, Dr.", "Sabrina",
                 1978, 07, 16, "Hansaweg", "22", "68163", "Mannheim",
@@ -233,7 +236,7 @@ public class ExampleData extends TestCase {
                 1959, 8, 10, "Unter den Linden", "141", "12487", "Berlin",
                 "+49 621 12345-599", null, "Berater", employeeLohe, null);
 
-        // Projects
+        // --------------------- Projects ---------------------------
 
         // Leute einstellen:
         Project hirePeople = new Project("LES", "Personal einstellen");

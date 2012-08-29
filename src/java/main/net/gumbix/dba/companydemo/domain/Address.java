@@ -28,8 +28,8 @@ public class Address {
 
     private String street;
     private String houseNumber;
-    private String zip;
-    private String city;
+
+    private ZipCity zipCity;
 
     public Address() {
     }
@@ -37,8 +37,7 @@ public class Address {
     public Address(String street, String houseNumber, String zip, String city) {
         this.street = street;
         this.houseNumber = houseNumber;
-        this.zip = zip;
-        this.city = city;
+        this.zipCity = new ZipCity(zip, city);
     }
 
     public String getStreet() {
@@ -58,22 +57,61 @@ public class Address {
     }
 
     public String getZip() {
-        return zip;
+        return zipCity.getZipCode();
     }
 
     public void setZip(String zip) {
-        this.zip = zip;
+        zipCity.setZipCode(zip);
     }
 
     public String getCity() {
-        return city;
+        return zipCity.getCity();
     }
 
     public void setCity(String city) {
-        this.city = city;
+        zipCity.setCity(city);
+    }
+
+    public ZipCity getZipCity() {
+        return zipCity;
+    }
+
+    public void setZipCity(ZipCity zipCity) {
+        this.zipCity = zipCity;
     }
 
     public String toString() {
-        return street + " " + houseNumber + ", " + zip + " " + city;
+        return street + " " + houseNumber + ", " + zipCity.zipCode +
+                " " + zipCity.city;
+    }
+
+    public static class ZipCity {
+
+        private String zipCode;
+        private String city;
+
+        private ZipCity() {
+        }
+
+        public ZipCity(String zipCode, String city) {
+            this.zipCode = zipCode;
+            this.city = city;
+        }
+
+        public String getZipCode() {
+            return zipCode;
+        }
+
+        public void setZipCode(String zipCode) {
+            this.zipCode = zipCode;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
     }
 }

@@ -34,14 +34,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <id name="licensePlate" column="nummernschild"/>
         <many-to-one name="car" column="modell"
                      class="Car"/>
-        <one-to-one name="driver" foreign-key="personalNr"
-                    class="Personnel"/>
+        <one-to-one name="driver" foreign-key="personalNr" class="Personnel"/>
     </class>
 
     <class name="Department" table="Abteilung">
-        <id name="depNumber" column="abteilungsNr" type="long">
-        </id>
+        <id name="depNumber" column="abteilungsNr" type="long"/>
         <property name="name" column="bezeichnung"/>
+    </class>
+
+    <class name="Address$ZipCity" table="Ort">
+        <id name="zipCode" column="plz"/>
+        <property name="city" column="ortsname"/>
     </class>
 
     <class lazy="false" name="Personnel" table="Mitarbeiter">
@@ -54,20 +57,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <component name="address" class="Address">
             <property name="street" column="strasse"/>
             <property name="houseNumber" column="hausNr"/>
-            <property name="zip" column="plz"/>
-            <!-- city fehlt -->
+            <many-to-one name="zipCity" column="plz" foreign-key="plz"
+                         insert="true" update="true"
+                         cascade="all"
+                         class="Address$ZipCity"/>
         </component>
 
-        <many-to-one name="department" foreign-key="abteilungsNr"
-                     class="Department"/>
+        <many-to-one name="department" column="abteilungsNr"
+                     foreign-key="abteilungsNr" class="Department"/>
 
-        <one-to-one name="boss" foreign-key="vorgesetzterNr" class="Personnel"/>
+        <many-to-one name="boss" column="vorgesetzterNr"
+                     foreign-key="vorgesetzterNr" class="Personnel"/>
 
         <joined-subclass name="Employee" table="Angestellter">
             <key column="personalNr"/>
             <property name="phoneNumber" column="telefonNr"/>
-            <one-to-one name="car" foreign-key="nummernschild"
-                        class="CompanyCar"/>
+            <one-to-one name="car" foreign-key="nummernschild" class="CompanyCar"/>
 
             <set name="projects">
                 <key column="personalNr"/>

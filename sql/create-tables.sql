@@ -28,7 +28,7 @@ j)	MitarbeiterArbeitetAnProjekt (personalNr#, projektNr#, prozAnteil, taetigkeit
 -- Ort (plz, ortsname)
 create table Ort (
 plz char(5) primary key not null,
-ortsname varchar(20)
+ortsname varchar(30)
 );
 
 -- Abteilung (abteilungsNr, bezeichnung)
@@ -52,8 +52,8 @@ funktion varchar(30), -- innerhalb der Abteilung
 vorgesetzterNr bigint,
 primary key (personalNr),
 foreign key (vorgesetzterNr) references Mitarbeiter (personalNr),
-foreign key (abteilungsNr) references Abteilung(abteilungsNr),
-foreign key (plz) references Ort(plz)
+foreign key (abteilungsNr) references Abteilung (abteilungsNr),
+foreign key (plz) references Ort (plz)
 );
 create index nameIdx on Mitarbeiter(nachname);
 

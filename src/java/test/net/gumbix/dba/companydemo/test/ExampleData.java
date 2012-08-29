@@ -39,6 +39,7 @@ import java.util.GregorianCalendar;
 public class ExampleData extends TestCase {
 
     public void testLoadExampleData() throws Exception {
+        Address.ZipCity z = new Address.ZipCity("f", "h");
         ExampleData data = importData();
         assertEquals(21, data.access.getNumberOfPersonnel());
         assertEquals(4, data.access.getNumberOfProjects());
@@ -240,9 +241,6 @@ public class ExampleData extends TestCase {
         WorksOn hirePeopleLohe = new WorksOn(employeeLohe, hirePeople, 10,
                 "Verträge ausstellen");
         access.storeWorksOn(hirePeopleLohe);
-        // TODO redundant?
-        hirePeople.addEmployee(hirePeopleLohe);
-        access.storeProject(hirePeople);
 
         StatusReport hirePeopleReport1 = new StatusReport(
                 new GregorianCalendar(2011, 10, 17).getTime(),

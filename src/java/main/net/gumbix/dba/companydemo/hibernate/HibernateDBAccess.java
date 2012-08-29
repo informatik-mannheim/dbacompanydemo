@@ -210,14 +210,21 @@ public class HibernateDBAccess extends AbstractDBAccess {
 
     // Queries
     public int getNumberOfPersonnel() throws Exception {
-        // TODO
-        throw new RuntimeException("Method not yet implemented");
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Long c = (Long) session.createQuery("select count(*) from Personnel")
+                .uniqueResult();
+        session.getTransaction().commit();
+        return c.intValue();
     }
 
-    // Queries
     public int getNumberOfProjects() throws Exception {
-        // TODO
-        throw new RuntimeException("Method not yet implemented");
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Long c = (Long) session.createQuery("select count(*) from Project")
+                .uniqueResult();
+        session.getTransaction().commit();
+        return c.intValue();
     }
 
     public List<Employee> getIdleEmployees() throws Exception {

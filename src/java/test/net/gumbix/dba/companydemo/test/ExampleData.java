@@ -56,9 +56,9 @@ public class ExampleData extends TestCase {
 
     public static ExampleData importData() throws Exception {
         ExampleData data = new ExampleData();
-        // data.db4oEmbedded();
+        data.db4oEmbedded();
         // data.jdbcLocal();
-        data.hibernateLocal();
+        // data.hibernateLocal();
         return data;
     }
 

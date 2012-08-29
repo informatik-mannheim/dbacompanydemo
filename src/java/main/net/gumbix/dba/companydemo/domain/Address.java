@@ -29,7 +29,7 @@ public class Address {
     private String street;
     private String houseNumber;
 
-    private ZipCity zipCity;
+    private ZipCity zipCity = new ZipCity();
 
     public Address() {
     }

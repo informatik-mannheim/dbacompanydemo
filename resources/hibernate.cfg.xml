@@ -50,9 +50,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <property name="show_sql">true</property>
 
         <!-- Drop and re-create the database schema on startup -->
-        <property name="hbm2ddl.auto">update</property>
+        <property name="hbm2ddl.auto"></property>
 
         <mapping resource="hibernate.hbm.xml"/>
+
+        <!-- <property name="hibernate.bytecode.use_reflection_optimizer">false</property> -->
+
 
     </session-factory>
 

@@ -90,7 +90,8 @@ public class Address {
         private String zipCode;
         private String city;
 
-        private ZipCity() {
+        // TODO must be public for Hibernate Javassist
+        public ZipCity() {
         }
 
         public ZipCity(String zipCode, String city) {

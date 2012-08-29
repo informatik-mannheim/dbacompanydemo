@@ -30,7 +30,8 @@ public class Department {
     private String name;
 
     // Required by Hibernate only.
-    private Department() {}
+    // TODO must be public for Hibernate Javassist
+    public Department() {}
 
     public Department(long depNumber, String name) {
         this.depNumber = depNumber;

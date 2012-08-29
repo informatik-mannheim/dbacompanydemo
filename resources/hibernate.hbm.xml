@@ -76,8 +76,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <joined-subclass name="Employee" table="Angestellter">
             <key column="personalNr"/>
             <property name="phoneNumber" column="telefonNr"/>
-            <one-to-one name="car" class="CompanyCar" foreign-key="personalNr"
-                        cascade="all"/>
+
+            <!-- <one-to-one name="car" class="CompanyCar" cascade="all"/> -->
+            <!-- <many-to-one name="car" class="CompanyCar" cascade="all"/> -->
+
             <set name="projects">
                 <key column="personalNr"/>
                 <one-to-many not-found="ignore" class="WorksOn"/>

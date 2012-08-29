@@ -47,7 +47,8 @@ public class WorksOn implements Serializable {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
-        employee.addProject(this);
+        // TODO Hibernate cannot handle this
+        // employee.addProject(this);
     }
 
     public Project getProject() {
@@ -56,7 +57,8 @@ public class WorksOn implements Serializable {
 
     public void setProject(Project project) {
         this.project = project;
-        project.addEmployee(this);
+        // TODO Hibernate cannot handle this
+        // project.addEmployee(this);
     }
 
     public double getPercentage() {

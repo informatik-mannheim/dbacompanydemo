@@ -51,7 +51,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <property name="position" column="funktion"/>
         <property name="birthDate" column="gebDatum"/>
 
-        <component name="address">
+        <component name="address" class="Address">
             <property name="street" column="strasse"/>
             <property name="houseNumber" column="hausNr"/>
             <property name="zip" column="plz"/>
@@ -61,7 +61,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <many-to-one name="department" foreign-key="abteilungsNr"
                      class="Department"/>
 
-        <one-to-one name="boss" foreign-key="vorgesetzerNr" class="Personnel"/>
+        <one-to-one name="boss" foreign-key="vorgesetzterNr" class="Personnel"/>
 
         <joined-subclass name="Employee" table="Angestellter">
             <key column="personalNr"/>
@@ -79,6 +79,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <key column="personalNr"/>
             <property name="workspace" column="arbeitsplatz"/>
         </joined-subclass>
+
     </class>
 
     <class lazy="false" name="Project" table="Projekt">

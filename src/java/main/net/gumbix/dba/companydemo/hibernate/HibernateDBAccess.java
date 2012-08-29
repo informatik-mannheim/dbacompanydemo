@@ -1,6 +1,7 @@
 package net.gumbix.dba.companydemo.hibernate;
 
 import net.gumbix.dba.companydemo.db.AbstractDBAccess;
+import net.gumbix.dba.companydemo.db.IdGenerator;
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
 import net.gumbix.dba.companydemo.domain.*;
 import org.hibernate.Session;
@@ -17,6 +18,7 @@ public class HibernateDBAccess extends AbstractDBAccess {
     private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
     public HibernateDBAccess() {
+        IdGenerator.generator = new HibernateIdGenerator(sessionFactory);
     }
 
     // Personnels

@@ -34,8 +34,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <id name="licensePlate" column="nummernschild"/>
         <many-to-one name="car" column="modell"
                      class="Car"/>
-        <one-to-one name="driver" foreign-key="personalNr"
-                    class="Personnel" cascade="all"/>
+        <!-- Note: one-to-one is for [1;1]:[1;1] relationships only -->
+        <many-to-one name="driver" class="Employee" column="personalNr"
+                     unique="true" insert="true" update="true"
+                     cascade="all"/>
     </class>
 
     <class name="Department" table="Abteilung">
@@ -55,12 +57,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <property name="position" column="funktion"/>
         <property name="birthDate" column="gebDatum"/>
 
-        <component name="address" class="Address">
+        <component name="address" class="Address" unique="false">
             <property name="street" column="strasse"/>
             <property name="houseNumber" column="hausNr"/>
             <many-to-one name="zipCity" column="plz" foreign-key="plz"
-                         insert="true" update="true"
+                         insert="true" update="false"
                          cascade="all"
+                         unique="false"
                          class="Address$ZipCity"/>
         </component>
 
@@ -73,7 +76,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <joined-subclass name="Employee" table="Angestellter">
             <key column="personalNr"/>
             <property name="phoneNumber" column="telefonNr"/>
-            <one-to-one name="car" class="CompanyCar"
+            <one-to-one name="car" class="CompanyCar" foreign-key="personalNr"
                         cascade="all"/>
             <set name="projects">
                 <key column="personalNr"/>

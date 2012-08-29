@@ -3,6 +3,7 @@ package net.gumbix.dba.companydemo.hibernate;
 import net.gumbix.dba.companydemo.db.IdGenerator;
 import net.gumbix.dba.companydemo.domain.Personnel;
 import net.gumbix.dba.companydemo.jdbc.JdbcAccess;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
@@ -14,17 +15,17 @@ import java.sql.ResultSet;
  * @author Markus Gumbel
  */
 public class HibernateIdGenerator extends IdGenerator {
-    private SessionFactory sessionFactory;
+    private Session session;
 
-    public HibernateIdGenerator(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public HibernateIdGenerator(Session session) {
+        this.session = session;
     }
 
     public long getNextLong(Class clazz) {
         try {
             if (clazz.equals(Personnel.class)) {
-                Transaction transaction = sessionFactory.getCurrentSession().beginTransaction();
-                ResultSet rs = sessionFactory.getCurrentSession()
+                Transaction transaction = session.beginTransaction();
+                ResultSet rs = session
                         .connection().createStatement()
                         .executeQuery("select max(personalNr) from Mitarbeiter");
                 rs.next();

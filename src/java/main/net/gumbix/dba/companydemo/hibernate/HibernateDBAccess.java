@@ -15,15 +15,14 @@ import java.util.Set;
  */
 public class HibernateDBAccess extends AbstractDBAccess {
 
-    private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    private Session session = HibernateUtil.getSessionFactory().openSession();
 
     public HibernateDBAccess() {
-        IdGenerator.generator = new HibernateIdGenerator(sessionFactory);
+        IdGenerator.generator = new HibernateIdGenerator(session);
     }
 
     // Personnels
     public Personnel loadPersonnel(long persNr) throws Exception {
-        Session session = sessionFactory.openSession();
         session.beginTransaction();
         Personnel personnel = (Personnel) session.get(Personnel.class, persNr);
         session.getTransaction().commit();
@@ -34,7 +33,6 @@ public class HibernateDBAccess extends AbstractDBAccess {
     }
 
     public List<Personnel> queryPersonnelByName(String firstName, String lastName) throws Exception {
-        Session session = sessionFactory.openSession();
         session.beginTransaction();
         firstName = firstName.replace('*', '%');
         lastName = lastName.replace('*', '%');
@@ -55,7 +53,6 @@ public class HibernateDBAccess extends AbstractDBAccess {
 
     // Departments...
     public Department loadDepartment(long depNumber) throws Exception {
-        Session session = sessionFactory.openSession();
         session.beginTransaction();
         Department dep = (Department) session.get(Department.class, depNumber);
         session.getTransaction().commit();
@@ -66,7 +63,6 @@ public class HibernateDBAccess extends AbstractDBAccess {
     }
 
     public List<Department> queryDepartmentByName(String queryString) throws Exception {
-        Session session = sessionFactory.openSession();
         session.beginTransaction();
         queryString = queryString.replace('*', '%');
         List result = session.createQuery("from Department"
@@ -85,7 +81,6 @@ public class HibernateDBAccess extends AbstractDBAccess {
 
     // Cars
     public Car loadCar(String model) throws Exception {
-        Session session = sessionFactory.openSession();
         session.beginTransaction();
         Car car = (Car) session.get(Car.class, model);
         session.getTransaction().commit();
@@ -105,7 +100,6 @@ public class HibernateDBAccess extends AbstractDBAccess {
 
     // CompanyCars...
     public CompanyCar loadCompanyCar(String licensePlate) throws Exception {
-        Session session = sessionFactory.openSession();
         session.beginTransaction();
         CompanyCar car = (CompanyCar) session.get(CompanyCar.class, licensePlate);
         session.getTransaction().commit();
@@ -116,7 +110,6 @@ public class HibernateDBAccess extends AbstractDBAccess {
     }
 
     public List<CompanyCar> queryCompanyCarByModel(String model) throws Exception {
-        Session session = sessionFactory.openSession();
         session.beginTransaction();
         model = model.replace('*', '%');
         List result = session.createQuery("from CompanyCar as c"
@@ -135,7 +128,6 @@ public class HibernateDBAccess extends AbstractDBAccess {
 
     // Projects...
     public Project loadProject(String projId) throws Exception {
-        Session session = sessionFactory.openSession();
         session.beginTransaction();
         Project project = (Project) session.get(Project.class, projId);
         session.getTransaction().commit();
@@ -146,7 +138,6 @@ public class HibernateDBAccess extends AbstractDBAccess {
     }
 
     public List<Project> queryProjectByDescription(String queryString) throws Exception {
-        Session session = sessionFactory.openSession();
         session.beginTransaction();
         queryString = queryString.replace('*', '%');
         List result = session.createQuery("from Project "
@@ -165,7 +156,6 @@ public class HibernateDBAccess extends AbstractDBAccess {
 
     // StatusReports...
     public StatusReport loadStatusReport(Project project, long continuousNumber) throws Exception {
-        Session session = sessionFactory.openSession();
         session.beginTransaction();
         List result = session.createQuery("from StatusReport "
                 + " where project.projectId = " + project.getProjectId()
@@ -213,7 +203,6 @@ public class HibernateDBAccess extends AbstractDBAccess {
 
     // Queries
     public int getNumberOfPersonnel() throws Exception {
-        Session session = sessionFactory.openSession();
         session.beginTransaction();
         Long c = (Long) session.createQuery("select count(*) from Personnel")
                 .uniqueResult();
@@ -222,7 +211,6 @@ public class HibernateDBAccess extends AbstractDBAccess {
     }
 
     public int getNumberOfProjects() throws Exception {
-        Session session = sessionFactory.openSession();
         session.beginTransaction();
         Long c = (Long) session.createQuery("select count(*) from Project")
                 .uniqueResult();
@@ -236,20 +224,21 @@ public class HibernateDBAccess extends AbstractDBAccess {
     }
 
     public void close() {
-        sessionFactory.close();
+        session.close();
     }
 
     private void save(Object o) {
-        Session session = sessionFactory.openSession();
         session.beginTransaction();
-        session.save(o);
+        session.saveOrUpdate(o);
+        session.flush();
         session.getTransaction().commit();
+        session.clear();
     }
 
     private void delete(Object o) {
-        Session session = sessionFactory.openSession();
         session.beginTransaction();
         session.delete(o);
         session.getTransaction().commit();
+        session.clear();
     }
 }

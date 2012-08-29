@@ -85,7 +85,8 @@ nummernschild varchar(12) primary key not null,
 modell varchar(20),
 personalNr bigint,
 foreign key (modell) references Auto(modell),
-foreign key (personalNr) references Angestellter(personalNr)
+foreign key (personalNr) references Angestellter(personalNr),
+unique (personalNr)
 );
 
 -- Projekt (projektNr, bezeichnung)

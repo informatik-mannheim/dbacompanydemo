@@ -41,7 +41,7 @@ import java.util.Locale;
 public class UI {
 
     private static String NAME = "CompanyDemo";
-    private static String VERSION = "0.2.0";
+    private static String VERSION = "0.2.1";
     private static String PROMPT = "Ihre Eingabe (Zahl): ";
     private static String INVALID_INPUT = "Fehlerhafte Eingabe \n\n";
     private static DBAccess db;

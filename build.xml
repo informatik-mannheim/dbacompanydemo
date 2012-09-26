@@ -1,7 +1,7 @@
 <project name="CompanyDemo" default="dist" basedir=".">
     <!-- set global properties for this build -->
     <property name="jarname" value="companydemo"/>
-    <property name="version" value="0.2.0"/>
+    <property name="version" value="0.2.1"/>
 
     <property name="javasrc" location="src/java/main"/>
     <property name="sqlsrc" location="sql"/>

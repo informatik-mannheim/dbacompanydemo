@@ -37,6 +37,7 @@ public class Personnel {
     private String lastName;
     private String firstName;
     private Date birthDate;
+    private double salary;
     private Address address;
     private Department department;
     private String position;
@@ -87,6 +88,14 @@ public class Personnel {
 
     public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
     }
 
     public Address getAddress() {
@@ -140,6 +149,7 @@ public class Personnel {
         String base =
                 "Name:       " + firstName + " " + lastName + "\n" +
                         "Geb.-Datum: " + df.format(birthDate) + "\n" +
+                        "Gehalt:     " + salary + "\n" +
                         "Adresse:    " + address;
         String depString = "";
         if (department != null) {

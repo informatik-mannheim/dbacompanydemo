@@ -16,7 +16,7 @@ die Reihenfolge des Anlegens bzw. Löschens ist wichtig.
 a)	Auto (modell, marke)
 b)	Firmenwagen (nummernschild, modell#, personalNr#)
 c)	Ort (plz, ortsname)
-d)	Mitarbeiter (personalNr, vorname, nachname, strasse, hausNr, plz#, gebDatum, abteilungsNr#, funktion, vorgesetzterNr#)
+d)	Mitarbeiter (personalNr, vorname, nachname, strasse, hausNr, plz#, gebDatum, gehalt, abteilungsId#, funktion, vorgesetzterNr#)
 e)	Arbeiter (personalNr, arbeitsplatz)
 f)	Angestellter (personalNr, telefonNr)
 g)	Abteilung (abteilungsNr, bezeichnung)
@@ -38,7 +38,7 @@ bezeichnung varchar(30),
 primary key (abteilungsNr)
 );
 
--- Mitarbeiter (personalNr, vorname, nachname, straße, hausNr, plz#, gebDatum, abteilungsNr#, funktion, vorgesetzterNr#)
+-- Mitarbeiter (personalNr, vorname, nachname, straße, hausNr, plz#, gebDatum, gehalt, abteilungsId#, funktion, vorgesetzterNr#)
 create table Mitarbeiter (
 personalNr bigint not null auto_increment,
 vorname varchar(30),
@@ -47,12 +47,13 @@ strasse varchar(30),
 hausNr varchar(5),
 plz char(5),
 gebDatum date,
-abteilungsNr bigint,
+gehalt decimal(7, 2), -- 7 Zahlen insgesamt, davon 2 Nachkommastellen (00000,00)
+abteilungsId bigint,
 funktion varchar(30), -- innerhalb der Abteilung
 vorgesetzterNr bigint,
 primary key (personalNr),
 foreign key (vorgesetzterNr) references Mitarbeiter (personalNr),
-foreign key (abteilungsNr) references Abteilung(abteilungsNr),
+foreign key (abteilungsId) references Abteilung(abteilungsNr),
 foreign key (plz) references Ort(plz)
 );
 create index nameIdx on Mitarbeiter(nachname);

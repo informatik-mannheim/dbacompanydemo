@@ -62,16 +62,19 @@ public class PersonnelDAO extends AbstractDAO {
             adr.setZip(rs.getString("plz"));
             adr.setCity(rs.getString("ortsname"));
             Date birthDate = rs.getDate("gebDatum");
+            double salary = rs.getDouble("gehalt");
 
             if (rs.getLong("wPersNr") != 0) {
                 String workplace = rs.getString("arbeitsplatz");
                 Worker newWorker =
                         new Worker(personalNr, lastName, firstName, birthDate, adr, workplace);
+                newWorker.setSalary(salary);
                 personnel = createAndCache(personalNr, newWorker);
             } else if (rs.getLong("aPersNr") != 0) {
                 String telephone = rs.getString("telefonNr");
                 Employee newEmployee =
                         new Employee(personalNr, lastName, firstName, birthDate, adr, telephone);
+                newEmployee.setSalary(salary);
                 personnel = createAndCache(personalNr, newEmployee);
                 // Try to assign a company car:
                 ResultSet rsC = executeSQLQuery("select * from Firmenwagen f" +
@@ -93,7 +96,7 @@ public class PersonnelDAO extends AbstractDAO {
             }
             personnel.setPosition(rs.getString("funktion"));
 
-            long depNr = rs.getLong("abteilungsNr");
+            long depNr = rs.getLong("abteilungsId");
             if (depNr != 0) {
                 personnel.setDepartment(access.loadDepartment(depNr));
             }
@@ -145,7 +148,8 @@ public class PersonnelDAO extends AbstractDAO {
                     prepareStatement("update Mitarbeiter set vorname = ?, " +
                             " set nachname = ?, set strasse = ?, " +
                             " set hausNr = ?, set plz = ?, " +
-                            " set gebDatum = ?, set abteilungsNr = ?, " +
+                            " set gebDatum = ?, set gehalt = ?, " +
+                            " set abteilungsNr = ?, " +
                             " funktion = ?, vorgesetzterNr = ? " +
                             " where personalNr = ?");
             pstmt.setString(1, pers.getFirstName());
@@ -154,30 +158,7 @@ public class PersonnelDAO extends AbstractDAO {
             pstmt.setString(4, pers.getAddress().getHouseNumber());
             pstmt.setString(5, pers.getAddress().getZip());
             pstmt.setDate(6, new java.sql.Date(pers.getBirthDate().getTime()));
-            if (pers.getDepartment() != null) {
-                pstmt.setLong(7, pers.getDepartment().getDepNumber());
-            } else {
-                pstmt.setNull(7, Types.INTEGER);
-            }
-            pstmt.setString(8, pers.getPosition());
-            if (pers.getBoss() != null) {
-                pstmt.setLong(9, pers.getBoss().getPersonnelNumber());
-            } else {
-                pstmt.setNull(9, Types.INTEGER);
-            }
-            pstmt.execute();
-        } catch (ObjectNotFoundException e) {
-            // new
-            createZip(pers.getAddress());
-            PreparedStatement pstmt =
-                    prepareStatement("insert into Mitarbeiter values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
-            pstmt.setLong(1, pers.getPersonnelNumber());
-            pstmt.setString(2, pers.getFirstName());
-            pstmt.setString(3, pers.getLastName());
-            pstmt.setString(4, pers.getAddress().getStreet());
-            pstmt.setString(5, pers.getAddress().getHouseNumber());
-            pstmt.setString(6, pers.getAddress().getZip());
-            pstmt.setDate(7, new java.sql.Date(pers.getBirthDate().getTime()));
+            pstmt.setDouble(7, pers.getSalary());
             if (pers.getDepartment() != null) {
                 pstmt.setLong(8, pers.getDepartment().getDepNumber());
             } else {
@@ -188,6 +169,31 @@ public class PersonnelDAO extends AbstractDAO {
                 pstmt.setLong(10, pers.getBoss().getPersonnelNumber());
             } else {
                 pstmt.setNull(10, Types.INTEGER);
+            }
+            pstmt.execute();
+        } catch (ObjectNotFoundException e) {
+            // new
+            createZip(pers.getAddress());
+            PreparedStatement pstmt =
+                    prepareStatement("insert into Mitarbeiter values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+            pstmt.setLong(1, pers.getPersonnelNumber());
+            pstmt.setString(2, pers.getFirstName());
+            pstmt.setString(3, pers.getLastName());
+            pstmt.setString(4, pers.getAddress().getStreet());
+            pstmt.setString(5, pers.getAddress().getHouseNumber());
+            pstmt.setString(6, pers.getAddress().getZip());
+            pstmt.setDate(7, new java.sql.Date(pers.getBirthDate().getTime()));
+            pstmt.setDouble(8, pers.getSalary());
+            if (pers.getDepartment() != null) {
+                pstmt.setLong(9, pers.getDepartment().getDepNumber());
+            } else {
+                pstmt.setNull(9, Types.INTEGER);
+            }
+            pstmt.setString(10, pers.getPosition());
+            if (pers.getBoss() != null) {
+                pstmt.setLong(11, pers.getBoss().getPersonnelNumber());
+            } else {
+                pstmt.setNull(11, Types.INTEGER);
             }
             pstmt.execute();
         }

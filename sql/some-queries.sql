@@ -56,6 +56,12 @@ Gib das Durchschnittsalter aller Mitarbeiter in Jahren an.
 select avg(datediff(curdate(), gebDatum) / 365.25) as 'Durchschnittsalter'
 from Mitarbeiter;
 
+/*
+Gib das Durchschnittsgehalt aller Mitarbeiter aus.
+*/
+select avg(gehalt) as 'Durchschnittsgehalt'
+from Mitarbeiter;
+
 -- ###########################
 -- II. Anspruchsvolle Abfragen
 -- ###########################
@@ -64,13 +70,14 @@ from Mitarbeiter;
 -- wie I.4, aber zeige nur Mitarbeiter, die einer Abteilung zugeordnet sind. Liste auch den Namen
 -- der Abteilung auf:
 select nachname as 'Name', vorname as 'Vorname', bezeichnung 
-from Mitarbeiter natural join Abteilung
+from Mitarbeiter m join Abteilung a on m.abteilungsId = a.abteilungsNr
 order by nachname, vorname;
 
 -- Wer (Nachname, Vorname) arbeitet in der Abteilung "Produktion"? Die Liste
 -- soll aufsteigend nach den Nachnamen sortiert sein.
 select m.nachname, m.vorname 
-from Mitarbeiter as m natural join Abteilung where Abteilung.bezeichnung = 'Produktion'
+from Mitarbeiter m join Abteilung a on m.abteilungsId = a.abteilungsNr
+where a.bezeichnung = 'Produktion'
 order by m.nachname;
 
 -- Wer arbeitet mehr als 100% an Projekten (sortiert nach Name)?
@@ -87,8 +94,8 @@ from Abteilung
 where abteilungsNr not in (select abteilungsNr from Mitarbeiter);
 
 select a.bezeichnung as 'leere Abteilung'
-from Abteilung a left outer join Mitarbeiter m on a.abteilungsNr = m.abteilungsNr
-where m.abteilungsNr is null;
+from Abteilung a left outer join Mitarbeiter m on a.abteilungsNr = m.abteilungsId
+where m.abteilungsId is null;
 
 /*
 Welcher Angestellten arbeiten aktuell an keinem Projekt?

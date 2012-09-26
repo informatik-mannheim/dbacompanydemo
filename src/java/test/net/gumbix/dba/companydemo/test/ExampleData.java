@@ -56,8 +56,8 @@ public class ExampleData extends TestCase {
 
     public static ExampleData importData() throws Exception {
         ExampleData data = new ExampleData();
-        data.db4oEmbedded();
-        // data.jdbcLocal();
+        // data.db4oEmbedded();
+        data.jdbcLocal();
         // data.hibernateLocal();
         return data;
     }
@@ -141,99 +141,99 @@ public class ExampleData extends TestCase {
 
         // Management:
         Employee employeeLohe = addEmployee("Lohe", "Fransiska",
-                1967, 12, 01, "Chefstraße", "1a", "68305", "Mannheim",
+                1967, 12, 01, 15000.0, "Chefstraße", "1a", "68305", "Mannheim",
                 "+49 621 12345-100", management, "Vorstand", null, companyCar1234);
 
         Employee employeeLindemann = addEmployee("Lindemann", "Hans",
-                1968, 1, 21, "Pappelallee", "1a", "10437", "Berlin",
+                1968, 1, 21, 4200.5, "Pappelallee", "1a", "10437", "Berlin",
                 "+49 621 12345-110", management, "Personalreferent", employeeLohe, null);
 
         // Einkauf:
         Employee employeeGaenzler = addEmployee("Gänzler", "Bernd",
-                1964, 1, 5, "Hauptstraße", "110b", "68163", "Mannheim",
+                1964, 1, 5, 5320.0, "Hauptstraße", "110b", "68163", "Mannheim",
                 "+49 621 12345-200", einkauf, "Einkäufer", employeeLohe, null);
 
         // Verkauf:
         Employee employeeRichter = addEmployee("Richter", "Simone",
-                1971, 6, 6, "Ahornweg", "2", "68163", "Mannheim",
+                1971, 6, 6, 6100.0, "Ahornweg", "2", "68163", "Mannheim",
                 "+49 621 12345-300", verkauf, "Verkaufsleitung", employeeLohe, companyCar1237);
 
         Employee employeeReinhard = addEmployee("Reinhard", "Marcus",
-                1973, 5, 20, "Hauptstraße", "11", "68163", "Mannheim",
+                1973, 5, 20, 4210.1, "Hauptstraße", "11", "68163", "Mannheim",
                 "+49 621 12345-310", verkauf, "Verkäufer", employeeRichter, null);
 
         Employee employeeUhl = addEmployee("Uhl", "Paul",
-                1982, 4, 20, "Langestraße", "1", "68163", "Mannheim",
+                1982, 4, 20, 4210.1, "Langestraße", "1", "68163", "Mannheim",
                 "+49 621 12345-320", verkauf, "Verkäufer", employeeRichter, null);
 
         // Kundendienst:
         Employee employeeSimon = addEmployee("Simon", "Frank",
-                1971, 10, 20, "Holzweg", "23", "68163", "Mannheim",
+                1971, 10, 20, 5900.0, "Holzweg", "23", "68163", "Mannheim",
                 "+49 621 12345-330", kundendienst, "Kundendienstleitung", employeeLohe, companyCar1240);
 
         Employee employeeNix = addEmployee("Nix", "Karl",
-                1961, 9, 12, "Ritterstraße", "12", "68163", "Mannheim",
+                1961, 9, 12, 3280.0, "Ritterstraße", "12", "68163", "Mannheim",
                 "+49 621 12345-340", kundendienst, "Service-Mitarbeiter", employeeSimon, companyCar1241);
 
         // IT
         Employee employeeZiegler = addEmployee("Ziegler", "Peter",
-                1967, 01, 13, "Ulmenweg", "34", "69115", "Heidelberg",
+                1967, 01, 13, 7100.0, "Ulmenweg", "34", "69115", "Heidelberg",
                 "+49 621 12345-400", it, "IT-Leiter", employeeLohe, null);
 
         Employee employeeBauer = addEmployee("Bauer", "Thomas",
-                1985, 02, 24, "Dorfstraße", "1a", "68309", "Mannheim",
+                1985, 02, 24, 4100.0, "Dorfstraße", "1a", "68309", "Mannheim",
                 "+49 621 12345-410", it, "Sys.-Admin", employeeZiegler, null);
 
         // Produktion:
         Employee employeeMueller = addEmployee("Müller", "Walter", 1949, 02, 11,
-                "Flussweg", "23", "68113", "Mannheim", "+49 621 12345-500",
+                5000.0, "Flussweg", "23", "68113", "Mannheim", "+49 621 12345-500",
                 produktion, "Produktionsleiter", employeeLohe, companyCar1235);
 
         Worker workerKleinschmidt = addWorker("Kleinschmidt", "August",
-                1955, 7, 23, "Wasserturmstraße", "29", "69214", "Eppelheim",
+                1955, 7, 23, 3800.0, "Wasserturmstraße", "29", "69214", "Eppelheim",
                 "Halle A/Platz 30", produktion, "Nachfüller", employeeMueller);
 
         Worker workerZiegler = addWorker("Ziegler", "Peter",
-                1961, 11, 15, "Wasserweg", "4", "69115", "Heidelberg",
+                1961, 11, 15, 3600.0, "Wasserweg", "4", "69115", "Heidelberg",
                 "Halle A/Platz 31", produktion, "Auffüller", employeeMueller);
 
         Worker workerSchmidt = addWorker("Schmidt", "Hanna",
-                1977, 10, 29, "Wasserweg", "16", "69115", "Heidelberg",
+                1977, 10, 29, 3550.0, "Wasserweg", "16", "69115", "Heidelberg",
                 "Halle A/Platz 32", produktion, "Auffüller", employeeMueller);
 
         Worker workerAlbrecht = addWorker("Albrecht", "Justin",
-                1991, 9, 9, "Liesgewann", "6", "69115", "Heidelberg",
+                1991, 9, 9, 1200.0, "Liesgewann", "6", "69115", "Heidelberg",
                 "Halle A/Platz 33", produktion, "Azubi", workerSchmidt);
 
         // F&E:
 
         // Dr. cannot be assigned to a field. Bad!
         Employee employeeFischer = addEmployee("Fischer, Dr.", "Jan",
-                1968, 04, 10, "Untere straße", "2", "68163", "Mannheim",
+                1968, 04, 10, 6900.0, "Untere straße", "2", "68163", "Mannheim",
                 "+49 621 12345-600", entwicklung, "F&E_Leiter", employeeLohe, companyCar1236);
         // TODO car was also modified...
         access.storeCompanyCar(companyCar1236);
 
         Employee employeeWalther = addEmployee("Walther, Dr.", "Sabrina",
-                1978, 07, 16, "Hansaweg", "22", "68163", "Mannheim",
+                1978, 07, 16, 5990.0, "Hansaweg", "22", "68163", "Mannheim",
                 "+49 621 12345-610", entwicklung, "CAD-Experte", employeeFischer, null);
 
         Employee employeeThorn = addEmployee("Thorn", "Max",
-                1956, 01, 30, "Hauptstraße", "110a", "68163", "Mannheim",
+                1956, 01, 30, 5800.0, "Hauptstraße", "110a", "68163", "Mannheim",
                 "+49 621 12345-620", entwicklung, "Ingenieur", employeeFischer, null);
 
         // Buchhaltung:
         Employee employeeFischer2 = addEmployee("Fischer", "Lutz",
-                1959, 5, 7, "Ulmenweg", "18", "68163", "Mannheim",
+                1959, 5, 7, 4900.0, "Ulmenweg", "18", "68163", "Mannheim",
                 "+49 621 12345-700", buchhaltung, "Chefbuchhalter", employeeLohe, null);
 
         Employee employeeKlein = addEmployee("Klein", "Jennifer",
-                1979, 1, 29, "Lindenweg", "12", "68305", "Mannheim",
+                1979, 1, 29, 3850.0, "Lindenweg", "12", "68305", "Mannheim",
                 "+49 621 12345-710", buchhaltung, "Buchhalter", employeeFischer2, null);
 
         // Berater:
         Employee employeeWeiss = addEmployee("Weiß", "Gisela",
-                1959, 8, 10, "Unter den Linden", "141", "12487", "Berlin",
+                1959, 8, 10, 6280.0, "Unter den Linden", "141", "12487", "Berlin",
                 "+49 621 12345-599", null, "Berater", employeeLohe, null);
 
         // --------------------- Projects ---------------------------
@@ -324,7 +324,7 @@ public class ExampleData extends TestCase {
      * @throws Exception
      */
     private Employee addEmployee(String lastName, String firstName,
-                                 int year, int month, int day,
+                                 int year, int month, int day, double salary,
                                  String street, String houseNumber,
                                  String zip, String city, String phone,
                                  Department dep, String position, Personnel boss,
@@ -332,6 +332,7 @@ public class ExampleData extends TestCase {
         Employee employee = new Employee(lastName, firstName,
                 new GregorianCalendar(year, month, day).getTime(),
                 new Address(street, houseNumber, zip, city), phone);
+        employee.setSalary(salary);
         employee.setCar(car);
         employee.setDepartment(dep);
         employee.setPosition(position);
@@ -360,13 +361,14 @@ public class ExampleData extends TestCase {
      * @throws Exception
      */
     private Worker addWorker(String lastName, String firstName,
-                             int year, int month, int day,
+                             int year, int month, int day, double salary,
                              String street, String houseNumber,
                              String zip, String city, String workplace,
                              Department dep, String position, Personnel boss) throws Exception {
         Worker worker = new Worker(lastName, firstName,
                 new GregorianCalendar(year, month, day).getTime(),
                 new Address(street, houseNumber, zip, city), workplace);
+        worker.setSalary(salary);
         worker.setDepartment(dep);
         worker.setPosition(position);
         worker.setBoss(boss);

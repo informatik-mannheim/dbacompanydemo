@@ -9,6 +9,7 @@
     <property name="docsrc" location="doc"/>
     <property name="lib" location="lib"/>
     <property name="doc" location="doc"/>
+    <property name="resources" location="resources"/>
     <property name="build" location="build"/>
     <property name="dist" location="dist"/>
     <property name="javadoc" location="${build}/javadoc"/>
@@ -69,6 +70,7 @@
             <zipfileset dir="${buildlib}" prefix="lib"/>
             <fileset dir="${build}/shell"/>
             <zipfileset dir="${javasrc}" prefix="src"/>
+            <zipfileset dir="${resources}" prefix="resources"/>
             <zipfileset dir="${sqlsrc}" prefix="sql">
                 <exclude name="*.bak"/>
             </zipfileset>

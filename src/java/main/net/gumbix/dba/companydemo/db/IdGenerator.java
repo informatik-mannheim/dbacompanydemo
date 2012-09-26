@@ -20,9 +20,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.db;
 
+/**
+ * This interface provides new unique IDs for a specific class.
+ * Such a generator is required by DB4O for instance
+ * within the <code>Personnel</code>
+ * class as this class does not have a public key.
+ * (c) 2012 by Markus Gumbel (m.gumbel@hs-mannheim.de)
+ * @author Markus Gumbel
+ */
 public abstract class IdGenerator {
 
+    /**
+     * Singleton method.
+     */
 	public static IdGenerator generator ;
-	
+
+    /**
+     * Get the next available ID for the given class.
+     * @param clazz
+     * @return
+     */
 	public abstract long getNextLong(Class clazz);
 }

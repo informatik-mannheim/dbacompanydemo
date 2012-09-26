@@ -1,6 +1,7 @@
 package net.gumbix.dba.companydemo.hibernate;
 
 /**
+ * Helper class to provide a <code>SessionFactory</code>.
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
 import org.hibernate.SessionFactory;

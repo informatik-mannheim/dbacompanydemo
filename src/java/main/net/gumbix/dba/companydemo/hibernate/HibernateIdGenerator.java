@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 
 /**
  * (c) 2012 by Markus Gumbel (m.gumbel@hs-mannheim.de)
- *
  * @author Markus Gumbel
  */
 public class HibernateIdGenerator extends IdGenerator {

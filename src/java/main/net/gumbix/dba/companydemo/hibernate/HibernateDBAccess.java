@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * The DB access interface that uses Hibernate (3.x) internally.
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
 public class HibernateDBAccess extends AbstractDBAccess {
@@ -227,6 +228,10 @@ public class HibernateDBAccess extends AbstractDBAccess {
         session.close();
     }
 
+    /**
+     * Save or update the given object. The session is cleared afterwards.
+     * @param o
+     */
     private void save(Object o) {
         session.beginTransaction();
         session.saveOrUpdate(o);
@@ -235,6 +240,10 @@ public class HibernateDBAccess extends AbstractDBAccess {
         session.clear();
     }
 
+    /**
+     * Delete the given object. The session is cleared afterwards.
+     * @param o
+     */
     private void delete(Object o) {
         session.beginTransaction();
         session.delete(o);

@@ -22,7 +22,6 @@ values (1, 'Management'),
        (8, 'Qualitätssicherung'),
        (9, 'Buchhaltung'),
        (10, 'Kundendienst');
-;
 
 -- Ort (plz, ortsname)
 insert into Ort
@@ -34,7 +33,6 @@ values ('10437', 'Berlin'),
        ('68309', 'Mannheim'),
        ('69115', 'Heidelberg'),
        ('69214', 'Eppelheim');
-
 
 -- Mitarbeiter (personalNr, vorname, nachname, strasse, hausNr, plz#, gebDatum, abteilungsNr#, funktion, vorgesetzterNr#)
 -- Angestellter (personalNr#, telefonNr)

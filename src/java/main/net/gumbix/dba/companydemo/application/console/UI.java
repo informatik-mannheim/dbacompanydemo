@@ -41,7 +41,7 @@ import java.util.Locale;
 public class UI {
 
     private static String NAME = "CompanyDemo";
-    private static String VERSION = "0.2.1";
+    private static String VERSION = "0.2.2";
     private static String PROMPT = "Ihre Eingabe (Zahl): ";
     private static String INVALID_INPUT = "Fehlerhafte Eingabe \n\n";
     private static DBAccess db;
@@ -73,7 +73,7 @@ public class UI {
                             + "2 SQL-Datenbank der Hochschule Mannheim (über Hibernate) \n"
                             + "3 eigene SQL-Datenbank (über JDBC) \n"
                             + "4 eigene SQL-Datenbank (über Hibernate) \n"
-                            + "5 eigene DB4O-Datenbank (Servermode) \n"
+                            + "5 eigene DB4O-Datenbank (Servermode; vorher startDb4oServer.bat starten) \n"
                             + "6 lokale DB4O-Datenbank \n\n"
                             + "9 Credits \n\n"
                             + "0 Programm beenden");

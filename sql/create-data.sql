@@ -8,6 +8,29 @@ wir die Referenzen einfacher nachverfolgen kÃ¶nnen.
 Die gleichen Daten können auch mit der Anwendung
 net.gumbix.dba.companydemo.test.ExampleData erzeugt werden.
 */
+
+/**
+Zuerst werden bestehende Daten gelöscht.
+*/
+delete from Statusbericht;
+delete from MitarbeiterArbeitetAnProjekt;
+delete from Projekt;
+delete from Firmenwagen;
+delete from Auto; 
+delete from Angestellter;
+delete from Arbeiter;
+/* Mitarbeiter hat einen Verweis auf sich selbst (vorgesetzterID). Deshalb
+können nicht einfach alle Datensätze gelöscht werden. Wir wissen das und
+schalten deshalb kurzerhand die Überprüfung auf referentielle Integrität
+aus. */
+SET foreign_key_checks = 0;
+delete ignore from Mitarbeiter;
+SET foreign_key_checks = 1;
+delete from Ort;
+delete from Abteilung;
+
+/* Anlegen der Daten... */
+
 -- Abteilung (abteilungsNr, bezeichnung)
 insert into Abteilung(abteilungsNr, bezeichnung)
 values (1, 'Management'),
@@ -110,7 +133,8 @@ insert into Projekt(projektId, bezeichnung, naechsteStatusNummer)
 values ('DBP', 'DB portieren', 2),
        ('FOP', 'Neues Produkt entwickeln', 6),
        ('LES', 'Personal einstellen', 6),
-       ('SEC', 'Security-Konzept für Firma', 2);
+       ('SEC', 'Security-Konzept für Firma', 2),
+       ('SAL', 'Kundenumfrage', 1);
        
 -- MitarbeiterArbeitetAnProjekt (personalNr#, projektNr#, prozAnteil, taetigkeit)
 insert into MitarbeiterArbeitetAnProjekt(personalNr, projektId, taetigkeit, prozAnteil)

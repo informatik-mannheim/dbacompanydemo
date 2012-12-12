@@ -183,11 +183,11 @@ ausgegeben werden.
 select nachname, vorname, bezeichnung as Abteilung
 from 
     (select nachname, vorname, bezeichnung
-    from Mitarbeiter as m join Abteilung as a on m.abteilungsNr = a.abteilungsNr
+    from Mitarbeiter as m join Abteilung as a on m.abteilungsId = a.abteilungsNr
     union
     select m.nachname, m.vorname, '- ohne -' as bezeichnung
     from Mitarbeiter as m
-    where abteilungsNr is null
+    where abteilungsId is null
     ) as tmp
 order by bezeichnung, nachname;
 
@@ -240,12 +240,13 @@ group by m2.personalNr, m2.nachname, m2.vorname, m2.funktion, a.bezeichnung;
 IV.3
 Gib an, wie viele Mitarbeiter jeweils an ihren Chef berichten.
 */
-select m2.nachname, m2.vorname, count(m2.personalNr) as 'Teamgröße'
-from Mitarbeiter m1 join Mitarbeiter m2 on m1.vorgesetzterNr = m2.personalNr
+select m2.nachname, m2.vorname, count(*) as 'Teamgröße'
+from Mitarbeiter m1 join Mitarbeiter m2 
+on m1.vorgesetzterNr = m2.personalNr
 group by m2.personalNr, m2.nachname, m2.vorname
 order by m2.nachname;
 
-/**
+/**                             
 IV.4
 wie III.4, jedoch soll nur die PLZ mit der größten Häufigkeit ausgeben werden (d.h. nur eine Zeile).
 */

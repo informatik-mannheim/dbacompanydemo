@@ -11,6 +11,8 @@ net.gumbix.dba.companydemo.test.ExampleData erzeugt werden.
 
 /**
 Zuerst werden bestehende Daten gelöscht.
+Hinweis: Evtl. muss die SQL-Umgebung so eingerichtet werden,
+dass updates und delete ohne where-Anweisung möglich sind.
 */
 delete from Statusbericht;
 delete from MitarbeiterArbeitetAnProjekt;

@@ -11,8 +11,6 @@ id_file
 .settings
 out
 eclipse-classes
-.classpath
-.project
 *.yap
 build
 dist

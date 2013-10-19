@@ -140,7 +140,7 @@ public class UI {
                     + "3 Firmenwagen verwalten\n"
                     + "4 Abteilungen verwalten\n"
                     + "5 Berichte\n\n"
-                    + "0 Zurue¼ck");
+                    + "0 Zuruck");
 
             menuChoice = getMenuChoice();
 
@@ -691,7 +691,8 @@ public class UI {
             System.out.println("\n*** Berichte ***\n\n"
                     + "Was moechten Sie tun? \n\n"
                     + "1 Statistik\n"
-                    + "2 Nicht ausgelastete Angestellte\n\n"
+                    + "2 Nicht ausgelastete Angestellte\n"
+                    + "3 Projektuebersicht\n\n"
                     + "0 Zurueck");
 
             menuChoice = getMenuChoice();
@@ -722,6 +723,11 @@ public class UI {
                     }
                     pressAnyKey();
                     break;
+               
+                case 3:
+                	List<Project> projects = db.getProjectOverview();
+                	processReportProjectOverview(projects);                	
+                	break;
 
                 case 0:
                     break;
@@ -736,6 +742,31 @@ public class UI {
     /**
      * Helper methods.
      */
+    private static void processReportProjectOverview(List<Project> projects){
+    	System.out.println("*** Projektuebersicht ***\n");
+    	String lastProjectId = "";
+    	for (Project project : projects) {
+    		if(lastProjectId != project.getProjectId()){
+    			lastProjectId = project.getProjectId();
+    			System.out.print("--------------------------------------------------------------------------");
+    			System.out.println();
+    			System.out.print("("+project.getProjectId()+") ");
+    			System.out.print(project.getDescription());
+    			System.out.println();
+            }
+            
+            for(WorksOn worksOn : project.getEmployees()){
+            	System.out.print("-");
+            	System.out.print((worksOn.getJob()+": "));
+            	System.out.print(worksOn.getEmployee().getFirstName()+" ");
+            	System.out.print(worksOn.getEmployee().getLastName()+" ");
+            	System.out.print("(Personalnummer: "+worksOn.getEmployee().getPersonnelNumber()+", ");
+            	System.out.print(worksOn.getEmployee().getPosition()+")");
+            	System.out.println();
+            }
+        }
+    	
+    }
 
     private static Date stringToDate(String bDate)
             throws Exception {
@@ -781,7 +812,7 @@ public class UI {
 
     private static void credits() {
 
-        System.out.println("\n" + NAME + " version " + VERSION + ", Copyright (C) 2011-12");
+        System.out.println("\n" + NAME + " version " + VERSION + ", Copyright (C) 2011-13");
         System.out.println("CompanyDemo comes with ABSOLUTELY NO WARRANTY;");
         System.out.println("This is free software, and you are welcome ");
         System.out.println("to redistribute it under certain conditions;");
@@ -791,5 +822,6 @@ public class UI {
         System.out.println(" - Marius Czardybon");
         System.out.println(" - Patrick Sturm");
         System.out.println(" - Markus Gumbel");
+        System.out.println(" - Maximilian Naehrlich");
     }
 }

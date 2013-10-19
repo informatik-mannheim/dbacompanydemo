@@ -4,11 +4,14 @@ import net.gumbix.dba.companydemo.db.AbstractDBAccess;
 import net.gumbix.dba.companydemo.db.IdGenerator;
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
 import net.gumbix.dba.companydemo.domain.*;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.util.List;
 import java.util.Set;
+
+import javax.naming.OperationNotSupportedException;
 
 /**
  * The DB access interface that uses Hibernate (3.x) internally.
@@ -250,4 +253,9 @@ public class HibernateDBAccess extends AbstractDBAccess {
         session.getTransaction().commit();
         session.clear();
     }
+
+	@Override
+	public List<Project> getProjectOverview() throws OperationNotSupportedException {
+		throw new OperationNotSupportedException();
+	}
 }

@@ -29,6 +29,7 @@ import java.util.Set;
  * This interface contains all methods to interact with the database.
  * Each database implementation/technology implements this interface.
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
+ * @author Maximilian Nährlich (maximilian.naehrlich@stud.hs-mannheim.de)
  */
 public interface DBAccess {
 
@@ -103,6 +104,7 @@ public interface DBAccess {
     public int getNumberOfPersonnel() throws Exception;
     public int getNumberOfProjects() throws Exception;
     public List<Employee> getIdleEmployees() throws Exception;
+    public List<Project> getProjectOverview() throws Exception;
 
     public void close();
 }

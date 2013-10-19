@@ -25,8 +25,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.naming.OperationNotSupportedException;
+
 import com.db4o.Db4o;
 import com.db4o.Db4oEmbedded;
+
 import net.gumbix.dba.companydemo.db.AbstractDBAccess;
 import net.gumbix.dba.companydemo.db.DBAccess;
 import net.gumbix.dba.companydemo.db.IdGenerator;
@@ -357,4 +360,9 @@ public class Db4oAccess extends AbstractDBAccess {
         // TODO
         throw new RuntimeException("Method not yet implemented");
     }
+
+	@Override
+	public List<Project> getProjectOverview() throws OperationNotSupportedException {
+		throw new OperationNotSupportedException();
+	}
 }

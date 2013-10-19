@@ -34,6 +34,7 @@ import java.util.Set;
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Marius Czardybon (m.czardybon@gmx.net)
+ * @author Maximilian Nährlich (maximilian.naehrlich@stud.hs-mannheim.de)
  */
 public class JdbcAccess extends AbstractDBAccess {
 
@@ -237,5 +238,33 @@ public class JdbcAccess extends AbstractDBAccess {
     public void close() {
         // TODO what to close?
     }
+
+	@Override
+	public List<Project> getProjectOverview() throws Exception {
+				String queryString = "select distinct p.projektId "+//, p.bezeichnung, mp.taetigkeit, m.personalNr, m.vorname, m.nachname, m.funktion " +
+				"from projekt as p " +
+				"join mitarbeiterarbeitetanprojekt as mp on p.projektId = mp.projektId " +
+				"join mitarbeiter m on mp.personalNr = m.personalNr " +
+				"order by p.projektId asc";
+				
+		Statement query = connection.createStatement();
+        ResultSet rs = query.executeQuery(queryString);
+        
+        List<Project> projects = new ArrayList();
+        //List<Employee> employees = new ArrayList<>();
+        
+        while (rs.next()) {
+            String projectId = rs.getString(1);
+            Project p = (Project) projDAO.load(projectId);
+            projects.add(p);
+            
+            /*for(WorksOn worksOn: p.getEmployees()){
+            	worksOn.getEmployee()
+            }*/
+        }
+        rs.close();
+        query.close();
+        return projects;
+	}
 }
 

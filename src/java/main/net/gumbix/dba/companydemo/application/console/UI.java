@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
@@ -692,7 +693,8 @@ public class UI {
                     + "Was moechten Sie tun? \n\n"
                     + "1 Statistik\n"
                     + "2 Nicht ausgelastete Angestellte\n"
-                    + "3 Projektuebersicht\n\n"
+                    + "3 Projektuebersicht\n"
+                    + "4 Organigramm\n\n"
                     + "0 Zurueck");
 
             menuChoice = getMenuChoice();
@@ -728,7 +730,13 @@ public class UI {
                 	List<Project> projects = db.getProjectOverview();
                 	processReportProjectOverview(projects);                	
                 	break;
-
+                
+                case 4:
+                	List<Personnel> personnelWOBoss =  db.getPersonnellWOBoss();
+                	Map<Long, List<Personnel>> mapOrganigram = db.getPersonnelOrganigram();
+                	processReportOrganigram(personnelWOBoss, mapOrganigram);
+                	break;
+                	
                 case 0:
                     break;
 
@@ -767,6 +775,39 @@ public class UI {
         }
     	
     }
+    
+    private static void processReportOrganigram(List<Personnel> personnelWOBoss, Map<Long, List<Personnel>> mapOrganigram){
+    	
+    	for(Personnel pWOBoss : personnelWOBoss){
+    		printPersonnel(pWOBoss);
+    		System.out.println();
+    		printSubordinates(pWOBoss.getPersonnelNumber(), mapOrganigram, 0);
+    	}
+    	
+    }
+    
+    private static void printPersonnel(Personnel personnel){
+    	System.out.print(personnel.getPersonnelNumber()+" ");
+    	System.out.print(personnel.getFirstName()+" "+personnel.getLastName());
+    	System.out.print( " ("+((personnel.getDepartment()!=null)? personnel.getDepartment().getName() : "-")+", "+personnel.getPosition()+")");
+    }
+    
+    private static void printSubordinates(long bossPersonnelNumber, Map<Long, List<Personnel>> mapOrganigram, int level){
+    	
+    	if(mapOrganigram.get(bossPersonnelNumber).size() > 0){
+    		for(Personnel supordinate : mapOrganigram.get(bossPersonnelNumber)){
+    			for(int i=0;i<=level;i++){System.out.print("\t");}
+    			printPersonnel(supordinate);
+    			System.out.println();
+    			int currentLevel = level;
+    			if(mapOrganigram.containsKey(supordinate.getPersonnelNumber()) ){    				
+    				printSubordinates(supordinate.getPersonnelNumber(), mapOrganigram, ++currentLevel);
+    			}
+    		}
+    	}
+    }
+    
+
 
     private static Date stringToDate(String bDate)
             throws Exception {

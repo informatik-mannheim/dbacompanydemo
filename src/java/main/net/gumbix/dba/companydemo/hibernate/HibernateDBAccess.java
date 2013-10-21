@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.naming.OperationNotSupportedException;
@@ -256,6 +257,16 @@ public class HibernateDBAccess extends AbstractDBAccess {
 
 	@Override
 	public List<Project> getProjectOverview() throws OperationNotSupportedException {
-		throw new OperationNotSupportedException();
+		throw new RuntimeException("Method not yet implemented");
+	}
+
+	@Override
+	public Map<Long, List<Personnel>> getPersonnelOrganigram() throws Exception {
+		throw new RuntimeException("Method not yet implemented");
+	}
+
+	@Override
+	public List<Personnel> getPersonnellWOBoss() throws Exception {
+		throw new RuntimeException("Method not yet implemented");
 	}
 }

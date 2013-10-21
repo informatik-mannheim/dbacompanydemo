@@ -23,6 +23,7 @@ package net.gumbix.dba.companydemo.db4o;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.naming.OperationNotSupportedException;
@@ -363,6 +364,16 @@ public class Db4oAccess extends AbstractDBAccess {
 
 	@Override
 	public List<Project> getProjectOverview() throws OperationNotSupportedException {
-		throw new OperationNotSupportedException();
+		throw new RuntimeException("Method not yet implemented");
+	}
+
+	@Override
+	public Map<Long, List<Personnel>> getPersonnelOrganigram() throws Exception {
+		throw new RuntimeException("Method not yet implemented");
+	}
+
+	@Override
+	public List<Personnel> getPersonnellWOBoss() throws Exception {
+		throw new RuntimeException("Method not yet implemented");
 	}
 }

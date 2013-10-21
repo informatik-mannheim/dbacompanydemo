@@ -23,6 +23,7 @@ package net.gumbix.dba.companydemo.db;
 import net.gumbix.dba.companydemo.domain.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -105,6 +106,9 @@ public interface DBAccess {
     public int getNumberOfProjects() throws Exception;
     public List<Employee> getIdleEmployees() throws Exception;
     public List<Project> getProjectOverview() throws Exception;
+   
+    public List<Personnel> getPersonnellWOBoss() throws Exception;
+    public Map<Long, List<Personnel>> getPersonnelOrganigram() throws Exception;
 
     public void close();
 }

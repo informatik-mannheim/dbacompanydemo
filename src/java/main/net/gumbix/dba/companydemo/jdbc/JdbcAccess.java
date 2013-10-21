@@ -28,7 +28,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -241,7 +244,7 @@ public class JdbcAccess extends AbstractDBAccess {
 
 	@Override
 	public List<Project> getProjectOverview() throws Exception {
-				String queryString = "select distinct p.projektId "+//, p.bezeichnung, mp.taetigkeit, m.personalNr, m.vorname, m.nachname, m.funktion " +
+		String queryString = "select distinct p.projektId "+
 				"from projekt as p " +
 				"join mitarbeiterarbeitetanprojekt as mp on p.projektId = mp.projektId " +
 				"join mitarbeiter m on mp.personalNr = m.personalNr " +
@@ -251,20 +254,63 @@ public class JdbcAccess extends AbstractDBAccess {
         ResultSet rs = query.executeQuery(queryString);
         
         List<Project> projects = new ArrayList();
-        //List<Employee> employees = new ArrayList<>();
         
         while (rs.next()) {
             String projectId = rs.getString(1);
             Project p = (Project) projDAO.load(projectId);
             projects.add(p);
-            
-            /*for(WorksOn worksOn: p.getEmployees()){
-            	worksOn.getEmployee()
-            }*/
         }
         rs.close();
         query.close();
         return projects;
+	}
+
+	@Override
+	public Map<Long, List<Personnel>> getPersonnelOrganigram() throws Exception {
+		String queryString = "select boss.personalNr, boss.vorname, boss.nachname, subordinate.personalNr, subordinate.vorname, subordinate.nachname "+
+				"from mitarbeiter as boss join mitarbeiter as subordinate on boss.personalNr = subordinate.vorgesetzterNr "+
+				"order by boss.personalNr asc ";
+				
+		Statement query = connection.createStatement();
+        ResultSet rs = query.executeQuery(queryString);
+        
+        long personnelNumberLast = 0;
+        Map<Long, List<Personnel>> bossMap = new HashMap<>();
+        List<Personnel> subordinates = null;
+        
+        while (rs.next()) {
+        	long personnelNumber  = rs.getLong(1);        	
+        	if(personnelNumber != personnelNumberLast){
+        		//new entry in map
+        		personnelNumberLast = personnelNumber;
+        		subordinates = new ArrayList();
+        		bossMap.put(personnelNumber, subordinates);
+        	}
+        	long personnelNumberSub = rs.getLong(4);
+        	subordinates.add((Personnel) persDAO.load(personnelNumberSub));
+        }
+ 
+        rs.close();
+        query.close();
+        return bossMap;
+	}
+
+	@Override
+	public List<Personnel> getPersonnellWOBoss() throws Exception {
+		String queryString = "select personalNr from mitarbeiter where vorgesetzterNr is null;";
+				
+		Statement query = connection.createStatement();
+        ResultSet rs = query.executeQuery(queryString);
+        
+        List<Personnel> personnels = new ArrayList();
+        
+        while (rs.next()) {
+            long personnelNumer = rs.getLong(1);
+            personnels.add(persDAO.load(personnelNumer));
+        }
+        rs.close();
+        query.close();
+        return personnels;
 	}
 }
 

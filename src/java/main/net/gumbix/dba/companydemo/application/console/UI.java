@@ -28,11 +28,15 @@ import net.gumbix.dba.companydemo.hibernate.HibernateDBAccess;
 import net.gumbix.dba.companydemo.jdbc.JdbcAccess;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.security.auth.login.LoginException;
 
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
@@ -76,6 +80,8 @@ public class UI {
                             + "4 eigene SQL-Datenbank (Ueber Hibernate) \n"
                             + "5 eigene DB4O-Datenbank (Servermode; vorher startDb4oServer.bat starten) \n"
                             + "6 lokale DB4O-Datenbank \n\n"
+                            + "7 Benutzerbasierte Anmeldung an SQL-Datenbank der Hochschule Mannheim (Ueber JDBC) (EXPERIMENTAL) \n"
+                            + "8 lokale Benutzerbasierte Anmeldung (Ueber JDBC) (EXPERIMENTAL)\n\n"
                             + "9 Credits \n\n"
                             + "0 Programm beenden");
 
@@ -112,7 +118,32 @@ public class UI {
                     db = new Db4oAccess("firmenwelt.yap");
                     menu();
                     break;
-
+                /*********Experimental*********/
+                case 7:
+                	try{
+                		db = userLogin4DB("jdbc:mysql://codd.ki.hs-mannheim.de:3306/firmenwelt");
+                	}catch(SQLException sqlExc){
+                		System.out.println(sqlExc.getMessage());
+                		break;
+                	}catch(LoginException loginExp){
+                		System.out.println(loginExp.getMessage());
+                		break;
+                	}
+                	menu();
+                	break;
+                case 8:
+                	try{
+                		db = userLogin4DB("jdbc:mysql://localhost:3306/firmenwelt");
+                	}catch(SQLException sqlExc){
+                		System.out.println(sqlExc.getMessage());
+                		break;
+                	}catch(LoginException loginExp){
+                		System.out.println(loginExp.getMessage());
+                		break;
+        			}
+                	menu();
+                	break;
+                /*****************************/
                 case 9:
                     credits();
                     pressAnyKey();
@@ -129,6 +160,26 @@ public class UI {
             }
         } while (menuChoice != 0);
     }
+    
+    /*********Experimental*********/
+    private static DBAccess userLogin4DB(String url) throws SQLException, LoginException, Exception {
+    	if(System.console() == null){
+    		throw new LoginException("\n\nBenutzerbasierte Anmeldung nicht möglich\n\n");
+    	}
+    	
+    	DBAccess dbx = null;
+    	System.out.print("Benutzer: ");
+    	String user = getUserInputString(); 
+    	String pwd = "";
+    	System.out.print("Passwort (Eingabe ist unsichtbar): ");
+    	pwd = new String(System.console().readPassword());
+    	
+    	dbx = new JdbcAccess(url, user, pwd);
+ 
+    	System.out.println("Benutzer "+user+" angemeldet...");
+    	return dbx;
+    }
+    /*****************************/
 
     private static void menu() throws Exception {
         int menuChoice;

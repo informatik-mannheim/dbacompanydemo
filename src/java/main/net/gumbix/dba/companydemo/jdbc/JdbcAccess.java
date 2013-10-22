@@ -26,6 +26,7 @@ import net.gumbix.dba.companydemo.domain.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,7 +64,7 @@ public class JdbcAccess extends AbstractDBAccess {
                 user, pwd);
     }
 
-    public JdbcAccess(String url, String user, String pwd) throws Exception {
+    public JdbcAccess(String url, String user, String pwd) throws Exception, SQLException {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         connection = DriverManager.getConnection(url, user, pwd);
         JdbcIdGenerator.generator = new JdbcIdGenerator(this);
@@ -279,14 +280,14 @@ public class JdbcAccess extends AbstractDBAccess {
         List<Personnel> subordinates = null;
         
         while (rs.next()) {
-        	long personnelNumber  = rs.getLong(1);        	
+        	long personnelNumber  = rs.getLong(1);//thats the ID of the boss        	
         	if(personnelNumber != personnelNumberLast){
         		//new entry in map
         		personnelNumberLast = personnelNumber;
         		subordinates = new ArrayList();
         		bossMap.put(personnelNumber, subordinates);
         	}
-        	long personnelNumberSub = rs.getLong(4);
+        	long personnelNumberSub = rs.getLong(4);//thats the ID of the subordinate
         	subordinates.add((Personnel) persDAO.load(personnelNumberSub));
         }
  

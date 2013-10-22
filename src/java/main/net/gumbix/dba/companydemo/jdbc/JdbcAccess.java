@@ -38,7 +38,7 @@ import java.util.Set;
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Marius Czardybon (m.czardybon@gmx.net)
- * @author Maximilian Nährlich (maximilian.naehrlich@stud.hs-mannheim.de)
+ * @author Maximilian Nährlich (maximilian.naehrlich@stud.hs-mannheim.de )
  */
 public class JdbcAccess extends AbstractDBAccess {
 

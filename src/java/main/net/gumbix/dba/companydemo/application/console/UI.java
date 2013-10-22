@@ -42,6 +42,7 @@ import javax.security.auth.login.LoginException;
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Patrick Sturm (patrick-sturm@gmx.net)
  * @author Marius Czardybon (m.czardybon@gmx.net)
+ * @author Maximilian Nährlich (maximilian.naehrlich@stud.hs-mannheim.de )
  */
 public class UI {
 

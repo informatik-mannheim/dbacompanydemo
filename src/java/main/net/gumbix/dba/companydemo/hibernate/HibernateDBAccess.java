@@ -1,5 +1,6 @@
 package net.gumbix.dba.companydemo.hibernate;
 
+import net.gumbix.dba.companydemo.application.process.ProjectStatusEnum;
 import net.gumbix.dba.companydemo.db.AbstractDBAccess;
 import net.gumbix.dba.companydemo.db.IdGenerator;
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
@@ -268,5 +269,12 @@ public class HibernateDBAccess extends AbstractDBAccess {
 	@Override
 	public List<Personnel> getPersonnellWOBoss() throws Exception {
 		throw new RuntimeException("Method not yet implemented");
+	}
+
+	@Override
+	public ProjectStatus loadProjectStatus(ProjectStatusEnum projectStatus)
+			throws Exception {
+		// TODO
+        throw new RuntimeException("Not implemented!");
 	}
 }

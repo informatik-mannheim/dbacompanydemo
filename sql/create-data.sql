@@ -128,13 +128,21 @@ values ('MA-MA 1234', 'S-Klasse', 1),
        ('MA-MA 1240', 'Passat', 7),
        ('MA-MA 1241', 'Passat', 8);
 
--- Projekt (projektNr, bezeichnung)
-insert into Projekt(projektId, bezeichnung, naechsteStatusNummer)
-values ('DBP', 'DB portieren', 2),
-       ('FOP', 'Neues Produkt entwickeln', 6),
-       ('LES', 'Personal einstellen', 6),
-       ('SEC', 'Security-Konzept für Firma', 2),
-       ('SAL', 'Kundenumfrage', 1);
+-- ProjekStatus(stausId, beschreibung)
+insert into projektstatus
+values	('New', 'Neu'),
+		('InProcess', 'In Bearbeitung'),
+		('Blocked', 'Blockiert'),
+		('Cancelled', 'Abgebrochen'),
+		('Finished', 'Abgeschlossen');
+
+-- Projekt (projektNr, bezeichnung, naechsteStatusNummer, statusId#)
+insert into Projekt(projektId, bezeichnung, naechsteStatusNummer, statusId)
+values ('DBP', 'DB portieren', 2, 'New'),
+       ('FOP', 'Neues Produkt entwickeln', 6, 'InProcess'),
+       ('LES', 'Personal einstellen', 6, 'New'),
+       ('SEC', 'Security-Konzept für Firma', 2, 'New'),
+       ('SAL', 'Kundenumfrage', 1, 'New');
        
 -- MitarbeiterArbeitetAnProjekt (personalNr#, projektNr#, prozAnteil, taetigkeit)
 insert into MitarbeiterArbeitetAnProjekt(personalNr, projektId, taetigkeit, prozAnteil)
@@ -152,3 +160,4 @@ values ('FOP', 3, '2012-09-17 00:00:00', 'Das ist der erste Statusbericht'),
        ('FOP', 5, '2012-09-28 00:00:00', 'Fortschritte beim Modell'),
        ('LES', 3, '2011-11-17 00:00:00', 'Das ist der erste Statusbericht'),
        ('LES', 5, '2011-11-18 00:00:00', 'Das ist noch ein Statusbericht');
+

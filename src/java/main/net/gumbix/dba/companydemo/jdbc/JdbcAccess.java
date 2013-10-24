@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.jdbc;
 
+import net.gumbix.dba.companydemo.application.process.ProjectStatusEnum;
 import net.gumbix.dba.companydemo.db.AbstractDBAccess;
 import net.gumbix.dba.companydemo.domain.*;
 
@@ -51,6 +52,7 @@ public class JdbcAccess extends AbstractDBAccess {
     private StatusReportDAO statDAO = new StatusReportDAO(this);
     private WorkerDAO workerDAO = new WorkerDAO(this);
     private WorksOnDAO woOnDAO = new WorksOnDAO(this);
+    private ProjectStatusDAO projStDAO = new ProjectStatusDAO(this);
 
     public Connection connection;
 
@@ -200,6 +202,11 @@ public class JdbcAccess extends AbstractDBAccess {
     public void deleteWorksOn(WorksOn wo) throws Exception {
         woOnDAO.delete(wo);
     }
+    
+    //ProjectStatus
+    public ProjectStatus loadProjectStatus(ProjectStatusEnum projectStatus) throws Exception {
+    	return projStDAO.load(projectStatus);
+    }
 
     // Queries
     public int getNumberOfPersonnel() throws Exception {
@@ -313,5 +320,6 @@ public class JdbcAccess extends AbstractDBAccess {
         query.close();
         return personnels;
 	}
+
 }
 

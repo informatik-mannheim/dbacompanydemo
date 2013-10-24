@@ -2,45 +2,47 @@ package net.gumbix.dba.companydemo.application.process;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import net.gumbix.dba.companydemo.db.DBAccess;
 import net.gumbix.dba.companydemo.domain.Project;
 import net.gumbix.dba.companydemo.jdbc.ProjectDAO;
 
+/**
+ * @author Maximilian Nährlich (maximilian.naehrlich@stud.hs-mannheim.de )
+ */
+
 public class ProjectStatusManager {
 	
 	private static ProjectStatusManager instance;
-	private DBAccess db;
 	
-	public static ProjectStatusManager getInstance(DBAccess db){
+	public static ProjectStatusManager getInstance(){
 		if(instance == null){
 			instance = new ProjectStatusManager();
 		}
 		return instance;
 	}
 	
-	public List<ProjectStatus> getNextStatus(ProjectStatus currentStatus){
-		List<ProjectStatus> nextStatus = new ArrayList<>();
+	public List<ProjectStatusEnum> getNextStatus(ProjectStatusEnum currentStatus){
+		List<ProjectStatusEnum> nextStatus = new ArrayList<>();
 		
 		switch(currentStatus){
 			case New:
 			case Cancelled:
 			case Blocked:
-				nextStatus.add(ProjectStatus.InProcess);
+				nextStatus.add(ProjectStatusEnum.InProcess);
 				break;
 			case Finished:
 				break;
 			case InProcess:
-				nextStatus.add(ProjectStatus.Finished);
-				nextStatus.add(ProjectStatus.Blocked);
-				nextStatus.add(ProjectStatus.Cancelled);
+				nextStatus.add(ProjectStatusEnum.Finished);
+				nextStatus.add(ProjectStatusEnum.Blocked);
+				nextStatus.add(ProjectStatusEnum.Cancelled);
 				break;
 		}
 		
 		return nextStatus;
 	}
 	
-	public void setNextStatus(Project project, ProjectStatus nextStatus){
+	public void setNextStatus(DBAccess db, Project project, ProjectStatusEnum nextStatus){
 		/*
 		//test if nextStatis is valid
 		boolean isValid = false;

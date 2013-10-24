@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.db;
 
+import net.gumbix.dba.companydemo.application.process.ProjectStatusEnum;
 import net.gumbix.dba.companydemo.domain.*;
 
 import java.util.List;
@@ -100,6 +101,9 @@ public interface DBAccess {
     public void storeWorksOn(WorksOn wo) throws Exception;
 
     public void deleteWorksOn(WorksOn wo) throws Exception;
+    
+    //ProjectStatus
+    public ProjectStatus loadProjectStatus(ProjectStatusEnum projectStatus) throws Exception;
 
     // Queries
     public int getNumberOfPersonnel() throws Exception;

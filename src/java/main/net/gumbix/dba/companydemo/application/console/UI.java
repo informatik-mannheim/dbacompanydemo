@@ -396,7 +396,8 @@ public class UI {
                     + "3 Projekt loeschen\n\n"
                     + "4 Statusberichte fuer Projekt ausgeben\n"
                     + "5 Statusbericht eingeben\n"
-                    + "6 Statusbericht Aendern\n\n"
+                    + "6 Statusbericht Aendern\n"
+                    + "7 Projekt Status ausgeben\n\n"
                     + "0 Zurueck");
 
             menuChoice = getMenuChoice();
@@ -512,7 +513,20 @@ public class UI {
                     }
                     pressAnyKey();
                     break;
+                case 7:
+                	System.out.println("*** Status fuer Projekt ausgeben ***\n");
 
+                	System.out.print("Projektkuerzel: ");
+                	projId = getUserInputString();
+
+                	try {
+                		project = db.loadProject(projId);
+                		System.out.println("Projekt "+projId+" ist im Status \'"+project.getStatus().getDescription()+"\'");                		
+            		} catch (ObjectNotFoundException e) {
+            			System.out.println("Projekt (fuer Status) nicht gefunden!");
+            		}
+                	pressAnyKey();
+                	break;
                 case 0:
                     break;
 

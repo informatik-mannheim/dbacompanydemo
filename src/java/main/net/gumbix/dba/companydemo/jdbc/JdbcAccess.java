@@ -20,20 +20,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.jdbc;
 
+import net.gumbix.dba.companydemo.application.process.ProjectStatusEnum;
 import net.gumbix.dba.companydemo.db.AbstractDBAccess;
 import net.gumbix.dba.companydemo.domain.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Marius Czardybon (m.czardybon@gmx.net)
+ * @author Maximilian Nährlich (maximilian.naehrlich@stud.hs-mannheim.de )
  */
 public class JdbcAccess extends AbstractDBAccess {
 
@@ -46,6 +52,7 @@ public class JdbcAccess extends AbstractDBAccess {
     private StatusReportDAO statDAO = new StatusReportDAO(this);
     private WorkerDAO workerDAO = new WorkerDAO(this);
     private WorksOnDAO woOnDAO = new WorksOnDAO(this);
+    private ProjectStatusDAO projStDAO = new ProjectStatusDAO(this);
 
     public Connection connection;
 
@@ -59,7 +66,7 @@ public class JdbcAccess extends AbstractDBAccess {
                 user, pwd);
     }
 
-    public JdbcAccess(String url, String user, String pwd) throws Exception {
+    public JdbcAccess(String url, String user, String pwd) throws Exception, SQLException {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         connection = DriverManager.getConnection(url, user, pwd);
         JdbcIdGenerator.generator = new JdbcIdGenerator(this);
@@ -195,6 +202,11 @@ public class JdbcAccess extends AbstractDBAccess {
     public void deleteWorksOn(WorksOn wo) throws Exception {
         woOnDAO.delete(wo);
     }
+    
+    //ProjectStatus
+    public ProjectStatus loadProjectStatus(ProjectStatusEnum projectStatus) throws Exception {
+    	return projStDAO.load(projectStatus);
+    }
 
     // Queries
     public int getNumberOfPersonnel() throws Exception {
@@ -237,5 +249,77 @@ public class JdbcAccess extends AbstractDBAccess {
     public void close() {
         // TODO what to close?
     }
+
+	@Override
+	public List<Project> getProjectOverview() throws Exception {
+		String queryString = "select distinct p.projektId "+
+				"from projekt as p " +
+				"join mitarbeiterarbeitetanprojekt as mp on p.projektId = mp.projektId " +
+				"join mitarbeiter m on mp.personalNr = m.personalNr " +
+				"order by p.projektId asc";
+				
+		Statement query = connection.createStatement();
+        ResultSet rs = query.executeQuery(queryString);
+        
+        List<Project> projects = new ArrayList();
+        
+        while (rs.next()) {
+            String projectId = rs.getString(1);
+            Project p = (Project) projDAO.load(projectId);
+            projects.add(p);
+        }
+        rs.close();
+        query.close();
+        return projects;
+	}
+
+	@Override
+	public Map<Long, List<Personnel>> getPersonnelOrganigram() throws Exception {
+		String queryString = "select boss.personalNr, boss.vorname, boss.nachname, subordinate.personalNr, subordinate.vorname, subordinate.nachname "+
+				"from mitarbeiter as boss join mitarbeiter as subordinate on boss.personalNr = subordinate.vorgesetzterNr "+
+				"order by boss.personalNr asc ";
+				
+		Statement query = connection.createStatement();
+        ResultSet rs = query.executeQuery(queryString);
+        
+        long personnelNumberLast = 0;
+        Map<Long, List<Personnel>> bossMap = new HashMap<>();
+        List<Personnel> subordinates = null;
+        
+        while (rs.next()) {
+        	long personnelNumber  = rs.getLong(1);//thats the ID of the boss        	
+        	if(personnelNumber != personnelNumberLast){
+        		//new entry in map
+        		personnelNumberLast = personnelNumber;
+        		subordinates = new ArrayList();
+        		bossMap.put(personnelNumber, subordinates);
+        	}
+        	long personnelNumberSub = rs.getLong(4);//thats the ID of the subordinate
+        	subordinates.add((Personnel) persDAO.load(personnelNumberSub));
+        }
+ 
+        rs.close();
+        query.close();
+        return bossMap;
+	}
+
+	@Override
+	public List<Personnel> getPersonnellWOBoss() throws Exception {
+		String queryString = "select personalNr from mitarbeiter where vorgesetzterNr is null;";
+				
+		Statement query = connection.createStatement();
+        ResultSet rs = query.executeQuery(queryString);
+        
+        List<Personnel> personnels = new ArrayList();
+        
+        while (rs.next()) {
+            long personnelNumer = rs.getLong(1);
+            personnels.add(persDAO.load(personnelNumer));
+        }
+        rs.close();
+        query.close();
+        return personnels;
+	}
+
 }
 

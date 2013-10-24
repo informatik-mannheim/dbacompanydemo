@@ -23,10 +23,15 @@ package net.gumbix.dba.companydemo.db4o;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import javax.naming.OperationNotSupportedException;
 
 import com.db4o.Db4o;
 import com.db4o.Db4oEmbedded;
+
+import net.gumbix.dba.companydemo.application.process.ProjectStatusEnum;
 import net.gumbix.dba.companydemo.db.AbstractDBAccess;
 import net.gumbix.dba.companydemo.db.DBAccess;
 import net.gumbix.dba.companydemo.db.IdGenerator;
@@ -37,6 +42,7 @@ import net.gumbix.dba.companydemo.domain.Department;
 import net.gumbix.dba.companydemo.domain.Employee;
 import net.gumbix.dba.companydemo.domain.Personnel;
 import net.gumbix.dba.companydemo.domain.Project;
+import net.gumbix.dba.companydemo.domain.ProjectStatus;
 import net.gumbix.dba.companydemo.domain.StatusReport;
 import net.gumbix.dba.companydemo.domain.Worker;
 import net.gumbix.dba.companydemo.domain.WorksOn;
@@ -357,4 +363,26 @@ public class Db4oAccess extends AbstractDBAccess {
         // TODO
         throw new RuntimeException("Method not yet implemented");
     }
+
+	@Override
+	public List<Project> getProjectOverview() throws OperationNotSupportedException {
+		throw new RuntimeException("Method not yet implemented");
+	}
+
+	@Override
+	public Map<Long, List<Personnel>> getPersonnelOrganigram() throws Exception {
+		throw new RuntimeException("Method not yet implemented");
+	}
+
+	@Override
+	public List<Personnel> getPersonnellWOBoss() throws Exception {
+		throw new RuntimeException("Method not yet implemented");
+	}
+
+	@Override
+	public ProjectStatus loadProjectStatus(ProjectStatusEnum projectStatus)
+			throws Exception {
+		// TODO
+        throw new RuntimeException("Not implemented!");
+	}
 }

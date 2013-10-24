@@ -20,15 +20,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.db;
 
+import net.gumbix.dba.companydemo.application.process.ProjectStatusEnum;
 import net.gumbix.dba.companydemo.domain.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * This interface contains all methods to interact with the database.
  * Each database implementation/technology implements this interface.
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
+ * @author Maximilian Nährlich (maximilian.naehrlich@stud.hs-mannheim.de)
  */
 public interface DBAccess {
 
@@ -98,11 +101,18 @@ public interface DBAccess {
     public void storeWorksOn(WorksOn wo) throws Exception;
 
     public void deleteWorksOn(WorksOn wo) throws Exception;
+    
+    //ProjectStatus
+    public ProjectStatus loadProjectStatus(ProjectStatusEnum projectStatus) throws Exception;
 
     // Queries
     public int getNumberOfPersonnel() throws Exception;
     public int getNumberOfProjects() throws Exception;
     public List<Employee> getIdleEmployees() throws Exception;
+    public List<Project> getProjectOverview() throws Exception;
+   
+    public List<Personnel> getPersonnellWOBoss() throws Exception;
+    public Map<Long, List<Personnel>> getPersonnelOrganigram() throws Exception;
 
     public void close();
 }

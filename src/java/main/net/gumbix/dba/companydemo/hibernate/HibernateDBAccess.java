@@ -1,14 +1,19 @@
 package net.gumbix.dba.companydemo.hibernate;
 
+import net.gumbix.dba.companydemo.application.process.ProjectStatusEnum;
 import net.gumbix.dba.companydemo.db.AbstractDBAccess;
 import net.gumbix.dba.companydemo.db.IdGenerator;
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
 import net.gumbix.dba.companydemo.domain.*;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import javax.naming.OperationNotSupportedException;
 
 /**
  * The DB access interface that uses Hibernate (3.x) internally.
@@ -250,4 +255,26 @@ public class HibernateDBAccess extends AbstractDBAccess {
         session.getTransaction().commit();
         session.clear();
     }
+
+	@Override
+	public List<Project> getProjectOverview() throws OperationNotSupportedException {
+		throw new RuntimeException("Method not yet implemented");
+	}
+
+	@Override
+	public Map<Long, List<Personnel>> getPersonnelOrganigram() throws Exception {
+		throw new RuntimeException("Method not yet implemented");
+	}
+
+	@Override
+	public List<Personnel> getPersonnellWOBoss() throws Exception {
+		throw new RuntimeException("Method not yet implemented");
+	}
+
+	@Override
+	public ProjectStatus loadProjectStatus(ProjectStatusEnum projectStatus)
+			throws Exception {
+		// TODO
+        throw new RuntimeException("Not implemented!");
+	}
 }

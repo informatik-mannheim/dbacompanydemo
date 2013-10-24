@@ -20,8 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.jdbc;
 
+import net.gumbix.dba.companydemo.application.process.ProjectStatusEnum;
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
 import net.gumbix.dba.companydemo.domain.Project;
+import net.gumbix.dba.companydemo.domain.ProjectStatus;
 import net.gumbix.dba.companydemo.domain.StatusReport;
 import net.gumbix.dba.companydemo.domain.WorksOn;
 
@@ -59,6 +61,8 @@ public class ProjectDAO extends AbstractDAO {
             for (WorksOn worksOn : access.loadWorksOn(proj)) {
                 proj.addEmployee(worksOn);
             }
+            ProjectStatus status = access.loadProjectStatus(ProjectStatusEnum.valueOf(rs.getString("statusId")));
+            proj.setStatus(status);
             Field nextReportNumber = Project.class.getField("nextStatusReportNumber");
             nextReportNumber.setAccessible(true);
             nextReportNumber.setLong(proj, rs.getLong("naechsteStatusNummer"));
@@ -101,6 +105,8 @@ public class ProjectDAO extends AbstractDAO {
             pstmt.setString(1, proj.getProjectId());
             pstmt.setString(2, proj.getDescription());
             pstmt.setLong(3, proj.getNextStatusReportNumber());
+            //TODO set initial status New
+            //pstmt.setString(3, ProjectStatus.New.toString());
             pstmt.execute();
         }
     }

@@ -28,6 +28,7 @@ import java.util.Set;
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Marius Czardybon (m.czardybon@gmx.net)
+ * @author Maximilian Nährlich (maximilian.naehrlich@stud.hs-mannheim.de )
  */
 public class Project {
 
@@ -37,8 +38,9 @@ public class Project {
     private Set<WorksOn> employees = new HashSet<WorksOn>();
     // private long nextStatusReportNumber = 1;
     public long nextStatusReportNumber = 1;  // TODO, reflection does not work yet.
+    private ProjectStatus status;
 
-    public Project() {}
+	public Project() {}
 
     public Project(String projectId, String description) {
         this.projectId = projectId;
@@ -70,6 +72,15 @@ public class Project {
     private void setStatusReports(List<StatusReport> statusReports) {
         this.statusReports = statusReports;
     }
+    
+
+    public ProjectStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(ProjectStatus status) {
+		this.status = status;
+	}
 
 
     /**

@@ -1,7 +1,7 @@
 use firmenwelt;
 
 -- Zuerst werden alle Tabellen gelöscht
-drop table if exists Statusbericht, MitarbeiterArbeitetAnProjekt, Projekt;
+drop table if exists ProjektStatus, Statusbericht, MitarbeiterArbeitetAnProjekt, Projekt;
 drop table if exists Firmenwagen, Auto; 
 drop table if exists Angestellter, Arbeiter, Mitarbeiter;
 drop table if exists Ort, Abteilung;
@@ -89,11 +89,20 @@ foreign key (modell) references Auto(modell),
 foreign key (personalNr) references Angestellter(personalNr)
 );
 
--- Projekt (projektNr, bezeichnung)
+
+-- ProjekStatus(stausId, beschreibung)
+CREATE TABLE ProjektStatus (
+  statusId VARCHAR(15) NOT NULL,
+  beschreibung VARCHAR(255) NULL,
+  PRIMARY KEY (statusId));
+
+-- Projekt (projektNr, bezeichnung, naechsteStatusNummer, statusId#)
 create table Projekt (
 projektId char(3) primary key not null,
 bezeichnung varchar(30),
-naechsteStatusNummer integer not null -- wg. zusammengesetzen Schlüssel ProjNr, StatusNr
+naechsteStatusNummer integer not null, -- wg. zusammengesetzen Schlüssel ProjNr, StatusNr
+statusId varchar(15)  NOT NULL,
+foreign key (statusId) references ProjektStatus(statusId)
 );
 create index bezeichnungIdx on Projekt(bezeichnung);
 

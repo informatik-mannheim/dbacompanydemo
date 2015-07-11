@@ -1,3 +1,3 @@
-This project contains the source code for a full-blown database application in Java (later also Scala) that was created for the lecture "Databases". Note that any documentation is mainly written in German, except for the source code comments.
+This project contains the source code for a full-blown database application in Java (later maybe also Scala) that was created for the lecture "Databases". Note that any documentation is mainly written in German, except for the source code comments. This repository might be of limited interest for people not attending the DBA lecture.
 
-Please refer to "project home page":http://www.mi.hs-mannheim.de/gumbel/vorlesungen/dba/dba-companydemo/ for more information. 
+Please refer to "project home page":http://mi.informatik.hs-mannheim.de/gumbel/vorlesungen/dba/dba-companydemo/ for more information. 

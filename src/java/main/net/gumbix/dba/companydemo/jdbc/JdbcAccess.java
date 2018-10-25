@@ -50,7 +50,7 @@ public class JdbcAccess extends AbstractDBAccess {
     public Connection connection;
 
     public JdbcAccess() throws Exception {
-        this("jdbc:mysql://codd.ki.hs-mannheim.de:3306/firmenwelt",
+        this("jdbc:mysql://oracle.informatik.hs-mannheim.de:3306/firmenwelt",
                 "firmenwelt", "firmenwelt10");
     }
 

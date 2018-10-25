@@ -71,7 +71,7 @@ public class ExampleData {
     }
 
     public void jdbc() throws Exception {
-        access = new JdbcAccess(); // codd.hs-mannheim.de
+        access = new JdbcAccess(); // oracle.informatik.hs-mannheim.de
         createData();
     }
 

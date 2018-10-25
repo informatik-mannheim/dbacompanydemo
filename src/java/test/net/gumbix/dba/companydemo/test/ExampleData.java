@@ -20,17 +20,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.test;
 
-import junit.framework.TestCase;
 import net.gumbix.dba.companydemo.db.DBAccess;
 import net.gumbix.dba.companydemo.db4o.Db4oAccess;
 import net.gumbix.dba.companydemo.domain.*;
 import net.gumbix.dba.companydemo.hibernate.HibernateDBAccess;
 import net.gumbix.dba.companydemo.jdbc.JdbcAccess;
+import org.junit.Test;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Create example data via the Java API. This is the only way for
@@ -38,8 +38,9 @@ import java.util.List;
  *
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-public class ExampleData extends TestCase {
+public class ExampleData {
 
+    @Test
     public void testLoadExampleData() throws Exception {
         ExampleData data = importData();
         assertEquals(21, data.access.getNumberOfPersonnel());

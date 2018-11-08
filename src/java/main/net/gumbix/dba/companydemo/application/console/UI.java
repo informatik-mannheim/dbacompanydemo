@@ -460,9 +460,9 @@ public class UI {
 			switch (menuChoice) {
 
 			case 1:
-				System.out.println("*** Firmenwagen suchen (über Modell) ***\n");
+				System.out.println("*** Firmenwagen suchen (Ueber Modell) ***\n");
 
-				System.out.print("Modell eingeben (* am Ende möglich): ");
+				System.out.print("Modell eingeben (* am Ende moeglich): ");
 				String queryString = getUserInputString();
 				List<CompanyCar> result = db.queryCompanyCarByModel(queryString);
 				for (CompanyCar c : result) {
@@ -547,11 +547,11 @@ public class UI {
 
 	private static void departmentsMenu() throws Exception {
 		int menuChoice;
-		Department dep;
+		Department dep = null;
 		do {
 			System.out.println("*** Abteilungen verwalten ***\n\n" + "Was möchten Sie tun? \n\n"
 					+ "1 Abteilung suchen (über ID)\n" + "2 Abteilung suchen (über Bezeichnung)\n"
-					+ "3 Abteilung neu anlegen \n" + "4 Abteilung ändern \n" + "5 Abteilung löschen \n\n"
+					+ "3 Abteilung neu anlegen \n" + "4 Abteilung aendern \n" + "5 Abteilung löschen \n\n"
 					+ "0 Zurück");
 
 			menuChoice = getMenuChoice();
@@ -559,7 +559,7 @@ public class UI {
 			switch (menuChoice) {
 
 			case 1:
-				System.out.println("*** Abteilung suchen (über ID) ***\n");
+				System.out.println("*** Abteilung suchen (Ueber ID) ***\n");
 
 				System.out.print("Abteilungnr. eingeben: ");
 				long depNr = getUserInputLong();
@@ -573,9 +573,9 @@ public class UI {
 				break;
 
 			case 2:
-				System.out.println("*** Abteilung suchen (über Bezeichnung) ***\n");
+				System.out.println("*** Abteilung suchen (Ueber Bezeichnung) ***\n");
 
-				System.out.print("Abteilungsbezeichnung eingeben (* am Ende möglich): ");
+				System.out.print("Abteilungsbezeichnung eingeben (* am Ende moeglich): ");
 				String queryString = getUserInputString();
 				List<Department> result = db.queryDepartmentByName(queryString);
 				for (Department d : result) {
@@ -591,15 +591,24 @@ public class UI {
 				long id = getUserInputLong();
 
 				try {
-					db.loadDepartment(id);
-					System.out.println("Abteilungnr. bereits vergeben.");
-				} catch (ObjectNotFoundException e) {
 					System.out.print("Bezeichnung der Abteilung: ");
 					String name = getUserInputString();
 
 					dep = new Department(id, name);
 					db.storeDepartment(dep);
 					System.out.println(dep);
+
+					
+//					db.storeDepartment(dep);
+					db.loadDepartment(id);
+					System.out.println("Abteilung bereits vorhanden...");
+				} catch (ObjectNotFoundException e) {
+//					System.out.print("Bezeichnung der Abteilung: ");
+//					String name = getUserInputString();
+//
+//					dep = new Department(id, name);
+//					db.storeDepartment(dep);
+//					System.out.println(dep);
 				}
 				pressAnyKey();
 				break;

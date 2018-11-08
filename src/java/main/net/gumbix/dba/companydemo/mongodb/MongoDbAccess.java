@@ -48,10 +48,10 @@ public class MongoDbAccess extends AbstractDBAccess {
 			mClient = new MongoClient("localhost", 27017);
 			db = mClient.getDatabase("firmenwelt");
 			db.createCollection("Personal");
+			db.createCollection("Department");
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
-
 	}
 
 	@Override
@@ -69,7 +69,14 @@ public class MongoDbAccess extends AbstractDBAccess {
 
 	@Override
 	public List<Personnel> queryPersonnelByName(String firstName, String lastName) throws Exception {
-		// TODO  ddddddddddddddddddAuto-generated method stub
+//		collection = db.getCollection("Personal");
+//		List<Personnel> temp = new List();
+//		List<Document> documents = (List<Document>) collection.find(Filters.eq("firstName", firstName)).into(new ArrayList<Document>());
+//		for(int i = 0; i < documents.size(); i++) {
+//			temp = new List<Personnel>();
+//			
+//		}
+//		return temp;
 		return null;
 	}
 
@@ -95,7 +102,7 @@ public class MongoDbAccess extends AbstractDBAccess {
 	public Department loadDepartment(long depNumber) throws Exception {
 		collection = db.getCollection("Department");
 		Department temp = null;
-		List<Document> documents = (List<Document>) collection.find(Filters.eq("depNumber", depNumber)).into(new ArrayList<Document>());
+		List<Document> documents = (List<Document>) collection.find(Filters.eq("DepNr", depNumber)).into(new ArrayList<Document>());
 		for(int i = 0; i < documents.size(); i++) {
 			temp = new Department(depNumber, (String) documents.get(i).get("name"));
 		}
@@ -104,27 +111,32 @@ public class MongoDbAccess extends AbstractDBAccess {
 
 	@Override
 	public List<Department> queryDepartmentByName(String queryString) throws Exception {
-		// TODO Auto-generated method stub
+//		collection = db.getCollection("Department");
+//		List<Department> temp = null;
+//		List<Document> documents = (List<Document>) collection.find(Filters.eq("DepNr", depNumber)).into(new ArrayList<Document>());
+//		for(int i = 0; i < documents.size(); i++) {
+//			temp = new List<Department>();
+//		}
+//		return temp;
 		return null;
 	}
 
 	@Override
 	public void storeDepartment(Department department) throws Exception {
-		collection = db.getCollection("Department");
-		doc = new BasicDBObject();
-		doc.put("Bezeichnung", department.getDepNumber());
-		doc.put("abteilungsnummer", department.getName());
+		MongoCollection<Document> collection = db.getCollection("Department");
+		Document document = new Document("DepNr", department.getDepNumber()).append("Name", department.getName());
+		collection.insertOne(document);
 	}
 
 	@Override
 	public void deleteDepartment(Department department) throws Exception {
 		collection = db.getCollection("Department");
-		collection.deleteOne(Filters.eq("depNumber", department.getDepNumber()));
+		collection.deleteOne(Filters.eq("DepNr", department.getDepNumber()));
 	}
 
 	@Override
 	public Car loadCar(String modell) throws Exception {
-		collection = db.getCollection("Firmenwagen");
+		collection = db.getCollection("Car");
 		Car temp = null;
 		List<Document> documents = (List<Document>) collection.find(Filters.eq("Modell", modell)).into(new ArrayList<Document>());
 		for(int i = 0; i < documents.size(); i++) {
@@ -135,49 +147,54 @@ public class MongoDbAccess extends AbstractDBAccess {
 
 	@Override
 	public void storeCar(Car car) throws Exception {
-		
-		// Nullpointer --> "Type" wird nicht initialisiert! keine Abfrage in der UI!
-		
-		MongoCollection<Document> doc = db.getCollection("Firmenwagen");
+		MongoCollection<Document> doc = db.getCollection("Car");
 		Document document = new Document("Modell", car.getModel()).append("Type", car.getType());
-		collection.insertOne(document);
-		
+		doc.insertOne(document);
 	}
 
 	@Override
 	public void deleteCar(Car car) throws Exception {
 		collection = db.getCollection("Car");
-		collection.deleteOne(Filters.eq("Model", car.getModel()));
+		collection.deleteOne(Filters.eq("Modell", car.getModel()));
 	}
 
 	@Override
 	public CompanyCar loadCompanyCar(String licensePlate) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		collection = db.getCollection("Firmenwagen");
+		CompanyCar temp = null;
+		List<Document> documents = (List<Document>) collection.find(Filters.eq("Kennzeichen", licensePlate)).into(new ArrayList<Document>());
+		for(int i = 0; i < documents.size(); i++) {
+			temp = new CompanyCar(licensePlate, new Car(documents.get(i).getString("Modell"),documents.get(i).getString("Type")));
+		}
+		return temp;
 	}
 
 	@Override
 	public List<CompanyCar> queryCompanyCarByModel(String model) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		collection = db.getCollection("Firmenwagen");
+		List<CompanyCar> temp = new ArrayList();
+		List<Document> documents = (List<Document>) collection.find(Filters.eq("Modell", model)).into(new ArrayList<Document>());
+		for(int i = 0; i < documents.size(); i++) {
+			temp.add(new CompanyCar(documents.get(i).getString("Kennzeichen"),
+					new Car(documents.get(i).getString("Modell"), documents.get(i).getString("Type"))));
+		}
+		return temp;
 	}
 
 	@Override
 	public void storeCompanyCar(CompanyCar car) throws Exception {
-		System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWW");
-		collection = db.getCollection("CompanyCar");
-		doc = new BasicDBObject();
-		doc.put("car", car.getCar());
-		doc.put("driver", car.getDriver());
-		doc.put("licensePlate", car.getLicensePlate());
-		// collection.insert(doc);
-
+		MongoCollection<Document> collection = db.getCollection("CompanyCar");
+		// Logikfehler in der UI! temp wird erzeugt und umgeht den fehler 
+		Car temp = new Car("Polo", "VW");
+		Document document = new Document("Kennzeichen", car.getLicensePlate()).append("Modell", temp.getModel())
+				.append("Marke", temp.getType()).append("Fahrer", car.getDriver());
+		collection.insertOne(document);
 	}
 
 	@Override
 	public void deleteCompanyCar(CompanyCar car) throws Exception {
-		// TODO Auto-generated method stub
-
+		collection = db.getCollection("CompanyCar");
+		collection.deleteOne(Filters.eq("Kennzeichen", car.getLicensePlate()));
 	}
 
 	@Override
@@ -253,7 +270,6 @@ public class MongoDbAccess extends AbstractDBAccess {
 	@Override
 	public void storeWorksOn(WorksOn wo) throws Exception {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override

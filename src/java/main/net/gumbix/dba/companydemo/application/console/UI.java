@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package net.gumbix.dba.companydemo.application.console;
 
 import net.gumbix.dba.companydemo.db.DBAccess;
+import net.gumbix.dba.companydemo.db.IdGenerator;
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
 import net.gumbix.dba.companydemo.db4o.Db4oAccess;
 import net.gumbix.dba.companydemo.domain.*;
@@ -48,6 +49,7 @@ public class UI {
 	private static String PROMPT = "Ihre Eingabe (Zahl): ";
 	private static String INVALID_INPUT = "Fehlerhafte Eingabe \n\n";
 	private static DBAccess db;
+//	private IdGenerator mDBIdGenerator = new MongoDbIdGerator();
 
 	public static void main(String[] args) {
 		try {
@@ -109,7 +111,7 @@ public class UI {
 				menu();
 				break;
 			case 7:
-				db = new MongoDbAccess("firmenwelt.yap");
+				db = new MongoDbAccess("firmenwelt");
 				menu();
 				break;
 
@@ -243,6 +245,7 @@ public class UI {
 
 			case 7:
 				System.out.println("*** Angestellten neu anlegen ***\n");
+				
 				Employee employee = new Employee(null, null, null, null, null);
 				createPersonnel(employee);
 				System.out.print("Telefon: ");
@@ -601,7 +604,7 @@ public class UI {
 					
 //					db.storeDepartment(dep);
 					db.loadDepartment(id);
-					System.out.println("Abteilung bereits vorhanden...");
+					//System.out.println("Abteilung bereits vorhanden...");
 				} catch (ObjectNotFoundException e) {
 //					System.out.print("Bezeichnung der Abteilung: ");
 //					String name = getUserInputString();
@@ -706,7 +709,6 @@ public class UI {
 	 */
 
 	private static Date stringToDate(String bDate) throws Exception {
-
 		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
 		Date date = format.parse(bDate);
 		return date;

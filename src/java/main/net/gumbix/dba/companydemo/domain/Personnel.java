@@ -47,7 +47,7 @@ public class Personnel {
 	}
 //IdGenerator.generator.getNextLong(Personnel.class),
 	public Personnel(String lastName, String firstName, Date birthDate, Address adr) {
-//		this(IdGenerator.generator.getNextLong(Personnel.class),lastName, firstName, birthDate, adr);
+//		this.personnelNumber = IdGenerator.generator.getNextLong(Personnel.class);
 	}
 
 	public Personnel(long personnelNumber, String lastName, String firstName, Date birthDate, Address adr) {

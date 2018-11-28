@@ -39,8 +39,7 @@ public class Employee extends Personnel {
 
     public Employee() {}
 
-    public Employee(String lastName, String firstName,
-                    Date birthDate, Address adr, String tel) {
+    public Employee(String lastName, String firstName, Date birthDate, Address adr, String tel) {
         this(IdGenerator.generator.getNextLong(Personnel.class),
                 lastName, firstName, birthDate, adr, tel);
     }

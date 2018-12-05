@@ -524,14 +524,14 @@ public class UI {
 				break;
 
 			case 5:
-				System.out.println("*** Modell lÃ¶schen ***\n");
+				System.out.println("*** Modell löschen ***\n");
 				try {
 					System.out.println("Modell: ");
 					type = getUserInputString();
 
 					car = db.loadCar(type);
 					db.deleteCar(car);
-					System.out.println(car + " gelÃ¶scht.");
+					System.out.println(car + " gelöscht.");
 				} catch (ObjectNotFoundException e) {
 					System.out.println("Modell zum LÃ¶schen nicht gefunden!");
 				}

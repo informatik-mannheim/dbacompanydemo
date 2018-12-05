@@ -229,7 +229,7 @@ public class MongoDbAccess extends AbstractDBAccess {
 	public List<CompanyCar> queryCompanyCarByModel(String model) throws Exception {
 		collection = db.getCollection("Firmenwagen");
 		List<CompanyCar> temp = new ArrayList();
-		List<Document> documents = (List<Document>) collection.find(Filters.eq("Modell", model))//Wildcard geht nicht
+		List<Document> documents = (List<Document>) collection.find(Filters.eq("Modell", model))
 				.into(new ArrayList<Document>());
 		for (int i = 0; i < documents.size(); i++) {
 			temp.add(new CompanyCar(documents.get(i).getString("Kennzeichen"),
@@ -250,7 +250,7 @@ public class MongoDbAccess extends AbstractDBAccess {
 
 	@Override
 	public void deleteCompanyCar(CompanyCar car) throws Exception {
-		collection = db.getCollection("CompanyCar");
+		collection = db.getCollection("Firmenwagen");
 		collection.deleteOne(Filters.eq("Kennzeichen", car.getLicensePlate()));
 	}
 

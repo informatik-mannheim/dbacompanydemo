@@ -35,6 +35,7 @@ public class Db4oIdGenerator extends IdGenerator {
     }
 
     public long getNextLong(Class clazz) {
+    	System.out.println("EEEEEEEE44444444444EEEEEEEEEEEEEEEEEEE");
         if (clazz.equals(Personnel.class)) {
             nextPersonnel++;
             return nextPersonnel;

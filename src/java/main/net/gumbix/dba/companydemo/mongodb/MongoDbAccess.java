@@ -44,10 +44,9 @@ public class MongoDbAccess extends AbstractDBAccess {
 	private BasicDBObject addresseVonPersonel;
 	private MongoCollection<Document> collection;
 	private MongoDbIdGenerator mdbIdGenerator;
-	public MongoDbAccess(String string) {
+	public MongoDbAccess() {
 		startClient();
 		mdbIdGenerator = new MongoDbIdGenerator();
-		
 	}
 
 	@SuppressWarnings("deprecation")

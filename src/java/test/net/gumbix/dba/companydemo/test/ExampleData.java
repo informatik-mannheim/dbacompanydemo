@@ -25,6 +25,7 @@ import net.gumbix.dba.companydemo.db4o.Db4oAccess;
 import net.gumbix.dba.companydemo.domain.*;
 import net.gumbix.dba.companydemo.hibernate.HibernateDBAccess;
 import net.gumbix.dba.companydemo.jdbc.JdbcAccess;
+import net.gumbix.dba.companydemo.mongodb.MongoDbAccess;
 import org.junit.Test;
 
 import java.io.File;
@@ -58,8 +59,9 @@ public class ExampleData {
     public static ExampleData importData() throws Exception {
         ExampleData data = new ExampleData();
         // data.db4oEmbedded();
-        data.jdbcLocal();
+        // data.jdbcLocal();
         // data.hibernateLocal();
+        data.mongoLocal();
         return data;
     }
 
@@ -88,6 +90,11 @@ public class ExampleData {
 
     public void hibernateLocal() throws Exception {
         access = new HibernateDBAccess();
+        createData();
+    }
+
+    public void mongoLocal() throws Exception {
+        access = new MongoDbAccess();
         createData();
     }
 

@@ -434,7 +434,7 @@ public class UI {
 					System.out.println(report + " wurde aktualisiert.");
 
 				} catch (ObjectNotFoundException e) {
-					System.out.println("Statusbericht zum ï¿½ndern nicht gefunden!");
+					System.out.println("Statusbericht zum ändern nicht gefunden!");
 				}
 				pressAnyKey();
 				break;
@@ -524,14 +524,14 @@ public class UI {
 				break;
 
 			case 5:
-				System.out.println("*** Modell lï¿½schen ***\n");
+				System.out.println("*** Modell löschen ***\n");
 				try {
 					System.out.println("Modell: ");
 					type = getUserInputString();
 
 					car = db.loadCar(type);
 					db.deleteCar(car);
-					System.out.println(car + " gelï¿½scht.");
+					System.out.println(car + " gelöscht.");
 				} catch (ObjectNotFoundException e) {
 					System.out.println("Modell zum LÃ¶schen nicht gefunden!");
 				}

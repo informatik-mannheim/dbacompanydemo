@@ -46,17 +46,17 @@ public class MongoDbAccess extends AbstractDBAccess {
 	private MongoDbIdGenerator mdbIdGenerator;
 	public MongoDbAccess() {
 		startClient();
-		mdbIdGenerator = new MongoDbIdGenerator();
 	}
 
 	@SuppressWarnings("deprecation")
 	private void startClient() {
 		try {
 			
+			mdbIdGenerator = new MongoDbIdGenerator();
 			mClient = new MongoClient("localhost", 27017);
 			db = mClient.getDatabase("firmenwelt");
-			db.createCollection("Personal");
-			db.createCollection("Department");
+//			db.createCollection("Personal");
+//			db.createCollection("Department");
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
@@ -112,7 +112,8 @@ public class MongoDbAccess extends AbstractDBAccess {
 		pers.setPersonnelNumber(temp);
 		Document document = new Document("PersonalID", temp).append("lastName", pers.getLastName())
 				.append("firstName", pers.getFirstName()).append("Birthdate", pers.getBirthDate())
-				.append("salary", pers.getSalary()).append("Straﬂe", pers.getAddress().getStreet())
+				.append("salary", pers.getSalary())
+				.append("Straﬂe", pers.getAddress().getStreet())
 				.append("Hausnummer", pers.getAddress().getHouseNumber()).append("PLZ", pers.getAddress().getZip())
 				.append("Stadt", pers.getAddress().getZipCity().getCity()).append("Telefonnummer", e.getPhoneNumber());
 		collection.insertOne(document);
@@ -240,8 +241,7 @@ public class MongoDbAccess extends AbstractDBAccess {
 	@Override
 	public void storeCompanyCar(CompanyCar car) throws Exception {
 		MongoCollection<Document> collection = db.getCollection("Firmenwagen");
-		// Logikfehler in der UI! Beim anlegen eines Firmenwagnes wird defaultm‰ﬂig ein Auto-Modell angelegt
-		Car temp = new Car("Polo", "VW");
+		Car temp = car.getCar(); 
 		Document document = new Document("Kennzeichen", car.getLicensePlate()).append("Modell", temp.getModel())
 				.append("Marke", temp.getType()).append("Fahrer", car.getDriver());
 		collection.insertOne(document);

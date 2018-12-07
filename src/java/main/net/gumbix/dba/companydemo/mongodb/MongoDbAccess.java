@@ -1,39 +1,17 @@
 package net.gumbix.dba.companydemo.mongodb;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import org.bson.Document;
-
 import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.client.ClientSession;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
-//import com.google.common.collect.Lists;
 import net.gumbix.dba.companydemo.db.AbstractDBAccess;
-import net.gumbix.dba.companydemo.domain.Address;
-import net.gumbix.dba.companydemo.domain.Car;
-import net.gumbix.dba.companydemo.domain.CompanyCar;
-import net.gumbix.dba.companydemo.domain.Department;
-import net.gumbix.dba.companydemo.domain.Employee;
-import net.gumbix.dba.companydemo.domain.Personnel;
-import net.gumbix.dba.companydemo.domain.Project;
-import net.gumbix.dba.companydemo.domain.StatusReport;
-import net.gumbix.dba.companydemo.domain.Worker;
-import net.gumbix.dba.companydemo.domain.WorksOn;
+import net.gumbix.dba.companydemo.domain.*;
+import org.bson.Document;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class MongoDbAccess extends AbstractDBAccess {
 
@@ -55,8 +33,6 @@ public class MongoDbAccess extends AbstractDBAccess {
 			mdbIdGenerator = new MongoDbIdGenerator();
 			mClient = new MongoClient("localhost", 27017);
 			db = mClient.getDatabase("firmenwelt");
-//			db.createCollection("Personal");
-//			db.createCollection("Department");
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}

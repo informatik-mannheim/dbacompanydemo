@@ -434,7 +434,7 @@ public class UI {
 					System.out.println(report + " wurde aktualisiert.");
 
 				} catch (ObjectNotFoundException e) {
-					System.out.println("Statusbericht zum ändern nicht gefunden!");
+					System.out.println("Statusbericht zum ï¿½ndern nicht gefunden!");
 				}
 				pressAnyKey();
 				break;
@@ -524,14 +524,14 @@ public class UI {
 				break;
 
 			case 5:
-				System.out.println("*** Modell löschen ***\n");
+				System.out.println("*** Modell lï¿½schen ***\n");
 				try {
 					System.out.println("Modell: ");
 					type = getUserInputString();
 
 					car = db.loadCar(type);
 					db.deleteCar(car);
-					System.out.println(car + " gelöscht.");
+					System.out.println(car + " gelï¿½scht.");
 				} catch (ObjectNotFoundException e) {
 					System.out.println("Modell zum LÃ¶schen nicht gefunden!");
 				}
@@ -749,14 +749,17 @@ public class UI {
 
 	private static void credits() {
 
-		System.out.println("\n" + NAME + " version " + VERSION + ", Copyright (C) 2011-12");
+		System.out.println("\n" + NAME + " version " + VERSION + ", Copyright (C) 2011-18");
 		System.out.println("CompanyDemo comes with ABSOLUTELY NO WARRANTY;");
 		System.out.println("This is free software, and you are welcome ");
 		System.out.println("to redistribute it under certain conditions;");
 		System.out.println("See gpl2.0.txt for details.");
 		System.out.println("\nFolgende Personen haben an diesem Projekt mitgearbeitet:");
-		System.out.println(" - Marius Czardybon");
 		System.out.println(" - Patrick Sturm");
+		System.out.println(" - Sven Haag");
+		System.out.println(" - Marius Czardybon");
+		System.out.println(" - EyÃ¼p ÃœnlÃ¼");
+		System.out.println(" - Mike MÃ¶ck");
 		System.out.println(" - Markus Gumbel");
 	}
 }

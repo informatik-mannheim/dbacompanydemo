@@ -245,7 +245,7 @@ public class UI {
 
 			case 7:
 				System.out.println("*** Angestellten neu anlegen ***\n");
-				
+
 				Employee employee = new Employee(null, null, null, null, null);
 				createPersonnel(employee);
 				System.out.print("Telefon: ");
@@ -601,7 +601,7 @@ public class UI {
 					db.storeDepartment(dep);
 					System.out.println(dep);
 
-					
+
 //					db.storeDepartment(dep);
 					db.loadDepartment(id);
 					//System.out.println("Abteilung bereits vorhanden...");

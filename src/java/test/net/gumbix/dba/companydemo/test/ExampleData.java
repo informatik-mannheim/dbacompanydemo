@@ -204,7 +204,7 @@ public class ExampleData {
 		Employee employeeFischer = addEmployee("Fischer, Dr.", "Jan", 1968, 04, 10, 6900.0, "Untere straße", "2",
 				"68163", "Mannheim", "+49 621 12345-600", entwicklung, "F&E_Leiter", employeeLohe, companyCar1236);
 		// TODO car was also modified...
-		//access.storeCompanyCar(companyCar1236);
+		// access.storeCompanyCar(companyCar1236);
 
 		Employee employeeWalther = addEmployee("Walther, Dr.", "Sabrina", 1978, 07, 16, 5990.0, "Hansaweg", "22",
 				"68163", "Mannheim", "+49 621 12345-610", entwicklung, "CAD-Experte", employeeFischer, null);
@@ -276,52 +276,46 @@ public class ExampleData {
 		WorksOn securityConceptWeiss = new WorksOn(employeeWeiss, securityConcept, 100, "SQL-Code-Injection-Beratung");
 		access.storeWorksOn(securityConceptWeiss);
 
-		System.out.println("Beispieldaten erzeugt.");
 	}
 
 	/**
-     * Helper method to simplify creating an employee.
-     *
-     * @param lastName
-     * @param firstName
-     * @param year
-     * @param month
-     * @param day
-     * @param street
-     * @param houseNumber
-     * @param zip
-     * @param city
-     * @param phone
-     * @param dep
-     * @param position
-     * @param boss
-     * @param car
-     * @return
-     * @throws Exception
-     */
-    private Employee addEmployee(String lastName, String firstName,
-                                 int year, int month, int day, double salary,
-                                 String street, String houseNumber,
-                                 String zip, String city, String phone,
-                                 Department dep, String position, Personnel boss,
-                                 CompanyCar car) throws Exception {
-        Employee employee = new Employee(lastName, firstName,
-                new GregorianCalendar(year, month, day).getTime(),
-                new Address(street, houseNumber, zip, city), phone);
-        employee.setFirstName(firstName);
-        employee.setLastName(lastName);
-        employee.setBirthDate(new GregorianCalendar(year, month, day).getTime());
-		
-        employee.setSalary(salary);
-        employee.setCar(car);
-        employee.setDepartment(dep);
-        employee.setPosition(position);
-        employee.setBoss(boss);
-        employee.setAddress(new Address(street, houseNumber, zip, city));
-        System.out.println(employee.getAddress());
-        access.storePersonnel(employee);
-        return employee;
-    }
+	 * Helper method to simplify creating an employee.
+	 *
+	 * @param lastName
+	 * @param firstName
+	 * @param year
+	 * @param month
+	 * @param day
+	 * @param street
+	 * @param houseNumber
+	 * @param zip
+	 * @param city
+	 * @param phone
+	 * @param dep
+	 * @param position
+	 * @param boss
+	 * @param car
+	 * @return
+	 * @throws Exception
+	 */
+	private Employee addEmployee(String lastName, String firstName, int year, int month, int day, double salary,
+			String street, String houseNumber, String zip, String city, String phone, Department dep, String position,
+			Personnel boss, CompanyCar car) throws Exception {
+		Employee employee = new Employee(lastName, firstName, new GregorianCalendar(year, month, day).getTime(),
+				new Address(street, houseNumber, zip, city), phone);
+		employee.setFirstName(firstName);
+		employee.setLastName(lastName);
+		employee.setBirthDate(new GregorianCalendar(year, month, day).getTime());
+
+		employee.setSalary(salary);
+		employee.setCar(car);
+		employee.setDepartment(dep);
+		employee.setPosition(position);
+		employee.setBoss(boss);
+		employee.setAddress(new Address(street, houseNumber, zip, city));
+		access.storePersonnel(employee);
+		return employee;
+	}
 
 	/**
 	 * Helper method to simplify creating a worker.

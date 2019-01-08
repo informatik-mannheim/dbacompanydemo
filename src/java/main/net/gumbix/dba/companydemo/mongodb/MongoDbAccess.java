@@ -1,6 +1,5 @@
 package net.gumbix.dba.companydemo.mongodb;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -14,11 +13,8 @@ import java.util.List;
 import java.util.Set;
 
 public class MongoDbAccess extends AbstractDBAccess {
-
-//	private static final int CASE_INSENSITIVE = 0;
 	private MongoDatabase db;
 	private MongoClient mClient;
-	private BasicDBObject doc;
 	private MongoCollection<Document> collection;
 	private MongoDbIdGenerator mdbIdGenerator;
 
@@ -28,7 +24,6 @@ public class MongoDbAccess extends AbstractDBAccess {
 
 	private void startClient() {
 		try {
-
 			mdbIdGenerator = new MongoDbIdGenerator();
 			mClient = new MongoClient("localhost", 27017);
 			db = mClient.getDatabase("firmenwelt");
@@ -43,25 +38,25 @@ public class MongoDbAccess extends AbstractDBAccess {
 		Personnel temp = null;
 		List<Document> documents = (List<Document>) collection.find(Filters.eq("PersonnelID", persNr))
 				.into(new ArrayList<Document>());
-		
+
 		for (int i = 0; i < documents.size(); i++) {
 			if (documents.get(i).getString("typ").equals("personnel")) {
 				temp = new Personnel(persNr, documents.get(i).getString("lastName"),
 						documents.get(i).getString("firstName"), documents.get(i).getDate("birthDate"),
 						new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
-								documents.get(i).getString("zipCode"), documents.get(i).getString("city")));
-			}
-			else if(documents.get(i).getString("typ").equals("employee")) {
+						documents.get(i).getString("zipCode"), documents.get(i).getString("city")));
+			} else if (documents.get(i).getString("typ").equals("employee")) {
 				temp = new Employee(persNr, documents.get(i).getString("lastName"),
 						documents.get(i).getString("firstName"), documents.get(i).getDate("birthDate"),
 						new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
-								documents.get(i).getString("zipCode"), documents.get(i).getString("city")), documents.get(i).getString("tel"));
-			}
-			else {
+						documents.get(i).getString("zipCode"), documents.get(i).getString("city")),
+						documents.get(i).getString("tel"));
+			} else {
 				temp = new Worker(persNr, documents.get(i).getString("lastName"),
 						documents.get(i).getString("firstName"), documents.get(i).getDate("birthDate"),
 						new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
-								documents.get(i).getString("zipCode"), documents.get(i).getString("city")), documents.get(i).getString("workspace"));
+						documents.get(i).getString("zipCode"), documents.get(i).getString("city")),
+						documents.get(i).getString("workspace"));
 			}
 		}
 		return temp;
@@ -103,7 +98,8 @@ public class MongoDbAccess extends AbstractDBAccess {
 				.append("firstName", pers.getFirstName()).append("Birthdate", pers.getBirthDate())
 				.append("Salary", pers.getSalary()).append("street", pers.getAddress().getStreet())
 				.append("houseNumber", pers.getAddress().getHouseNumber()).append("zipCode", pers.getAddress().getZip())
-				.append("city", pers.getAddress().getZipCity().getCity()).append("type", "employee").append("phoneNumber", e.getPhoneNumber());
+				.append("city", pers.getAddress().getZipCity().getCity()).append("type", "employee")
+				.append("phoneNumber", e.getPhoneNumber());
 		collection.insertOne(document);
 	}
 
@@ -116,7 +112,8 @@ public class MongoDbAccess extends AbstractDBAccess {
 				.append("firstName", pers.getFirstName()).append("Birthdate", pers.getBirthDate())
 				.append("salary", pers.getSalary()).append("street", pers.getAddress().getStreet())
 				.append("houseNumber", pers.getAddress().getHouseNumber()).append("zipCode", pers.getAddress().getZip())
-				.append("city", pers.getAddress().getZipCity().getCity()).append("type", "worker").append("workspace", w.getWorkspace());
+				.append("city", pers.getAddress().getZipCity().getCity()).append("type", "worker")
+				.append("workspace", w.getWorkspace());
 		collection.insertOne(document);
 	}
 
@@ -221,7 +218,7 @@ public class MongoDbAccess extends AbstractDBAccess {
 				.into(new ArrayList<Document>());
 		for (int i = 0; i < documents.size(); i++) {
 			temp.add(new CompanyCar(documents.get(i).getString("licensePlate"),
-					new Car(documents.get(i).getString("model"), documents.get(i).getString("type"))));
+				new Car(documents.get(i).getString("model"), documents.get(i).getString("type"))));
 		}
 		return temp;
 	}
@@ -255,10 +252,6 @@ public class MongoDbAccess extends AbstractDBAccess {
 
 	@Override
 	public void storeProject(Project proj) throws Exception {
-		collection = db.getCollection("Project");
-		doc = new BasicDBObject();
-		doc.put("description", proj.getDescription());
-		// doc.put("", arg1)
 	}
 
 	@Override

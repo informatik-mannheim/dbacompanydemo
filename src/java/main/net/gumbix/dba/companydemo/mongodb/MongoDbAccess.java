@@ -35,29 +35,53 @@ public class MongoDbAccess extends AbstractDBAccess {
 	@Override
 	public Personnel loadPersonnel(long persNr) throws Exception {
 		collection = db.getCollection("Personnel");
-		Personnel temp = null;
+		Personnel pers = null;
 		List<Document> documents = (List<Document>) collection.find(Filters.eq("PersonnelID", persNr))
 				.into(new ArrayList<Document>());
 
 		for (int i = 0; i < documents.size(); i++) {
 			if (documents.get(i).getString("typ").equals("personnel")) {
-				temp = new Personnel(persNr, documents.get(i).getString("lastName"),
-						documents.get(i).getString("firstName"), documents.get(i).getDate("birthDate"),
-						new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
-						documents.get(i).getString("zipCode"), documents.get(i).getString("city")));
+				pers = loadPers(persNr, documents);
 			} else if (documents.get(i).getString("typ").equals("employee")) {
-				temp = new Employee(persNr, documents.get(i).getString("lastName"),
-						documents.get(i).getString("firstName"), documents.get(i).getDate("birthDate"),
-						new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
-						documents.get(i).getString("zipCode"), documents.get(i).getString("city")),
-						documents.get(i).getString("tel"));
+				pers = loadEmployee(persNr, documents);
 			} else {
-				temp = new Worker(persNr, documents.get(i).getString("lastName"),
-						documents.get(i).getString("firstName"), documents.get(i).getDate("birthDate"),
-						new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
-						documents.get(i).getString("zipCode"), documents.get(i).getString("city")),
-						documents.get(i).getString("workspace"));
+				pers = loadWorker(persNr, documents);
 			}
+		}
+		return pers;
+	}
+	
+	private Personnel loadPers(long persNr, List<Document> documents) {
+		Personnel pers = null;
+		for(int i = 0; i < documents.size(); i++) {
+			pers = new Personnel(persNr, documents.get(i).getString("lastName"),
+					documents.get(i).getString("firstName"), documents.get(i).getDate("birthDate"),
+					new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
+					documents.get(i).getString("zipCode"), documents.get(i).getString("city")));
+		}
+		return pers;
+	}
+	
+	private Employee loadEmployee(long persNr, List<Document> documents) {
+		Employee temp = null;
+		for(int i = 0; i < documents.size(); i++) {
+			temp = new Employee(persNr, documents.get(i).getString("lastName"),
+					documents.get(i).getString("firstName"), documents.get(i).getDate("birthDate"),
+					new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
+					documents.get(i).getString("zipCode"), documents.get(i).getString("city")),
+					documents.get(i).getString("tel"));
+		}
+		return temp;
+	}
+	
+	private Worker loadWorker(long persNr, List<Document> documents) {
+		Worker temp = null;
+		for(int i = 0; i < documents.size(); i++) {
+			temp = new Worker(persNr, documents.get(i).getString("lastName"),
+					documents.get(i).getString("firstName"), documents.get(i).getDate("birthDate"),
+					new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
+					documents.get(i).getString("zipCode"), documents.get(i).getString("city")),
+					documents.get(i).getString("workspace"));
 		}
 		return temp;
 	}
@@ -65,17 +89,17 @@ public class MongoDbAccess extends AbstractDBAccess {
 	@Override
 	public List<Personnel> queryPersonnelByName(String firstName, String lastName) throws Exception {
 		collection = db.getCollection("Personnel");
-		List<Personnel> temp = new ArrayList<Personnel>();
+		List<Personnel> pers = new ArrayList<Personnel>();
 		List<Document> documents = (List<Document>) collection
 				.find(Filters.and(Filters.eq("lastName", lastName), Filters.eq("firstName", firstName)))
 				.into(new ArrayList<Document>());
 		for (int i = 0; i < documents.size(); i++) {
-			temp.add(new Personnel(documents.get(i).getLong("PersonnelID"), documents.get(i).getString("lastName"),
+			pers.add(new Personnel(documents.get(i).getLong("PersonnelID"), documents.get(i).getString("lastName"),
 					documents.get(i).getString("firstName"), documents.get(i).getDate("Birthdate"),
 					new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
-							documents.get(i).getString("zipCode"), documents.get(i).getString("city"))));
+					documents.get(i).getString("zipCode"), documents.get(i).getString("city"))));
 		}
-		return temp;
+		return pers;
 	}
 
 	@Override
@@ -89,6 +113,18 @@ public class MongoDbAccess extends AbstractDBAccess {
 		}
 	}
 
+	private void storePers(Personnel pers) {
+		MongoCollection<Document> collection = db.getCollection("Personnel");
+		long temp = mdbIdGenerator.getID();
+		pers.setPersonnelNumber(temp);
+		Document document = new Document("PersonnelID", temp).append("lastName", pers.getLastName())
+				.append("firstName", pers.getFirstName()).append("Birthdate", pers.getBirthDate())
+				.append("salary", pers.getSalary()).append("street", pers.getAddress().getStreet())
+				.append("houseNumber", pers.getAddress().getHouseNumber()).append("zipCode", pers.getAddress().getZip())
+				.append("city", pers.getAddress().getZipCity().getCity()).append("type", "personnel");
+		collection.insertOne(document);
+	}
+	
 	private void storeEmploye(Personnel pers) {
 		Employee e = (Employee) pers;
 		MongoCollection<Document> collection = db.getCollection("Personnel");
@@ -114,18 +150,6 @@ public class MongoDbAccess extends AbstractDBAccess {
 				.append("houseNumber", pers.getAddress().getHouseNumber()).append("zipCode", pers.getAddress().getZip())
 				.append("city", pers.getAddress().getZipCity().getCity()).append("type", "worker")
 				.append("workspace", w.getWorkspace());
-		collection.insertOne(document);
-	}
-
-	private void storePers(Personnel pers) {
-		MongoCollection<Document> collection = db.getCollection("Personnel");
-		long temp = mdbIdGenerator.getID();
-		pers.setPersonnelNumber(temp);
-		Document document = new Document("PersonnelID", temp).append("lastName", pers.getLastName())
-				.append("firstName", pers.getFirstName()).append("Birthdate", pers.getBirthDate())
-				.append("salary", pers.getSalary()).append("street", pers.getAddress().getStreet())
-				.append("houseNumber", pers.getAddress().getHouseNumber()).append("zipCode", pers.getAddress().getZip())
-				.append("city", pers.getAddress().getZipCity().getCity()).append("type", "personnel");
 		collection.insertOne(document);
 	}
 

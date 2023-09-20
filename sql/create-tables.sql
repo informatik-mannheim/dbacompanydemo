@@ -52,8 +52,8 @@ abteilungsId bigint,
 funktion varchar(30), -- innerhalb der Abteilung
 vorgesetzterNr bigint,
 primary key (personalNr),
-foreign key (vorgesetzterNr) references Mitarbeiter (personalNr),
-foreign key (abteilungsId) references Abteilung(abteilungsNr),
+foreign key (vorgesetzterNr) references Mitarbeiter (personalNr) on delete set null on update cascade,
+foreign key (abteilungsId) references Abteilung(abteilungsNr) on delete set null on update cascade,
 foreign key (plz) references Ort(plz)
 );
 create index nameIdx on Mitarbeiter(nachname);

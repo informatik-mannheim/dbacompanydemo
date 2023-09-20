@@ -18,7 +18,7 @@ public class MongoDbIdGenerator {
 		id++;
 		try {
 			br = new BufferedWriter(new FileWriter("MongoIdGenerator.csv"));
-			br.write(""+id);
+			br.write("" + id);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -34,15 +34,14 @@ public class MongoDbIdGenerator {
 		try {
 			br = new BufferedReader(new FileReader("MongoIdGenerator.csv"));
 			String datenAlsString = br.readLine();
-			String [] tempArray = datenAlsString.split(";");
+			String[] tempArray = datenAlsString.split(";");
 			long temp = Long.parseLong(tempArray[0]);
 			this.id = temp;
 		} catch (IOException e) {
-		}
-		finally {
+		} finally {
 			try {
 				br.close();
-			}catch(IOException e) {
+			} catch (IOException e) {
 			}
 		}
 	}

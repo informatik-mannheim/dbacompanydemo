@@ -50,37 +50,37 @@ public class MongoDbAccess extends AbstractDBAccess {
 		}
 		return pers;
 	}
-	
+
 	private Personnel loadPers(long persNr, List<Document> documents) {
 		Personnel pers = null;
-		for(int i = 0; i < documents.size(); i++) {
+		for (int i = 0; i < documents.size(); i++) {
 			pers = new Personnel(persNr, documents.get(i).getString("lastName"),
 					documents.get(i).getString("firstName"), documents.get(i).getDate("birthDate"),
 					new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
-					documents.get(i).getString("zipCode"), documents.get(i).getString("city")));
+							documents.get(i).getString("zipCode"), documents.get(i).getString("city")));
 		}
 		return pers;
 	}
-	
+
 	private Employee loadEmployee(long persNr, List<Document> documents) {
 		Employee temp = null;
-		for(int i = 0; i < documents.size(); i++) {
+		for (int i = 0; i < documents.size(); i++) {
 			temp = new Employee(persNr, documents.get(i).getString("lastName"),
 					documents.get(i).getString("firstName"), documents.get(i).getDate("birthDate"),
 					new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
-					documents.get(i).getString("zipCode"), documents.get(i).getString("city")),
+							documents.get(i).getString("zipCode"), documents.get(i).getString("city")),
 					documents.get(i).getString("tel"));
 		}
 		return temp;
 	}
-	
+
 	private Worker loadWorker(long persNr, List<Document> documents) {
 		Worker temp = null;
-		for(int i = 0; i < documents.size(); i++) {
+		for (int i = 0; i < documents.size(); i++) {
 			temp = new Worker(persNr, documents.get(i).getString("lastName"),
 					documents.get(i).getString("firstName"), documents.get(i).getDate("birthDate"),
 					new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
-					documents.get(i).getString("zipCode"), documents.get(i).getString("city")),
+							documents.get(i).getString("zipCode"), documents.get(i).getString("city")),
 					documents.get(i).getString("workspace"));
 		}
 		return temp;
@@ -97,7 +97,7 @@ public class MongoDbAccess extends AbstractDBAccess {
 			pers.add(new Personnel(documents.get(i).getLong("PersonnelID"), documents.get(i).getString("lastName"),
 					documents.get(i).getString("firstName"), documents.get(i).getDate("Birthdate"),
 					new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
-					documents.get(i).getString("zipCode"), documents.get(i).getString("city"))));
+							documents.get(i).getString("zipCode"), documents.get(i).getString("city"))));
 		}
 		return pers;
 	}
@@ -124,7 +124,7 @@ public class MongoDbAccess extends AbstractDBAccess {
 				.append("city", pers.getAddress().getZipCity().getCity()).append("type", "personnel");
 		collection.insertOne(document);
 	}
-	
+
 	private void storeEmploye(Personnel pers) {
 		Employee e = (Employee) pers;
 		MongoCollection<Document> collection = db.getCollection("Personnel");
@@ -242,7 +242,7 @@ public class MongoDbAccess extends AbstractDBAccess {
 				.into(new ArrayList<Document>());
 		for (int i = 0; i < documents.size(); i++) {
 			temp.add(new CompanyCar(documents.get(i).getString("licensePlate"),
-				new Car(documents.get(i).getString("model"), documents.get(i).getString("type"))));
+					new Car(documents.get(i).getString("model"), documents.get(i).getString("type"))));
 		}
 		return temp;
 	}

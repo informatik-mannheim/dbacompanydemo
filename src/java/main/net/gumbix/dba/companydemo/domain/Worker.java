@@ -2,7 +2,7 @@
 A full-blown database demo developed at the
 Mannheim University of Applied Sciences.
 
-Copyright (C) 2011  the authors listed below.
+Copyright (C) 2011-2023 the authors listed below.
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -37,8 +37,8 @@ public class Worker extends Personnel {
 
     public Worker(String lastName, String firstName,
                   Date birthDate, Address adr, String workspace) {
-//        this(IdGenerator.generator.getNextLong(Personnel.class),
-//                lastName, firstName, birthDate, adr, workspace);
+        this(IdGenerator.generator.getNextLong(Personnel.class),
+                lastName, firstName, birthDate, adr, workspace);
     }
 
     public Worker(long personnelNumber, String lastName, String firstName,

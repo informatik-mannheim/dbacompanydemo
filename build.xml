@@ -1,7 +1,7 @@
 <project name="CompanyDemo" default="dist" basedir=".">
     <!-- set global properties for this build -->
     <property name="jarname" value="companydemo"/>
-    <property name="version" value="0.2.3"/>
+    <property name="version" value="0.3.1"/>
 
     <property name="javasrc" location="src/java/main"/>
     <property name="sqlsrc" location="sql"/>
@@ -20,11 +20,16 @@
         <pathelement location="${basedir}/lib/db4o-8.0.184.15484-all-java5.jar"/>
         <pathelement location="${basedir}/lib/mysql-connector-java-5.0.8-bin.jar"/>
         <pathelement location="${basedir}/lib/hibernate3.jar"/>
+        <pathelement location="${basedir}/lib/mongo-java-driver-3.8.2.jar"/>
         <pathelement path="${java.class.path}/"/>
         <pathelement path="${buildclasses}/"/>
     </path>
 
     <target name="init">
+        <replace dir="${javasrc}" value="${version}">
+            <include name="**/*.java"/>
+            <replacetoken>@{version}</replacetoken>
+        </replace>
         <tstamp/>
         <mkdir dir="${build}"/>
         <mkdir dir="${buildclasses}"/>
@@ -57,9 +62,11 @@
         </copydir>
         <copydir dest="${build}/shell" src="${shellsrc}">
             <include name="*.bat"/>
+            <include name="*.sh"/>
         </copydir>
         <replace dir="${build}/shell" value="${version}">
             <include name="**/*.bat"/>
+            <include name="**/*.sh"/>
             <replacetoken>@{version}</replacetoken>
         </replace>
         <zip zipfile="${dist}/${jarname}-${version}.zip">

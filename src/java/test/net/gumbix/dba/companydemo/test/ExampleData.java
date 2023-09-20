@@ -2,7 +2,7 @@
 A full-blown database demo developed at the
 Mannheim University of Applied Sciences.
 
-Copyright (C) 2011  the authors listed below.
+Copyright (C) 2011-2023 the authors listed below.
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -59,9 +59,9 @@ public class ExampleData {
 	public static ExampleData importData() throws Exception {
 		ExampleData data = new ExampleData();
 		// data.db4oEmbedded();
-		// data.jdbcLocal();
+		data.jdbcLocal();
 		// data.hibernateLocal();
-		data.mongoLocal();
+		// data.mongoLocal();
 		return data;
 	}
 
@@ -106,6 +106,8 @@ public class ExampleData {
 		access.storeCar(passat);
 		Car sklasse = new Car("S-Klasse", "Mercedes");
 		access.storeCar(sklasse);
+		Car a5 = new Car("A5", "Audi");
+		access.storeCar(a5);
 
 		// Create some company cars:
 		CompanyCar companyCar1234 = new CompanyCar("MA-MA 1234", sklasse);
@@ -202,7 +204,7 @@ public class ExampleData {
 
 		// Dr. cannot be assigned to a field. Bad!
 		Employee employeeFischer = addEmployee("Fischer, Dr.", "Jan", 1968, 04, 10, 6900.0, "Untere straße", "2",
-				"68163", "Mannheim", "+49 621 12345-600", entwicklung, "F&E_Leiter", employeeLohe, companyCar1236);
+				"68163", "Mannheim", "+49 621 12345-600", entwicklung, "F&E-Leiter", employeeLohe, companyCar1236);
 		// TODO car was also modified...
 		// access.storeCompanyCar(companyCar1236);
 

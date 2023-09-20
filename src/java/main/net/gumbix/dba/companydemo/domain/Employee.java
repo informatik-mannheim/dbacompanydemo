@@ -2,7 +2,7 @@
 A full-blown database demo developed at the
 Mannheim University of Applied Sciences.
 
-Copyright (C) 2011  the authors listed below.
+Copyright (C) 2011-2023 the authors listed below.
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.domain;
 
-import EDU.purdue.cs.bloat.reflect.Catch;
 import net.gumbix.dba.companydemo.db.IdGenerator;
 
 import java.util.HashSet;
@@ -40,8 +39,8 @@ public class Employee extends Personnel {
     public Employee() {}
 
     public Employee(String lastName, String firstName, Date birthDate, Address adr, String tel) {
-//        this(IdGenerator.generator.getNextLong(Personnel.class),
-//                lastName, firstName, birthDate, adr, tel);
+        this(IdGenerator.generator.getNextLong(Personnel.class),
+                lastName, firstName, birthDate, adr, tel);
     }
 
     public Employee(long personnelNumber, String lastName, String firstName,

@@ -87,7 +87,7 @@ values (1, 'Fransiska', 'Lohe', 'Chefstraße', '1a', '68305', '1968-01-01 00:00:
        (13, 'Peter', 'Ziegler', 'Wasserweg', '4', '69115', '1961-12-15 00:00:00', 3600, 6, 'Auffüller', 11),
        (14, 'Hanna', 'Schmidt', 'Wasserweg', '16', '69115', '1977-11-29 00:00:00', 3550, 6, 'Auffüller', 11),
        (15, 'Justin', 'Albrecht', 'Liesgewann', '6', '69115', '1991-10-09 00:00:00', 1200, 6, 'Azubi', 14),
-       (16, 'Jan', 'Fischer, Dr.', 'Untere straße', '2', '68163', '1968-05-10 00:00:00', 6900, 5, 'F&E_Leiter', 1),
+       (16, 'Jan', 'Fischer, Dr.', 'Untere straße', '2', '68163', '1968-05-10 00:00:00', 6900, 5, 'F&E-Leiter', 1),
        (17, 'Sabrina', 'Walther, Dr.', 'Hansaweg', '22', '68163', '1978-08-16 00:00:00', 5990, 5, 'CAD-Experte', 16),
        (18, 'Max', 'Thorn', 'Hauptstraße', '110a', '68163', '1956-03-01 00:00:00', 5800, 5, 'Ingenieur', 16),
        (19, 'Lutz', 'Fischer', 'Ulmenweg', '18', '68163', '1959-06-07 00:00:00', 4900, 7, 'Chefbuchhalter', 1),
@@ -118,7 +118,7 @@ values (1, '+49 621 12345-100'),
 
 -- Auto (modell, marke)
 insert into Auto
-values ('Passat', 'VW'), ('S-Klasse', 'Mercedes'), ('Touran', 'VW');
+values ('Passat', 'VW'), ('S-Klasse', 'Mercedes'), ('Touran', 'VW'), ('A5', 'Audi');
 
 -- Firmenwagen (nummernschild, modell#, personalNr#)
 insert into Firmenwagen(nummernschild, modell, personalNr)

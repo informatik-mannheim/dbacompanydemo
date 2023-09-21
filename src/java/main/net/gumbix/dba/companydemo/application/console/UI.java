@@ -693,7 +693,7 @@ public class UI {
 	}
 
 	private static void credits() {
-		System.out.println("\n" + NAME + " version " + VERSION + ", Copyright (C) 2011-18");
+		System.out.println("\n" + NAME + " version " + VERSION + ", Copyright (C) 2011-23");
 		System.out.println("CompanyDemo comes with ABSOLUTELY NO WARRANTY;");
 		System.out.println("This is free software, and you are welcome ");
 		System.out.println("to redistribute it under certain conditions;");

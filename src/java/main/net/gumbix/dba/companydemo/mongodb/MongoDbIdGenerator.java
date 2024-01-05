@@ -1,53 +1,38 @@
 package net.gumbix.dba.companydemo.mongodb;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import static com.mongodb.client.model.Sorts.descending;
 
-public class MongoDbIdGenerator {
-	private long id;
+import java.util.ArrayList;
+import java.util.List;
 
-	public MongoDbIdGenerator() {
-		dateiEinlesen();
-	}
+import org.bson.Document;
 
-	private void dateiUpdate() {
-		BufferedWriter br = null;
-		id++;
-		try {
-			br = new BufferedWriter(new FileWriter("MongoIdGenerator.csv"));
-			br.write("" + id);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				br.close();
-			} catch (IOException e) {
-			}
-		}
-	}
+import net.gumbix.dba.companydemo.db.IdGenerator;
 
-	private void dateiEinlesen() {
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new FileReader("MongoIdGenerator.csv"));
-			String datenAlsString = br.readLine();
-			String[] tempArray = datenAlsString.split(";");
-			long temp = Long.parseLong(tempArray[0]);
-			this.id = temp;
-		} catch (IOException e) {
-		} finally {
-			try {
-				br.close();
-			} catch (IOException e) {
-			}
-		}
-	}
+public class MongoDbIdGenerator extends IdGenerator{
 
-	public long getID() {
-		dateiUpdate();
-		return id;
-	}
+    private MongoDatabase db;
+
+    public MongoDbIdGenerator(MongoDatabase db){
+        this.db = db;
+    }
+
+    @Override
+    public long getNextLong(Class clazz) { // the class is for the database in MongoDB irrelevant
+        MongoCollection<Document> collection;
+        List<Document> results = new ArrayList<>();
+        long nextId = 1;
+        
+        collection = db.getCollection("Personnel"); // because this function is only called by Personnel-classes
+        if (collection.find().first() == null){ // check for empty collection
+            return nextId;
+        } else {
+            collection.find().sort(descending("personnelID")).limit(1).into(results); // get the document with the highest id and put it into an ArrayList
+            nextId = results.get(0).getLong("personnelID") + 1; // increase the id by one
+            return nextId;
+        }
+    }
+    
 }

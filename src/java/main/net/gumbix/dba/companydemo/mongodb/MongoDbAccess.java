@@ -16,7 +16,6 @@ public class MongoDbAccess extends AbstractDBAccess {
 	private MongoDatabase db;
 	private MongoClient mClient;
 	private MongoCollection<Document> collection;
-	private MongoDbIdGenerator mdbIdGenerator;
 
 	public MongoDbAccess() {
 		startClient();
@@ -24,9 +23,9 @@ public class MongoDbAccess extends AbstractDBAccess {
 
 	private void startClient() {
 		try {
-			mdbIdGenerator = new MongoDbIdGenerator();
 			mClient = new MongoClient("localhost", 27017);
 			db = mClient.getDatabase("firmenwelt");
+			MongoDbIdGenerator.generator = new MongoDbIdGenerator(db);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
@@ -115,7 +114,7 @@ public class MongoDbAccess extends AbstractDBAccess {
 
 	private void storePers(Personnel pers) {
 		MongoCollection<Document> collection = db.getCollection("Personnel");
-		long temp = mdbIdGenerator.getID();
+		long temp =MongoDbIdGenerator.generator.getNextLong(pers.getClass());
 		pers.setPersonnelNumber(temp);
 		Document document = new Document("PersonnelID", temp).append("lastName", pers.getLastName())
 				.append("firstName", pers.getFirstName()).append("Birthdate", pers.getBirthDate())
@@ -128,7 +127,7 @@ public class MongoDbAccess extends AbstractDBAccess {
 	private void storeEmploye(Personnel pers) {
 		Employee e = (Employee) pers;
 		MongoCollection<Document> collection = db.getCollection("Personnel");
-		long temp = mdbIdGenerator.getID();
+		long temp = MongoDbIdGenerator.generator.getNextLong(pers.getClass());
 		pers.setPersonnelNumber(temp);
 		Document document = new Document("PersonnelID", temp).append("lastName", pers.getLastName())
 				.append("firstName", pers.getFirstName()).append("Birthdate", pers.getBirthDate())
@@ -142,7 +141,7 @@ public class MongoDbAccess extends AbstractDBAccess {
 	private void storeWorker(Personnel pers) {
 		Worker w = (Worker) pers;
 		MongoCollection<Document> collection = db.getCollection("Personnel");
-		long temp = mdbIdGenerator.getID();
+		long temp = MongoDbIdGenerator.generator.getNextLong(pers.getClass());
 		pers.setPersonnelNumber(temp);
 		Document document = new Document("PersonnelID", temp).append("lastName", pers.getLastName())
 				.append("firstName", pers.getFirstName()).append("Birthdate", pers.getBirthDate())

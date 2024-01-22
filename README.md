@@ -13,3 +13,4 @@ Markus Gumbel is the maintainer of this project but many more people were involv
   * Marius Czardybon
   * Eyuep Üenlü
   * Mike Moeck
+  * Tabea Arend

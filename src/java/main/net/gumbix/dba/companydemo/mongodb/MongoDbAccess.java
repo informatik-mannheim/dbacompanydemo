@@ -3,7 +3,6 @@ package net.gumbix.dba.companydemo.mongodb;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
 import net.gumbix.dba.companydemo.db.AbstractDBAccess;
 import net.gumbix.dba.companydemo.domain.*;
 import org.bson.Document;
@@ -13,323 +12,200 @@ import java.util.List;
 import java.util.Set;
 
 public class MongoDbAccess extends AbstractDBAccess {
+
 	private MongoDatabase db;
 	private MongoClient mClient;
 	private MongoCollection<Document> collection;
-	private MongoDbIdGenerator mdbIdGenerator;
+
+	private PersonnelMongoDao persDao;
+	private DepartmentMongoDao depDao;
+	private CarMongoDao carDao;
+	private CompanyCarMongoDao companyCarDao;
+	private ProjectMongoDao projectDao;
+	private StatRepMongoDao statRepDao;
+	private WorksOnMongoDao worksOnDao;
+
 
 	public MongoDbAccess() {
 		startClient();
+		initDaos();
 	}
 
 	private void startClient() {
 		try {
-			mdbIdGenerator = new MongoDbIdGenerator();
 			mClient = new MongoClient("localhost", 27017);
 			db = mClient.getDatabase("firmenwelt");
+			MongoDbIdGenerator.generator = new MongoDbIdGenerator(db);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
 	}
 
+	/* DAOs needs the connection to the database */
+	private void initDaos(){
+		persDao = new PersonnelMongoDao(this);
+		depDao = new DepartmentMongoDao(this);
+		carDao = new CarMongoDao(this);
+		companyCarDao = new CompanyCarMongoDao(this);
+		projectDao = new ProjectMongoDao(this);
+		statRepDao = new StatRepMongoDao(this);
+		worksOnDao = new WorksOnMongoDao(this);
+	}
+
+	// TODO: find better way to pass database (maybe inheritance?)
+	public MongoDatabase getMongoDatabase(){
+		return db;
+	}
+
+
+	// Personnel
 	@Override
 	public Personnel loadPersonnel(long persNr) throws Exception {
-		collection = db.getCollection("Personnel");
-		Personnel pers = null;
-		List<Document> documents = (List<Document>) collection.find(Filters.eq("PersonnelID", persNr))
-				.into(new ArrayList<Document>());
-
-		for (int i = 0; i < documents.size(); i++) {
-			if (documents.get(i).getString("typ").equals("personnel")) {
-				pers = loadPers(persNr, documents);
-			} else if (documents.get(i).getString("typ").equals("employee")) {
-				pers = loadEmployee(persNr, documents);
-			} else {
-				pers = loadWorker(persNr, documents);
-			}
-		}
-		return pers;
-	}
-
-	private Personnel loadPers(long persNr, List<Document> documents) {
-		Personnel pers = null;
-		for (int i = 0; i < documents.size(); i++) {
-			pers = new Personnel(persNr, documents.get(i).getString("lastName"),
-					documents.get(i).getString("firstName"), documents.get(i).getDate("birthDate"),
-					new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
-							documents.get(i).getString("zipCode"), documents.get(i).getString("city")));
-		}
-		return pers;
-	}
-
-	private Employee loadEmployee(long persNr, List<Document> documents) {
-		Employee temp = null;
-		for (int i = 0; i < documents.size(); i++) {
-			temp = new Employee(persNr, documents.get(i).getString("lastName"),
-					documents.get(i).getString("firstName"), documents.get(i).getDate("birthDate"),
-					new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
-							documents.get(i).getString("zipCode"), documents.get(i).getString("city")),
-					documents.get(i).getString("tel"));
-		}
-		return temp;
-	}
-
-	private Worker loadWorker(long persNr, List<Document> documents) {
-		Worker temp = null;
-		for (int i = 0; i < documents.size(); i++) {
-			temp = new Worker(persNr, documents.get(i).getString("lastName"),
-					documents.get(i).getString("firstName"), documents.get(i).getDate("birthDate"),
-					new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
-							documents.get(i).getString("zipCode"), documents.get(i).getString("city")),
-					documents.get(i).getString("workspace"));
-		}
-		return temp;
+		return persDao.load(persNr);
 	}
 
 	@Override
 	public List<Personnel> queryPersonnelByName(String firstName, String lastName) throws Exception {
-		collection = db.getCollection("Personnel");
-		List<Personnel> pers = new ArrayList<Personnel>();
-		List<Document> documents = (List<Document>) collection
-				.find(Filters.and(Filters.eq("lastName", lastName), Filters.eq("firstName", firstName)))
-				.into(new ArrayList<Document>());
-		for (int i = 0; i < documents.size(); i++) {
-			pers.add(new Personnel(documents.get(i).getLong("PersonnelID"), documents.get(i).getString("lastName"),
-					documents.get(i).getString("firstName"), documents.get(i).getDate("Birthdate"),
-					new Address(documents.get(i).getString("street"), documents.get(i).getString("houseNumber"),
-							documents.get(i).getString("zipCode"), documents.get(i).getString("city"))));
-		}
-		return pers;
+		return persDao.queryByName(firstName, lastName);
 	}
 
 	@Override
 	public void storePersonnel(Personnel pers) throws Exception {
-		if (pers instanceof Worker) {
-			storeWorker(pers);
-		} else if (pers instanceof Employee) {
-			storeEmploye(pers);
-		} else {
-			storePers(pers);
-		}
-	}
-
-	private void storePers(Personnel pers) {
-		MongoCollection<Document> collection = db.getCollection("Personnel");
-		long temp = mdbIdGenerator.getID();
-		pers.setPersonnelNumber(temp);
-		Document document = new Document("PersonnelID", temp).append("lastName", pers.getLastName())
-				.append("firstName", pers.getFirstName()).append("Birthdate", pers.getBirthDate())
-				.append("salary", pers.getSalary()).append("street", pers.getAddress().getStreet())
-				.append("houseNumber", pers.getAddress().getHouseNumber()).append("zipCode", pers.getAddress().getZip())
-				.append("city", pers.getAddress().getZipCity().getCity()).append("type", "personnel");
-		collection.insertOne(document);
-	}
-
-	private void storeEmploye(Personnel pers) {
-		Employee e = (Employee) pers;
-		MongoCollection<Document> collection = db.getCollection("Personnel");
-		long temp = mdbIdGenerator.getID();
-		pers.setPersonnelNumber(temp);
-		Document document = new Document("PersonnelID", temp).append("lastName", pers.getLastName())
-				.append("firstName", pers.getFirstName()).append("Birthdate", pers.getBirthDate())
-				.append("Salary", pers.getSalary()).append("street", pers.getAddress().getStreet())
-				.append("houseNumber", pers.getAddress().getHouseNumber()).append("zipCode", pers.getAddress().getZip())
-				.append("city", pers.getAddress().getZipCity().getCity()).append("type", "employee")
-				.append("phoneNumber", e.getPhoneNumber());
-		collection.insertOne(document);
-	}
-
-	private void storeWorker(Personnel pers) {
-		Worker w = (Worker) pers;
-		MongoCollection<Document> collection = db.getCollection("Personnel");
-		long temp = mdbIdGenerator.getID();
-		pers.setPersonnelNumber(temp);
-		Document document = new Document("PersonnelID", temp).append("lastName", pers.getLastName())
-				.append("firstName", pers.getFirstName()).append("Birthdate", pers.getBirthDate())
-				.append("salary", pers.getSalary()).append("street", pers.getAddress().getStreet())
-				.append("houseNumber", pers.getAddress().getHouseNumber()).append("zipCode", pers.getAddress().getZip())
-				.append("city", pers.getAddress().getZipCity().getCity()).append("type", "worker")
-				.append("workspace", w.getWorkspace());
-		collection.insertOne(document);
+		persDao.store(pers);
 	}
 
 	@Override
 	public void deletePersonnel(Personnel pers) throws Exception {
-		collection = db.getCollection("Personnel");
-		collection.deleteOne(Filters.eq("PersonnelID", pers.getPersonnelNumber()));
+		persDao.delete(pers);
 	}
 
+	// Department
 	@Override
 	public Department loadDepartment(long depNumber) throws Exception {
-		collection = db.getCollection("Department");
-		Department temp = null;
-		List<Document> documents = (List<Document>) collection.find(Filters.eq("depNumber", depNumber))
-				.into(new ArrayList<Document>());
-		for (int i = 0; i < documents.size(); i++) {
-			temp = new Department(depNumber, documents.get(i).getString("name"));
-		}
-		return temp;
+		return depDao.load(depNumber);
 	}
 
 	@Override
 	public List<Department> queryDepartmentByName(String queryString) throws Exception {
-		collection = db.getCollection("Department");
-		List<Department> temp = new ArrayList<Department>();
-		List<Document> documents = (List<Document>) collection.find(Filters.eq("name", queryString))
-				.into(new ArrayList<Document>());
-		for (int i = 0; i < documents.size(); i++) {
-			temp.add(new Department(documents.get(i).getLong("depNumber"), documents.get(i).getString("name")));
-		}
-		return temp;
+		return depDao.queryByName(queryString);
 	}
 
 	@Override
 	public void storeDepartment(Department department) throws Exception {
-		MongoCollection<Document> collection = db.getCollection("Department");
-		Document document = new Document("depNumber", department.getDepNumber()).append("name", department.getName());
-		collection.insertOne(document);
+		depDao.store(department);
 	}
 
 	@Override
 	public void deleteDepartment(Department department) throws Exception {
-		collection = db.getCollection("Department");
-		collection.deleteOne(Filters.eq("depNumber", department.getDepNumber()));
+		depDao.delete(department);
 	}
 
+
+	// Car
 	@Override
 	public Car loadCar(String model) throws Exception {
-		collection = db.getCollection("Car");
-		Car temp = null;
-		List<Document> documents = (List<Document>) collection.find(Filters.eq("model", model))
-				.into(new ArrayList<Document>());
-		for (int i = 0; i < documents.size(); i++) {
-			temp = new Car(model, (String) documents.get(i).get("name"));
-		}
-		return temp;
+		return carDao.load(model);
 	}
 
 	@Override
 	public void storeCar(Car car) throws Exception {
-		MongoCollection<Document> doc = db.getCollection("Car");
-		Document document = new Document("model", car.getModel()).append("type", car.getType());
-		doc.insertOne(document);
+		carDao.store(car);
 	}
 
 	@Override
 	public void deleteCar(Car car) throws Exception {
-		collection = db.getCollection("Car");
-		collection.deleteOne(Filters.eq("model", car.getModel()));
+		carDao.delete(car);
 	}
 
+	// CompanyCars
 	@Override
 	public CompanyCar loadCompanyCar(String licensePlate) throws Exception {
-		collection = db.getCollection("CompanyCar");
-		CompanyCar temp = null;
-		List<Document> documents = (List<Document>) collection.find(Filters.eq("licensePlate", licensePlate))
-				.into(new ArrayList<Document>());
-		for (int i = 0; i < documents.size(); i++) {
-			temp = new CompanyCar(licensePlate,
-					new Car(documents.get(i).getString("model"), documents.get(i).getString("type")));
-		}
-		return temp;
+		return companyCarDao.load(licensePlate);
 	}
 
 	@Override
 	public List<CompanyCar> queryCompanyCarByModel(String model) throws Exception {
-		collection = db.getCollection("CompanyCar");
-		List<CompanyCar> temp = new ArrayList<CompanyCar>();
-		List<Document> documents = (List<Document>) collection.find(Filters.eq("model", model))
-				.into(new ArrayList<Document>());
-		for (int i = 0; i < documents.size(); i++) {
-			temp.add(new CompanyCar(documents.get(i).getString("licensePlate"),
-					new Car(documents.get(i).getString("model"), documents.get(i).getString("type"))));
-		}
-		return temp;
+		return companyCarDao.queryByModel(model);
 	}
 
 	@Override
 	public void storeCompanyCar(CompanyCar car) throws Exception {
-		MongoCollection<Document> collection = db.getCollection("CompanyCar");
-		Car temp = car.getCar();
-		Document document = new Document("licensePlate", car.getLicensePlate()).append("model", temp.getModel())
-				.append("type", temp.getType()).append("driver", car.getDriver());
-		collection.insertOne(document);
+		companyCarDao.store(car);
 	}
 
 	@Override
 	public void deleteCompanyCar(CompanyCar car) throws Exception {
-		collection = db.getCollection("CompanyCar");
-		collection.deleteOne(Filters.eq("licensePlate", car.getLicensePlate()));
+		companyCarDao.delete(car);
 	}
 
+
+	// Project
 	@Override
 	public Project loadProject(String projId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return projectDao.load(projId);
 	}
 
 	@Override
 	public List<Project> queryProjectByDescription(String queryString) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return projectDao.queryByDescription(queryString);
 	}
 
 	@Override
 	public void storeProject(Project proj) throws Exception {
+		projectDao.store(proj);
 	}
 
 	@Override
 	public void deleteProject(Project proj) throws Exception {
-		// TODO Auto-generated method stub
-
+		projectDao.delete(proj);
 	}
 
+	// Status Report
 	@Override
 	public StatusReport loadStatusReport(Project project, long continuousNumber) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return statRepDao.load(project, continuousNumber);
 	}
 
 	@Override
 	public List<StatusReport> loadStatusReport(Project project) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return statRepDao.load(project);
 	}
 
 	@Override
 	public void storeStatusReport(StatusReport rep) throws Exception {
-		// TODO Auto-generated method stub
+		statRepDao.store(rep);
 	}
 
 	@Override
 	public void deleteStatusReport(StatusReport rep) throws Exception {
-		// TODO Auto-generated method stub
+		statRepDao.delete(rep);
 
 	}
 
+
+	// WorksOn
 	@Override
 	public Set<WorksOn> loadWorksOn(Employee employee) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return worksOnDao.load(employee);
 	}
 
 	@Override
 	public Set<WorksOn> loadWorksOn(Project proj) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return worksOnDao.load(proj);
 	}
 
 	@Override
 	public void storeWorksOn(WorksOn wo) throws Exception {
-		// TODO Auto-generated method stub
+		worksOnDao.store(wo);
 	}
 
 	@Override
 	public void deleteWorksOn(WorksOn wo) throws Exception {
-		// TODO Auto-generated method stub
-
+		worksOnDao.delete(wo);
 	}
 
+
+	// Queries
 	@Override
 	public int getNumberOfPersonnel() throws Exception {
 		// TODO Auto-generated method stub
@@ -354,16 +230,18 @@ public class MongoDbAccess extends AbstractDBAccess {
 
 	}
 
+	// not sure what this method is used for or if it's even necessary
 	public long getIDfromLast() {
 		collection = db.getCollection("Personnel");
 		List<Document> documents = (List<Document>) collection.find().into(new ArrayList<Document>());
 		long temp = 0;
 		for (int i = 0; i < documents.size(); i++) {
-			if (documents.get(i).getLong("PersonnelID") > temp) {
-				temp = documents.get(i).getLong("PersonnelID");
+			if (documents.get(i).getLong("personnelID") > temp) {
+				temp = documents.get(i).getLong("personnelID");
 			}
 		}
 		return temp + 1;
-	}
+	} 
+
 
 }
